@@ -1,5 +1,5 @@
 /**
- * file created at 2010-2-26 下午03:22:46
+ * file created at 2010-2-26
  */
 package lightmvc;
 
