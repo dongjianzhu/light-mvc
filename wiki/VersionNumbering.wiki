@@ -1,5 +1,5 @@
-major.minor[.maintain]
-major.minor-alpah[number]
-major.minor-beta[number]
-major.minor-rc[number]
-major.minor-stable
+*major.minor[[.maintain]]
+*major.minor-alpah[[number]]
+*major.minor-beta[[number]]
+*major.minor-rc[[number]]
+*major.minor-stable
