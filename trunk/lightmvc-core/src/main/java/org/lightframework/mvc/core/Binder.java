@@ -141,7 +141,13 @@ public class Binder extends Plugin {
         } else if (type == Long.TYPE || type == Long.class) {
             value = Long.parseLong(string);
         } else if (type == Boolean.TYPE || type == Boolean.class) {
-            value = Boolean.parseBoolean(string);
+        	if("1".equals(string)){
+        		value = Boolean.TRUE;
+        	}else if("0".equals(string)){
+        		value = Boolean.FALSE;
+        	}else{
+        		value = Boolean.parseBoolean(string);	
+        	}
         } else if (type == Float.TYPE || type == Float.class) {
             value = Float.parseFloat(string);
         } else if (type == Double.TYPE || type == Double.class) {
