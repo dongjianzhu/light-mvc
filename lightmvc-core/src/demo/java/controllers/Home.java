@@ -13,41 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc;
-
-import org.lightframework.mvc.HTTP.Request;
-import org.lightframework.mvc.HTTP.Response;
+package controllers;
 
 /**
- * definition of a view.
+ * home controller of application
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
  */
-public class View {
+public class Home {
 
-	protected String name;
-	protected String path;
-	
-	public View(){
+	public void index(){
 		
-	}
-	
-	public View(String path){
-		this.path = path;
-	}
-	
-	public String getName(){
-		return name;
-	}
-	
-	public String getPath(){
-		return path;
-	}
-	
-	public void render(Request request,Response response, Object data){
-		request.setAttribute("view", this);
-		request.setAttribute("data", data);
-		response.forward(path);
 	}
 }
