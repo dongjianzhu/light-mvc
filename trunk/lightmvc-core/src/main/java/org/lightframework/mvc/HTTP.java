@@ -210,6 +210,21 @@ public final class HTTP {
 	    	return secure;
 	    }
 		
+		public Object getAttribute(String name){
+			return getAttributes().get(name);
+		}
+		
+		public void setAttribute(String name,Object value){
+			getAttributes().put(name, value);
+		}
+		
+		public Map<String,Object> getAttributes(){
+			if(null == attributes){
+				attributes = new HashMap<String, Object>();
+			}
+			return attributes;
+		}
+		
 		public String getParameter(String name){
 			return getParameters().get(name);
 		}

@@ -45,6 +45,7 @@ public class Filter implements javax.servlet.Filter {
 	public void init(FilterConfig config) throws ServletException {
 		servletContext = config.getServletContext();
 		application    = new Application();
+		application.servletContext = servletContext;
 		
 		Framework.start(application);
 	}
@@ -127,6 +128,7 @@ public class Filter implements javax.servlet.Filter {
 		@Override
 		@SuppressWarnings("unchecked")
         public Map<String, String> getParameters() {
+			//TODO : translate String[] type to String
 	        return request.getParameterMap();
         }
 

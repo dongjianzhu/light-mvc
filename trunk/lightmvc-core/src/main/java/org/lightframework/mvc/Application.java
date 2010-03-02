@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
 
 /**
  * represents a mvc web application
@@ -31,6 +34,8 @@ public class Application {
     private static final long serialVersionUID = 3816496065687999477L;
     
     public static final String DEFAULT_ENCODING = "UTF-8";
+    
+    protected ServletContext servletContext;
     
     protected String _package;
     
@@ -71,6 +76,11 @@ public class Application {
 	
 	public Map<String, Object> getParameters(){
 		return parameters;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<String> getResourcePaths(String path){
+		return servletContext.getResourcePaths(path);
 	}
 
 	List<Plugin> getPlugins(){

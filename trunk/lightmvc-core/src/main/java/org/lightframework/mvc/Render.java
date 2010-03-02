@@ -15,11 +15,8 @@
  */
 package org.lightframework.mvc;
 
-import java.util.Map;
-
-
 /**
- * TODO : document me 
+ * definition of a view render object.
  *
  * @author light.wind(lightworld.me@gmail.com)
  * @since 0.1
@@ -31,7 +28,7 @@ public class Render extends RuntimeException{
 	private String   redirectTo;
 	private String   forwardTo;
 	
-	protected String view;;
+	protected View   view;
 	protected Object data;
 	
 	/**
@@ -52,34 +49,55 @@ public class Render extends RuntimeException{
 		throw render;
 	}
 	
-	public static void render(String view){
-		render(view,null);
-	}
-	
-	public static void render(String view,Object data){
-		if(data instanceof Map<?,?>){
-			render(view,(Map<?,?>)data);
-		}else{
-			// TODO : Render.render
-		}
-	}
-	
-	public static void render(String view,Map<?,?> data){
-		// TODO : Render.render
-	}
+//	public static void render(String view){
+//		render(view,null);
+//	}
+//	
+//	public static void render(String view,Object data){
+//		if(data instanceof Map<?,?>){
+//			render(view,(Map<?,?>)data);
+//		}else{
+//			// TODO : Render.render
+//		}
+//	}
+//	
+//	public static void render(String view,Map<?,?> data){
+//		// TODO : Render.render
+//	}
 	
 	public Render(){
 		
 	}
 	
-	public Render(Object dataObject){
-		this.data = dataObject;
+	public Render(View view){
+		this.view = view;
+	}
+	
+	public Render(Object data){
+		this.data = data;
+	}
+	
+	public Render(Object data,View view){
+		this.data = data;
+		this.view = view;
 	}
 	
 	public Object getData() {
     	return data;
     }
 	
+	public void setData(Object data) {
+    	this.data = data;
+    }	
+	
+	public View getView() {
+    	return view;
+    }
+	
+	public void setView(View view) {
+    	this.view = view;
+    }
+
 	public boolean isRedirect(){
 		return null != redirectTo;
 	}

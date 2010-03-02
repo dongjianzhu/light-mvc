@@ -15,8 +15,12 @@
  */
 package org.lightframework.mvc.core;
 
+import java.util.Set;
+
+import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Render;
+import org.lightframework.mvc.View;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 
@@ -35,14 +39,63 @@ public class Renderer extends Plugin {
 		}else if(render.isForward()){
 			response.forward(render.getForwardTo());	
 		}else{
+			View view = render.getView();
 			
+			if(null == view){
+				String defaultViewPath = findDefaultViewPath(request);
+				if(null != defaultViewPath){
+					view = new View(defaultViewPath);
+				}
+			}
+
+			if(null != view){
+				view.render(request, response, render.getData());
+				return true;
+			}
 		}
-		
-		return true;
+		return false;
     }
 	
-//	private static void resolveActionView(Request request){
-//		String path   = request.getPath();
-//		Action action = request.getAction();
-//	}
+	private String findDefaultViewPath(Request request) {
+		Action action = request.getAction();
+		if(null != action){
+			String _packpage = request.getApplication().getPackage();
+			String className = action.getClazz().getName();
+			
+			if(null != _packpage && !"".equals(_packpage)){
+				//'demoapp.controllers.Product' -> 'controllers.Product' 
+				className = className.substring(_packpage.length() + 1);
+			}
+			
+			if(className.startsWith("controllers.")){
+				//'controllers.Product' -> 'Product'
+				className = className.substring("controllers.".length());
+			}
+			
+			String controller = className.toLowerCase();
+			String actionName = action.getMethod().getName().toLowerCase();
+			
+			return findDefaultViewPath(request,controller,actionName);
+		}
+		return null;
+	}
+	
+	private String findDefaultViewPath(Request request, String controller,String action){
+		String path = null;
+		if("home".equalsIgnoreCase(controller)){
+			path = "/";
+		}else{
+			path = "/" + controller.replace("\\.", "/") + "/";
+		}
+		
+		Set<String> files = request.getApplication().getResourcePaths(path);
+		
+		for(String file : files){
+			if(file.toLowerCase().startsWith(path + action + ".")){
+				return file;
+			}
+		}
+		
+		return null;
+	}
 }
