@@ -24,6 +24,7 @@ import org.lightframework.mvc.HTTP.Response;
  * core plugin to render action result
  *
  * @author light.wind(lightworld.me@gmail.com)
+ * @since 0.1
  */
 public class Renderer extends Plugin {
 

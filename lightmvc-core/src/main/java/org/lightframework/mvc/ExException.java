@@ -21,6 +21,7 @@ import org.lightframework.mvc.Utils.Messages;
  * exception class of mvc framework
  *
  * @author light.wind(lightworld.me@gmail.com)
+ * @since 0.1
  */
 public class ExException extends RuntimeException {
     private static final long serialVersionUID = 1056914628721520096L;

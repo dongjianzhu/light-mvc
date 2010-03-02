@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
  * configuration class of mvc framework
  *
  * @author light.wind(lightworld.me@gmail.com)
+ * @since 0.1
  */
 public class Config {
 	
