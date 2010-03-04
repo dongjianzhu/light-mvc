@@ -1,4 +1,5 @@
- *major.minor[[.maintain]]
+
+ *major.minor{.maintain}
  *major.minor-preview-{number}
  *major.minor-alpha-{number}
  *major.minor-beta-{number}
