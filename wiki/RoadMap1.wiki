@@ -1,2 +1,3 @@
 ==1.0 M1==
  * HTTP URL请求自动映射到Action
+ * Action参数自动绑定
