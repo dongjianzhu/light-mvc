@@ -1,9 +1,10 @@
 #summary list the main features of light-mvc framework
 
 ==Introduction==
- * (x) ：表示已经计划但未实现
+ * (*) ：表示已经计划但未实现
  * (o) ：表示已经在框架中实现
  * (?) ：表示在讨论中尚未计划
+ * (x) ：表示经过讨论后被放弃
 
 ==Feature List==
 
