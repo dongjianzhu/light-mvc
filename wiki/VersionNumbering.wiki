@@ -1,8 +1,8 @@
 ==版本命名==
- * major.minor`[.maintain]`
- * major.minor-preview`[number]`
- * major.minor-alpha`[number]`
- * major.minor-beta`[number]`
+|| major.minor`[.maintain]` || 正式发布版本 ||
+|| major.minor-preview`[number]` || 预览版本，只用于了解开发中的新特性 ||
+|| major.minor-alpha`[number]` || 内部测试版本 ||
+|| major.minor-beta`[number]` || 外部试用版本 ||
 
 ==详细说明==
 || *major:*    || 主版本号，从0开始，主版本号的变更不进行向下兼容 ||
