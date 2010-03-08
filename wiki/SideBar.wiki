@@ -1,6 +1,7 @@
- * [Introduction 项目介绍]
- * [GettingStarted 快速入门]
- * 用户指南
- * 版本计划
+ * [Features 功能介绍(Features)]
+ * [GettingStarted 快速入门(Getting Started)]
+ * [UserGuide 用户指南(User Guide)]
+ * [DeveloperGuide 开发指南(Developer Guide)]
+ * 发展路线(Road Map)
    * [RoadMap1 V1.0]
- * [VersionNumbering 版本说明]
+ * [VersionNumbering 版本说明(Version Numbering)]
