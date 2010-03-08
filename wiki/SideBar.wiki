@@ -1,9 +1,8 @@
  * [Introduction 简要介绍(Introduction)]
  * [Features 主要功能(Features)]
  * [GettingStarted 快速开始(Getting Started)]
- * 帮助文档(Help)
-   * [UserGuide 用户指南(User Guide)]
-   * [DeveloperGuide 开发指南(Developer Guide)]
+ * [UserGuide 用户指南(User Guide)]
+ * [DeveloperGuide 开发指南(Developer Guide)]
  * [ChangeLog 变更日志(Change Log)]
  * [VersionNumbering 版本说明(Version Numbering)]
  * [FAQ 常见问题(FAQ)]
