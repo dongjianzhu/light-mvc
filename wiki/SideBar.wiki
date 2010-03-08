@@ -2,5 +2,5 @@
  * [GettingStarted 快速入门(Getting Started)]
  * [UserGuide 用户指南(User Guide)]
  * [DeveloperGuide 开发指南(Developer Guide)]
- * [ChangeLog 变更日志]
+ * [ChangeLog 变更日志(Change Log)]
  * [VersionNumbering 版本说明(Version Numbering)]
