@@ -1,4 +1,4 @@
- * [Introduction 基本介绍(Introduction)]
+ * [Introduction 项目介绍(Introduction)]
  * [Features 功能说明(Features)]
  * [GettingStarted 快速入门(Getting Started)]
  * [UserGuide 用户指南(User Guide)]
