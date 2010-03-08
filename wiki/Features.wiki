@@ -9,6 +9,7 @@
 ==Feature List==
 
 ===`[*]` Feature 1 :===
+ _feature description_
  * ..
  * ..
 
