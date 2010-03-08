@@ -1,9 +1,8 @@
 ==版本命名==
- * major.minor{.maintain}
- * major.minor-alpha{number}
- * major.minor-beta{number}
- * major.minor-rc{number}
- * major.minor{.maintain}-stable
+ * major.minor`[.maintain]`
+ * major.minor-preview`[number]`
+ * major.minor-alpha`[number]`
+ * major.minor-beta`[number]`
 
 ==详细说明==
 || *major:*    || 主版本号，从0开始，主版本号的变更不进行向下兼容 ||
@@ -11,5 +10,3 @@
 || *maintain:* || 维护版本号，某一个版本发布后bug fixed到一定数量后会增加维护版本号 ||
 || *alpha:*    || 表示这是内部发布版，功能接近稳定，开始编写测试用例，只用于项目组内部测试使用 ||
 || *beta:*     || 表示这是公开测试版，功能已经稳定，但API可能会有较小的变化 ||
-|| *rc:*       || 表示这是发布候选版，即将正式发布，功能和API都不会再进行变化 ||
-|| *stable:*   || 表示这是发布稳定版 ||
