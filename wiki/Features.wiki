@@ -1,17 +1,16 @@
 #summary list the main fetures of light-mvc framework
 
 = Introduction =
-
- *(x) ：表示已经计划但未实现
- *(o) ：表示已经在框架中实现
- *(?) ：表示在讨论中尚未计划
+ * (x) ：表示已经计划但未实现
+ * (o) ：表示已经在框架中实现
+ * (?) ：表示在讨论中尚未计划
 
 = Feature List =
 
-  (x) Feature 1 :
-  * ..
-  * ..
+==(x) Feature 1 :==
+ * ..
+ * ..
 
-  (x) Feature 2 :
-  * ..
-  * ..
+==(x) Feature 2 :==
+ * ..
+ * ..
