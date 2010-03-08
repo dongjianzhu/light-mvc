@@ -1,5 +1,5 @@
- * [Introduction 项目介绍(Introduction)]
- * [Features 功能说明(Features)]
+ * [Introduction 简要介绍(Introduction)]
+ * [Features 主要功能(Features)]
  * [GettingStarted 快速开始(Getting Started)]
  * [UserGuide 用户指南(User Guide)]
  * [DeveloperGuide 开发指南(Developer Guide)]
