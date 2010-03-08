@@ -1,4 +1,5 @@
- * [Features 功能介绍(Features)]
+ * [Introduction 框架介绍(Introduction)]
+ * [Features 功能说明(Features)]
  * [GettingStarted 快速入门(Getting Started)]
  * [UserGuide 用户指南(User Guide)]
  * [DeveloperGuide 开发指南(Developer Guide)]
