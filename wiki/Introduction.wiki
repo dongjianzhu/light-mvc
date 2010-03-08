@@ -16,7 +16,7 @@ light-mvc是一个Model-View-Controller框架，但和struts这些经典传统�
  Controller : light的controller是一个普通的public class.
  Action     : light的action是指controller中的一个静态或非静态方法（对参数和返回值没有要求）
  View       : light的指把结果渲染并输出到客户端（Browser、SOAP Client..）的Object
- Model      ：light并没有对Model进行定义，也就是说框架并不关注Model的存在
+ Model      : light并没有对Model进行定义，也就是说框架并不关注Model的存在
 }}}
 
 _TODO: Add your content here._
