@@ -19,4 +19,4 @@ light-mvc是一个Model-View-Controller框架，但和struts这些经典传统�
  Model      : light的model并不存在，框架只关注action的执行，并不关注model是否存在
 }}}
 
-更多的内容请看[GettingStarted 快速开始]和[Features 主要功能]
+更多的内容请看[Features 主要功能]和[GettingStarted 快速开始].
