@@ -1,4 +1,4 @@
-#summary list the main fetures of light-mvc framework
+#summary list the main features of light-mvc framework
 
 = Introduction =
  * (x) ：表示已经计划但未实现
