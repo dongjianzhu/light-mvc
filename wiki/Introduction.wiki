@@ -9,7 +9,7 @@
 ==设计思想（thinking of design）==
  * 基于约定：使用自然并且大多数人都容易理解的约定而不是配置来编写代码
  * 插件体系：核心功能完全基于插件来实现，同时也允许应用扩展自己的插件
- * 面向服务：所有Action方法都可以通过插件自动支持AJAX、SOAP等远程请求
+ * 面向服务：所有Action方法都可以通过插件自动支持AJAX,SOAP等远程请求
 
 ==关于框架（about framework）==
 light-mvc是一个Model-View-Controller框架，但和struts这些经典传统的MVC框架对比，存在一些区别：
