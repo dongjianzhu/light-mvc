@@ -11,7 +11,7 @@
  * 插件体系：核心功能完全基于插件来实现，同时也允许应用扩展自己的插件
  * 面向服务：所有Action方法都可以通过插件自动支持AJAX,SOAP等远程请求
 
-==关于框架（about framework）==
+==关于框架（about light-mvc）==
 light-mvc是一个Model-View-Controller框架，但和struts这些经典传统的MVC框架对比，存在一些区别：
 {{{
  Controller : light的controller是一个普通Java对象(POJO）.
@@ -22,7 +22,7 @@ light-mvc是一个Model-View-Controller框架，但和struts这些经典传统�
 
 _更多内容请看[Features 主要功能]和[GettingStarted 快速开始]._
 
-==如何参与（Howto Contribute）==
+==如何参与（howto contribute）==
 您可以使用以下任何一种方式参与此项目，做成贡献：
  * [http://discussions.zoho.com/lightmvc 提出建议]
  * [http://code.google.com/p/light-mvc/issues/list 反馈问题]
