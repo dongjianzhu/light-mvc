@@ -6,4 +6,4 @@
  * [ChangeLog 变更日志(Change Log)]
  * [VersionNumbering 版本说明(Version Numbering)]
  * [FAQ 常见问题(FAQ)]
- * [ContributeTo 如何参与(HowTo Contribute)]
+ * [ContributeTo 如何参与(Howto Contribute)]
