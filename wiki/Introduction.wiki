@@ -3,7 +3,7 @@
 
 基于对项目实施和开发框架的理解，同时借鉴了一些开源框架（rails、play framework）的思想，我们创建了这个项目，旨在构建一个简单、统一、规范以及可灵活扩展的基础框架，用于支撑项目的开发。
 
-如果您对此项目有兴趣，请花些时间了解一下，也可参与到我们中来一起[http://groups.yahoo.com/group/light-mvc 交流、讨论]；您的一点建议或者意见，都有可能会对这个项目产生很大的帮助。
+如果您对此项目有兴趣，请花些时间了解一下，也可参与到我们中来一起[http://discussions.zoho.com/lightmvc 交流、讨论]；您的一点建议或者意见，都有可能会对这个项目产生很大的帮助。
 
 
 ==设计思想（thinking of design）==
@@ -21,3 +21,12 @@ light-mvc是一个Model-View-Controller框架，但和struts这些经典传统�
 }}}
 
 更多的内容请看[Features 主要功能]和[GettingStarted 快速开始].
+
+==如何参与（Howto Contribute）==
+您可以：
+ * [http://discussions.zoho.com/lightmvc 提出建议]
+ * [http://code.google.com/p/light-mvc/issues/list 反馈问题]
+ * [http://code.google.com/p/light-mvc/wiki 编写文档]
+ * [http://code.google.com/p/light-mvc/source/checkout 贡献代码]
+
+更详细请看[ContributeTo 如何参与].
