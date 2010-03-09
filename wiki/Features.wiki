@@ -8,8 +8,13 @@
 
 ==Feature List==
 
-===`[*]` Feature 1 :===
- _feature description_
+===`[*]` Url to Action Routing : ===
+
+ 把一个请求路径自动映射匹配到一个Action方法:
+ {{{
+   http://server/app/product/list -> {app-package.}controllers.Product.list(..) 
+   http://server/app/product/cagetory/delete -> {app-package.}controllers.product.Category.delete(..)
+ }}}
  * ..
  * ..
 
