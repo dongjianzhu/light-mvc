@@ -23,7 +23,7 @@ light-mvc是一个Model-View-Controller框架，但和struts这些经典传统�
 _更多内容请看[Features 主要功能]和[GettingStarted 快速开始]._
 
 ==如何参与（howto contribute）==
-您可以使用以下任何一种方式参与此项目，做成贡献：
+您可以使用以下任何一种方式参与此项目：
  * [http://discussions.zoho.com/lightmvc 提出建议]
  * [http://code.google.com/p/light-mvc/issues/list 反馈问题]
  * [http://code.google.com/p/light-mvc/wiki 编写文档]
