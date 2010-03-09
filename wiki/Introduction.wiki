@@ -20,7 +20,7 @@ light-mvc是一个Model-View-Controller框架，但和struts这些经典传统�
  Model      : light的model并不存在，框架只关注action的执行，并不关注model是否存在
 }}}
 
-更多的内容请看[Features 主要功能]和[GettingStarted 快速开始].
+更多内容请看[Features 主要功能]和[GettingStarted 快速开始].
 
 ==如何参与（Howto Contribute）==
 您可以：
@@ -29,4 +29,4 @@ light-mvc是一个Model-View-Controller框架，但和struts这些经典传统�
  * [http://code.google.com/p/light-mvc/wiki 编写文档]
  * [http://code.google.com/p/light-mvc/source/checkout 贡献代码]
 
-更详细请看[ContributeTo 如何参与].
+具体请浏览[ContributeTo 如何参与].
