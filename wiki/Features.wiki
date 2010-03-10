@@ -17,9 +17,9 @@
 
  约定：
  {{{
-  # action的名称为 controller.action，其中controller可以使用.分割，如product.category.list
-  # 缺省的controller是home，如果没有指定controller，那么默认是home.{action}
-  # 在url中，controller中的.可以用'/'或'`_`'字符代替，表示相同的含义
+ 1. action的名称为 controller.action，其中controller可以使用.分割，如product.category.list
+ 2. 缺省的controller是home，如果没有指定controller，那么默认是home.{action}
+ 3. 在url中，controller中的.可以用'/'或'`_`'字符代替，表示相同的含义
  }}}
 
  规则：
@@ -32,11 +32,11 @@
 
  示例：
  {{{
-  /product/ -> product.index
-  /product/category/ -> product.category.index
-  /product -> home.product Or product.index
-  /product/list -> product.list
-  /product/category/list -> product.category.list
+ /product/              ：product.index
+ /product/category/     ：product.category.index
+ /product               ：home.product Or product.index
+ /product/list          ：product.list
+ /product/category/list ：product.category.list
   }}}
 
 ===`[o]` action method dynamic resolving :===
