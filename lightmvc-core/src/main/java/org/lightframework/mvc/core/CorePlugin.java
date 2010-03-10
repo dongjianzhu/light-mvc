@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.plugins;
+package org.lightframework.mvc.core;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Render;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
-import org.lightframework.mvc.core.Binder;
-import org.lightframework.mvc.core.Executor;
-import org.lightframework.mvc.core.Renderer;
-import org.lightframework.mvc.core.Resolver;
-import org.lightframework.mvc.core.Router;
 
 /**
  * core plugin of mvc framework
@@ -34,11 +29,12 @@ import org.lightframework.mvc.core.Router;
  */
 public class CorePlugin extends Plugin{
 
-	protected Router   router   = new Router();
-	protected Binder   binder   = new Binder();
-	protected Executor executor = new Executor();
-	protected Resolver resolver = new Resolver();
-	protected Renderer renderer = new Renderer();
+	protected RoutePlugin   router   = new RoutePlugin();
+	protected BindingPlugin binder   = new BindingPlugin();
+	protected ExecutePlugin executor = new ExecutePlugin();
+	protected ResolvePlugin resolver = new ResolvePlugin();
+	protected RenderPlugin  renderer = new RenderPlugin();
+	protected ErrorPlugin   error    = new ErrorPlugin();
 	
 	@Override
     public boolean request(Request request, Response response) throws Throwable {
@@ -72,6 +68,6 @@ public class CorePlugin extends Plugin{
 
 	@Override
     public boolean error(Request request, Response response, Throwable exception) throws Throwable {
-	    return super.error(request, response, exception);
+	    return error.error(request, response, exception);
     }
 }

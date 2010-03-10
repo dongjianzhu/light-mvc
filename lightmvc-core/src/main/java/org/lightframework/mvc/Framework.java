@@ -19,8 +19,7 @@ import java.util.ArrayList;
 
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
-import org.lightframework.mvc.Utils.Assert;
-import org.lightframework.mvc.plugins.CorePlugin;
+import org.lightframework.mvc.core.CorePlugin;
 
 /**
  * the main class of mvc framework
@@ -123,7 +122,7 @@ class Framework {
 		//resolving action method
 		if(!action.isResolved()){
 			if(!PluginInvoker.resolve(request,response,action)){
-				throw new ExException("@ActionNotResolved", action.getName());
+				throw new MVCException("@ActionNotResolved", action.getName());
 			}
 			action.setResolved(true);
 		}
@@ -143,10 +142,10 @@ class Framework {
 		if(null != render){
 			//render action result
 			if(!PluginInvoker.render(request, response, render)){
-				throw new ExException("@ActionNotRendered",action.getName());
+				throw new MVCException("@ActionNotRendered",action.getName());
 			}
 		}else{
-			throw new ExException("@ActionNotExecuted",action.getName());
+			throw new MVCException("@ActionNotExecuted",action.getName());
 		}
 	}
 	

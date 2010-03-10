@@ -97,7 +97,7 @@ public class Application {
 	        }
 	        return null;
         } catch (IOException e) {
-        	throw new ExException(e);
+        	throw new MVCException(e);
         }
 	}
 	
@@ -118,7 +118,7 @@ public class Application {
 		try {
 	        return ClassUtils.findAllClassNames(_package);
         } catch (IOException e) {
-        	throw new ExException(e);
+        	throw new MVCException(e);
         }
 	}
 	

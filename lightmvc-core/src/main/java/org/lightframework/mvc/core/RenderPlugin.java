@@ -30,7 +30,7 @@ import org.lightframework.mvc.HTTP.Response;
  * @author light.wind(lightworld.me@gmail.com)
  * @since 1.0
  */
-public class Renderer extends Plugin {
+public class RenderPlugin extends Plugin {
 
 	@Override
     public boolean render(Request request, Response response, Render render) throws Throwable {

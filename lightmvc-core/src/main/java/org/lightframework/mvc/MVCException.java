@@ -15,7 +15,8 @@
  */
 package org.lightframework.mvc;
 
-import org.lightframework.mvc.Utils.Messages;
+import java.text.MessageFormat;
+
 
 /**
  * exception class of mvc framework
@@ -23,28 +24,30 @@ import org.lightframework.mvc.Utils.Messages;
  * @author light.wind(lightworld.me@gmail.com)
  * @since 1.0
  */
-public class ExException extends RuntimeException {
+public class MVCException extends RuntimeException {
     private static final long serialVersionUID = 1056914628721520096L;
 
-	public ExException() {
+	public MVCException() {
 		super();
 	}
 	
-	public ExException(Throwable cause){
+	public MVCException(Throwable cause){
 		super(cause);
 	}
 
-	public ExException(String message,Object... args){
+	public MVCException(String message,Object... args){
 		super(i18n(message,args));
 	}
 	
-	public ExException(String message,Throwable cause,Object... args){
+	public MVCException(String message,Throwable cause,Object... args){
 		super(i18n(message,args),cause);
 	}
 	
 	protected static String i18n(String message,Object... args){
 		if(null != message && message.charAt(0) == '@'){
 			return Messages.getString(message,args);
+		}else if(null != message && args.length > 0){
+			return MessageFormat.format(message, args);
 		}else{
 			return null == message ? "" : message;
 		}

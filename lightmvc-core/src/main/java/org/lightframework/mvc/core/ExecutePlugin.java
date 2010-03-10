@@ -28,12 +28,12 @@ import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.utils.ClassUtils;
 
 /**
- * core plugin to execute an {@link Action}
+ * core plugin to resolve and execute an {@link Action}
  *
  * @author light.wind(lightworld.me@gmail.com)
  * @since 1.0
  */
-public class Executor extends Plugin {
+public class ExecutePlugin extends Plugin {
 	
 	private static final Object[] EMPTY_EXECUTE_ARGS = new Object[]{};
 	
