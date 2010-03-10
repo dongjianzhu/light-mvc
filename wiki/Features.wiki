@@ -8,16 +8,38 @@
 
 ==Feature List==
 
-===`[*]` Url to Action Routing : ===
+===`[*]` url to action dynamic routing : ===
 
- 把一个请求路径自动映射匹配到一个Action方法:
+ 把一个请求路径映射为一个action，如:
  {{{
-   http://server/app/product/list -> {app-package.}controllers.Product.list(..) 
-   http://server/app/product/cagetory/delete -> {app-package.}controllers.product.Category.delete(..)
+   http://{server}/{context}/product/list 映射为 product.list : product is controller , list is action
  }}}
+
+ 约定：
+  # action的名称为 controller.action，其中controller可以使用.分割，如product.category.list
+  # 缺省的controller是home，如果没有指定controller，那么默认是home.{action}
+  # 在url中，controller中的.可以用'/'或'`_`'字符代替，表示相同的含义
+ 
+ 规则：
+   * */ -> home.index*
+   * */{controller}/ -> {controller}.index :*
+   {{{
+     /product/ -> product.index
+     /product/category/ -> product.category.index
+   }}}
+   * */{ActionOrController} -> home.{ActionOrController} Or {ActionOrController}.index :*
+   {{{
+     /product -> home.product Or product.index
+   }}}
+   * */{controller}/{action} -> {controller}.{action} :*
+   {{{
+     /product/list -> product.list
+     /product/category/list -> product.category.list
+   }}}
+===`[*]` action method dynamic resolving :===
+
  * ..
  * ..
 
-===`[*]` Feature 2 :===
- * ..
- * ..
+==='[*]' action arguments dynamic binding :===
+
