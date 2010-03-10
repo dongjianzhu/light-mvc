@@ -8,7 +8,7 @@
 
 ==Feature List==
 
-===`[*]` url to action dynamic routing : ===
+===`[o]` url to action dynamic routing : ===
 
  把一个请求路径映射为一个action，如:
  {{{
@@ -21,25 +21,24 @@
   # 在url中，controller中的.可以用'/'或'`_`'字符代替，表示相同的含义
  
  规则：
-   * */ -> home.index*
-   * */{controller}/ -> {controller}.index :*
+ <pre>
+  1. /                      : home.index
+ 2. /{controller}          : {controller}.index
+ 3. /{actionOrController}  : home.{actionOrController} 或 {actionOrController}.index
+ 4. /{controller}/{action} : {controller}.{action}
+ </pre>
+
    {{{
      /product/ -> product.index
      /product/category/ -> product.category.index
-   }}}
-   * */{ActionOrController} -> home.{ActionOrController} Or {ActionOrController}.index :*
-   {{{
      /product -> home.product Or product.index
-   }}}
-   * */{controller}/{action} -> {controller}.{action} :*
-   {{{
      /product/list -> product.list
      /product/category/list -> product.category.list
    }}}
-===`[*]` action method dynamic resolving :===
+
+===`[o]` action method dynamic resolving :===
 
  * ..
  * ..
 
 ==='[*]' action arguments dynamic binding :===
-
