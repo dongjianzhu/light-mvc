@@ -30,11 +30,11 @@
 
  示例：
  {{{
-     /product/ -> product.index
-     /product/category/ -> product.category.index
-     /product -> home.product Or product.index
-     /product/list -> product.list
-     /product/category/list -> product.category.list
+  /product/ -> product.index
+  /product/category/ -> product.category.index
+  /product -> home.product Or product.index
+  /product/list -> product.list
+  /product/category/list -> product.category.list
   }}}
 
 ===`[o]` action method dynamic resolving :===
