@@ -15,7 +15,7 @@
  */
 package org.lightframework.mvc.core;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
@@ -28,7 +28,7 @@ import org.lightframework.mvc.HTTP.Response;
  * core plugin to render action result
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public class Renderer extends Plugin {
 
@@ -88,11 +88,13 @@ public class Renderer extends Plugin {
 			path = "/" + controller.replace("\\.", "/") + "/";
 		}
 		
-		Set<String> files = request.getApplication().getResourcePaths(path);
+		Collection<String> files = request.getApplication().getViews(path);
 		
-		for(String file : files){
-			if(file.toLowerCase().startsWith(path + action + ".")){
-				return file;
+		if(null != files){
+			for(String file : files){
+				if(file.toLowerCase().startsWith(path + action + ".")){
+					return file;
+				}
 			}
 		}
 		

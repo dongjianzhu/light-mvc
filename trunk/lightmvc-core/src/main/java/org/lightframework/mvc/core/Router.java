@@ -34,18 +34,17 @@ import org.lightframework.mvc.Utils.Ref;
  * core router plugin of mvc framework
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public class Router extends Plugin {
 	
 	private static final ArrayList<Route> DEFAULT_ROUTES = new ArrayList<Route>();
 	
 	static{
-		DEFAULT_ROUTES.add(Route.compile("*", "/", "home.index"));
-		DEFAULT_ROUTES.add(Route.compile("*", "/{action}", "home.{action}"));
-		DEFAULT_ROUTES.add(Route.compile("*", "/{module}_{controller}/{action}", "{module}.{controller}.{action}"));
-		DEFAULT_ROUTES.add(Route.compile("*", "/{module}/{controller}/{action}", "{module}.{controller}.{action}"));
-		DEFAULT_ROUTES.add(Route.compile("*", "/{controller}/{action}", "{controller}.{action}"));
+		DEFAULT_ROUTES.add(Route.compile("*", "/",                       "home.index"));
+		DEFAULT_ROUTES.add(Route.compile("*", "/{controller*}/",         "{controller}.index"));
+		DEFAULT_ROUTES.add(Route.compile("*", "/{ActionOrController}",   "home.{ActionOrController},{ActionOrController}.index"));
+		DEFAULT_ROUTES.add(Route.compile("*", "/{controller*}/{action}", "{controller}.{action}"));
 	}
 	
 	protected List<Route> routes = new ArrayList<Route>();
@@ -83,8 +82,11 @@ public class Router extends Plugin {
 		return routes;
 	}
 	
+	/**
+	 * @since 1.0 
+	 */
 	public static final class Route {
-		private static Pattern PARAMS_PATTERN = Pattern.compile("\\{([a-zA-Z0-9]+)\\}");
+		private static Pattern PARAMS_PATTERN = Pattern.compile("\\{([a-zA-Z0-9_]+[\\*]?)\\}");
 		
 		protected String   method;
 		protected String   path;
@@ -114,12 +116,12 @@ public class Router extends Plugin {
 				if(null == path || "".equals(path = path.trim())){
 					path = "*";
 				}else{
-					//replace "*" chartacter to regex "[^/]*"
-					Ref<String> expr    = new Ref<String>(path.replaceAll("\\*", "\\[^/]\\*"));
+					Ref<String> expr    = new Ref<String>(path);
 					
 					compiled.pathParams   = findParams(expr,true);
 					compiled.actionParams = findParams(new Ref<String>(action),false);
-					compiled.pattern      = Pattern.compile(expr.value);
+					compiled.pattern      = Pattern.compile(expr.value.replaceAll("\\*", "\\[^/]\\*"));
+					//replace "*" chartacter to regex "[^/]*"
 				}
 			}
 		}
@@ -163,6 +165,8 @@ public class Router extends Plugin {
 		            				match.setName(Utils.replace(match.getName(), "{" + param + "}", value));
 		            			}
 		            		}
+		            		//replace all '/' characters to '.' characters
+		            		match.setName(Utils.replace(match.getName(), "/", "."));
 		            	}
 		            }					
 				}
@@ -179,8 +183,13 @@ public class Router extends Plugin {
 				String param = matcher.group(1);
 				
 				if(translate){
-					//replace "{param}" to regex "([a-zA-Z_0-9]+)"
-					text.value = text.value.replace("{" + param + "}","([a-zA-Z_0-9]+)");
+					if(param.endsWith("*")){
+						text.value = text.value.replace("{" + param + "}","([a-zA-Z_0-9/]+)");
+						param = param.substring(0,param.length() - 1);
+					}else{
+						//replace "{param}" to regex "([a-zA-Z_0-9]+)"
+						text.value = text.value.replace("{" + param + "}","([a-zA-Z_0-9]+)");
+					}
 				}
 				params.add(param.trim());
 			}

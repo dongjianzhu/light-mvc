@@ -31,7 +31,7 @@ import org.lightframework.mvc.utils.ClassUtils;
  * core plugin to execute an {@link Action}
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public class Executor extends Plugin {
 	

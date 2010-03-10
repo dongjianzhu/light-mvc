@@ -20,17 +20,13 @@ import java.util.ArrayList;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.Utils.Assert;
-import org.lightframework.mvc.core.Binder;
-import org.lightframework.mvc.core.Executor;
-import org.lightframework.mvc.core.Renderer;
-import org.lightframework.mvc.core.Resolver;
-import org.lightframework.mvc.core.Router;
+import org.lightframework.mvc.plugins.CorePlugin;
 
 /**
  * the main class of mvc framework
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 class Framework {
 	
@@ -119,14 +115,8 @@ class Framework {
 	}
 	
 	private static void init(){
-		//TODO : load extended framework plugins
-		
 		//load core framework plugins
-		plugins.add(new Router());
-		plugins.add(new Resolver());
-		plugins.add(new Binder());
-		plugins.add(new Executor());
-		plugins.add(new Renderer());
+		plugins.add(new CorePlugin());
 	}
 	
 	private static void invoke(Request request,Response response,Action action) throws Throwable{
@@ -160,6 +150,9 @@ class Framework {
 		}
 	}
 	
+	/**
+	 * @since 1.0 
+	 */
 	private static final class PluginInvoker{
 		static boolean request(Request request,Response response) throws Throwable{
 			for(Plugin plugin : request.getApplication().getPlugins()){

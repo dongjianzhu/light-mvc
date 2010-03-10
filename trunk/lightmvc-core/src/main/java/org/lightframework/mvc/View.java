@@ -22,7 +22,7 @@ import org.lightframework.mvc.HTTP.Response;
  * definition of a view.
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public class View {
 

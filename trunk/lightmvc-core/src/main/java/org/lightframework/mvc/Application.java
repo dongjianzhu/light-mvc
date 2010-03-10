@@ -15,25 +15,30 @@
  */
 package org.lightframework.mvc;
 
+import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
+
+import org.lightframework.mvc.utils.ClassUtils;
 
 /**
  * represents a mvc web application
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public class Application {
 
     private static final long serialVersionUID = 3816496065687999477L;
     
     public static final String DEFAULT_ENCODING = "UTF-8";
+    public static final String CONTROLLERS_DIR  = "controllers";
+    public static final String PLUGINS_DIR      = "plugins";
     
     protected ServletContext servletContext;
     
@@ -49,6 +54,8 @@ public class Application {
     
     void start(){
     	//TODO : load application plugins
+    	
+    	
     }
 
     void stop(){
@@ -78,37 +85,87 @@ public class Application {
 		return parameters;
 	}
 	
+	/**
+	 * load {@link Clazz} by name ignore case.
+	 * @return a {@link Clazz} object that contains the {@link Class} matched the name ignorecase,else null
+	 */
+	public Clazz getClazz(String name){
+		try {
+	        String className = ClassUtils.findClassNameIgnoreCase(name);
+	        if(null != className){
+	        	return new Clazz(ClassUtils.forName(className));
+	        }
+	        return null;
+        } catch (IOException e) {
+        	throw new ExException(e);
+        }
+	}
+	
+	public Collection<Clazz> getClasses(){
+		return getClasses(null);
+	}
+	
+	public Collection<Clazz> getClasses(String _package){
+		return getClasses(_package,false);
+	}
+
+	public Collection<Clazz> getClasses(String _package,boolean recursion) {
+		// TODO : Application.getClasses
+		return null;
+	}
+	
+	public Collection<String> getClassNames(String _package,boolean recursion) {
+		try {
+	        return ClassUtils.findAllClassNames(_package);
+        } catch (IOException e) {
+        	throw new ExException(e);
+        }
+	}
+	
+	public String getView(String path){
+		return null;
+	}
+	
+	public Collection<String> getViews(){
+		return getViews(null);
+	}
+	
+	public Collection<String> getViews(String path){
+		return getViews(path,false);
+	}
+	
 	@SuppressWarnings("unchecked")
-	public Set<String> getResourcePaths(String path){
+	public Collection<String> getViews(String path,boolean recursion){
+		// TODO : Application.getViews
 		return servletContext.getResourcePaths(path);
 	}
 
-	List<Plugin> getPlugins(){
+	protected List<Plugin> getPlugins(){
 		return plugins;
 	}
 
-	/*
-	public class Installer {
-		public static final String LOCATION_FIRST = "first";
-		public static final String LOCATION_LAST  = "last";
+	/**
+	 * @since 1.0
+	 */
+	public static final class Clazz {
+		protected Class<?> _class;
+		protected long lastReloaded;
+		protected long lastModified;
 		
-		public void install(Plugin plugin,String location){
-			if(LOCATION_FIRST.equals(location)){
-				plugins.addFirst(plugin);
-			}else{
-				plugins.addLast(plugin);
-			}
+		Clazz(Class<?> _class){
+			this._class = _class;
 		}
 		
-		public void install(List<Plugin> plugins,String location){
-			if(LOCATION_FIRST.equals(location)){
-				for(int i=plugins.size() - 1;i>=0;i--){
-					Application.this.plugins.addFirst(plugins.get(i));
-				}
-			}else{
-				Application.this.plugins.addAll(plugins);
-			}
+		public Class<?> Class(){
+			return _class;
+		}
+		
+		public boolean isModified(){
+			return lastModified != lastReloaded;
+		}
+		
+		public boolean isPlugin(){
+			return Plugin.class.isAssignableFrom(_class);
 		}
 	}
-	*/
 }

@@ -16,10 +16,12 @@
 package org.lightframework.mvc.core;
 
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.Collection;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
+import org.lightframework.mvc.Utils;
+import org.lightframework.mvc.Application.Clazz;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.Utils.Assert;
@@ -29,14 +31,26 @@ import org.lightframework.mvc.utils.ClassUtils;
  * core plugin to resolve action's method
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public class Resolver extends Plugin {
 
 	@Override
     public boolean resolve(Request request, Response response, Action action) throws Throwable{
 		String fullActionName = action.getName();
-		
+		String[] actionNames  = fullActionName.split(",");
+		for(String name : actionNames){
+			//replace all '_' characters to '.' characters
+			name = Utils.replace(name, "_", ".");
+			if(resolve(request,response,action,name)){
+				action.setName(name);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	protected boolean resolve(Request request,Response response,Action action,String fullActionName) throws Throwable{
 		//resolve controller and action method
 		int lastDotIndex = fullActionName.lastIndexOf(".");
 		
@@ -58,7 +72,10 @@ public class Resolver extends Plugin {
 		 4. {app-package}.{controller}.Controller            -> demo.product.Controller  | demo.product.category.Controller
 		 */
 		boolean resolved = false;
-		if(find1and2(_package,controller,action) || find3(_package,controller,action) || find4(_package,controller,action)){
+		if(find1and2(request,_package,controller,action) 
+				|| find3(request,_package,controller,action) 
+				|| find4(request,_package,controller,action)){
+			
 			//resolve method and arguments
 			Method method = ClassUtils.findMethodIgnoreCase(action.getClazz(), methodName);
 			
@@ -75,7 +92,7 @@ public class Resolver extends Plugin {
 		return resolved;
     }
 	
-	private static boolean find1and2(String prefix,String controller,Action action) throws Exception{
+	private static boolean find1and2(Request request,String prefix,String controller,Action action) throws Exception{
 		//{app-package}.controllers.{controller}Controller
 		String guessClassName1 = prefix + "controllers." + controller + "Controller";
 		
@@ -83,7 +100,7 @@ public class Resolver extends Plugin {
 		String guessClassName2 = prefix + "controllers." + controller;
 		
 		String pkgName = ClassUtils.extractPackageName(guessClassName1);
-		List<String> classes = ClassUtils.findAllClassNames(pkgName);
+		Collection<String> classes = request.getApplication().getClassNames(pkgName, false);
 		
 		for(String className : classes){
 			if(className.equalsIgnoreCase(guessClassName1)){
@@ -97,18 +114,18 @@ public class Resolver extends Plugin {
 		return false;
 	}
 	
-	private static boolean find3(String pkg,String controller,Action action) throws Exception{
+	private static boolean find3(Request request,String pkg,String controller,Action action) throws Exception{
 		//{app-package}.{controller}Controller
-		String guessClassName = pkg + controller + "Controller";
-		String realClassName  = ClassUtils.findClassNameIgnoreCase(guessClassName);
-		if(null != realClassName){
-			action.setClazz(ClassUtils.forName(realClassName));
+		String guessClassName  = pkg + controller + "Controller";
+		Clazz  controllerClazz = request.getApplication().getClazz(guessClassName);
+		if(null != controllerClazz){
+			action.setClazz(controllerClazz.Class());
 			return true;
 		}
 		return false;
 	}
 	
-	private static boolean find4(String pkg,String controller,Action action) throws Exception{
+	private static boolean find4(Request request,String pkg,String controller,Action action) throws Exception{
 		//{app-package}.{controller}Controller
 		String guessClassName = pkg + controller + ".Controller";
 		String realClassName  = ClassUtils.findClassNameIgnoreCase(guessClassName);

@@ -23,7 +23,7 @@ import org.lightframework.mvc.Utils.Messages;
  * main logger of mvc framework
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public final class Logger {
 	

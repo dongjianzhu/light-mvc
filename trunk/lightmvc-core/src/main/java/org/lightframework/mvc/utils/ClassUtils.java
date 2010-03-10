@@ -51,7 +51,7 @@ import org.lightframework.mvc.Action.Argument;
  * class utility,used by mvc framework only
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public final class ClassUtils {
     public static final String FILE_URL_PREFIX    = "file:";
