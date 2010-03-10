@@ -15,9 +15,6 @@
  */
 package org.lightframework.mvc;
 
-import java.text.MessageFormat;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 /**
  * utitlity class, internal used only
@@ -58,121 +55,35 @@ public final class Utils {
 		return sb.toString();
 	}
  
+	/**
+	 * @return string join with ',' 
+	 */
+	public static String arrayToString(Object[] array){
+		if(null != array){
+			if(array.length == 1){
+				return array[0].toString();
+			}
+			StringBuilder builder = new StringBuilder();
+			for(int i =0;i<array.length;i++){
+				if(i > 0){
+					builder.append(",");
+				}
+				Object value = array[i];
+				builder.append(null == value ? "" : value.toString());
+			}
+			return builder.toString();
+		}
+		return null;
+	}
+	
+	public static String[] stringToArray(String string){
+		return null == string ? null : string.split(",");
+	}
+	
 	public final static class Ref<E> {
 		public E value;
 		public Ref(E value){
 			this.value = value;
-		}
-	}
-
-	/*
-	public final static class ReadOnly{
-		
-		private static Map<Class<?>, Field> cache = new HashMap<Class<?>, Field>();
-		
-		public static void lock(Object o){
-			Field field = cache.get(o.getClass());
-			if(null == field){
-				synchronized (o.getClass()) {
-	                try {
-	                    field = o.getClass().getDeclaredField("_readonly");
-	                    cache.put(o.getClass(), field);
-	                } catch (Exception e) {
-	                	Logger.error("@Lang.ReadOnly.get_field_error",o.getClass().getName(),e.getMessage());
-	                	return ;
-	                }
-	            }
-			}
-			
-			try{
-				field.set(o, true);
-			}catch(Exception e){
-				Logger.error("@Lang.ReadOnly.set_field_value_error",o.getClass().getName(),e.getMessage());
-			}
-		}
-		
-		public static void protect(Object o,boolean _readonly) throws IllegalAccessException{
-			if(_readonly){
-				throw new IllegalAccessException(Messages.getString("@Lang.ReadOnly.object_readonly_error",o.getClass().getName(),o.toString()));
-			}
-		}
-	}
-	*/
-	
-	/**
-	 * assertion class of mvc framework
-	 */
-	public static final class Assert extends ExException {
-		
-        private static final long serialVersionUID = -4499551185792411201L;
-        
-		private Assert(String message, Object... args) {
-	        super(message, args);
-        }
-
-		private static void fail(Assert e){
-			throw e;
-		}
-		
-		public static void fail(String message,Object... args){
-			fail(new Assert(message,args));
-		}
-		
-		public static void isTrue(boolean test,String failMessage,Object... args){
-			if(!test){
-				fail(failMessage,args);
-			}
-		}
-
-		public static void notNull(String name,Object value) {
-			if(null == value){
-				fail(new Assert("@Assert.NotNull",name));
-			}
-		}
-		
-		public static void isNull(String name,Object value) {
-			if(null != value){
-				fail(new Assert("@Assert.Null",name));
-			}
-		}
-		
-		public static void notEmpty(String name,String value){
-			if(null == value || value.trim().equals("")){
-				fail(new Assert("@Assert.NotEmpty",name));
-			}
-		}
-		
-		public static void notEquals(String name,Object value,Object equalsTo){
-			if(null != value && value.equals(equalsTo)){
-				fail(new Assert("@Assert.NotEquals",name,value,equalsTo));
-			}
-		}
-		
-		public static void isEquals(String name,Object value,Object equalsTo){
-			if(null != value && !value.equals(equalsTo)){
-				fail(new Assert("@Assert.Equals",name,value,equalsTo));
-			}
-		}
-	}
-	
-	public static class Messages {
-		private static final String BUNDLE_NAME = "org.lightframework.mvc.messages"; //$NON-NLS-1$
-		private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-		public static String getString(String key) {
-			try {
-				return RESOURCE_BUNDLE.getString(key);
-			} catch (MissingResourceException e) {
-				return '!' + key + '!';
-			}
-		}
-		
-		public static String getString(String key,Object ... arguments){
-			if(arguments.length > 0){
-				return MessageFormat.format(getString(key), arguments);	
-			}else{
-				return getString(key);
-			}
 		}
 	}
 }

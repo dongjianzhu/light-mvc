@@ -116,7 +116,8 @@ public final class ClassUtils {
 	}
 	
 	public static Class<?> getWrapperType(Class<?> primitiveType){
-		return types.get(primitiveType);
+		Class<?> type = types.get(primitiveType);
+		return null == type ? primitiveType : type;
 	}
 	
 	public static Object newInstance(Class<?> clazz) throws Exception{

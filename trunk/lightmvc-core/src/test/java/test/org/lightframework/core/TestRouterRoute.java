@@ -17,8 +17,8 @@ package test.org.lightframework.core;
 
 import junit.framework.TestCase;
 
-import org.lightframework.mvc.core.Router.Match;
-import org.lightframework.mvc.core.Router.Route;
+import org.lightframework.mvc.routing.Match;
+import org.lightframework.mvc.routing.Route;
 
 /**
  * Test Case to test {@link Route}

@@ -157,10 +157,10 @@ public final class HTTP {
 	    protected Response    response;
 	    protected Application application;
 
-	    protected Map<String, Header> headers;
-	    protected Map<String, Cookie> cookies;
-	    protected Map<String, String> parameters;
-	    protected Map<String, Object> attributes;
+	    protected Map<String, Header>   headers;
+	    protected Map<String, Cookie>   cookies;
+	    protected Map<String, String[]> parameters;
+	    protected Map<String, Object>   attributes;
 
 	    public static Request current(){
 	    	return current.get();
@@ -230,21 +230,27 @@ public final class HTTP {
 		}
 		
 		public String getParameter(String name){
+			String[] values = getParameters().get(name);
+			if(values == null){
+				return null;
+			}else if(values.length == 1){
+				return values[1];
+			}else{
+				return Utils.arrayToString(values);
+			}
+		}
+		
+		public String[] getParameterValues(String name){
 			return getParameters().get(name);
 		}
 		
-		public Map<String, String> getParameters() {
+		public Map<String, String[]> getParameters() {
 			if(null == parameters){
-				parameters = new HashMap<String, String>();
+				parameters = new HashMap<String, String[]>();
 			}
 	    	return parameters;
 	    }
 		
-		public String[] getParameterValues(String name){
-			// TODO : HTTP.Request.getParameterValues
-			return null;
-		}
-
 		public Header getHeader(String name){
 			return getHeaders().get(name);
 		}

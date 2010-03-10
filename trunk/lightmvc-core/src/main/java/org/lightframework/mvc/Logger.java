@@ -17,7 +17,6 @@ package org.lightframework.mvc;
 
 import java.text.MessageFormat;
 
-import org.lightframework.mvc.Utils.Messages;
 
 /**
  * main logger of mvc framework

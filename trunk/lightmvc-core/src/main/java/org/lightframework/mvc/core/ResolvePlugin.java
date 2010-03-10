@@ -19,12 +19,12 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 import org.lightframework.mvc.Action;
+import org.lightframework.mvc.Assert;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Utils;
 import org.lightframework.mvc.Application.Clazz;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
-import org.lightframework.mvc.Utils.Assert;
 import org.lightframework.mvc.utils.ClassUtils;
 
 /**
@@ -33,7 +33,7 @@ import org.lightframework.mvc.utils.ClassUtils;
  * @author light.wind(lightworld.me@gmail.com)
  * @since 1.0
  */
-public class Resolver extends Plugin {
+public class ResolvePlugin extends Plugin {
 
 	@Override
     public boolean resolve(Request request, Response response, Action action) throws Throwable{

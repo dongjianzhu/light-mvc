@@ -127,9 +127,13 @@ public class Filter implements javax.servlet.Filter {
 
 		@Override
 		@SuppressWarnings("unchecked")
-        public Map<String, String> getParameters() {
-			//TODO : translate String[] type to String
+        public Map<String, String[]> getParameters() {
 	        return request.getParameterMap();
+        }
+		
+		@Override
+        public String[] getParameterValues(String name) {
+	        return request.getParameterValues(name);
         }
 
 		@Override
@@ -145,6 +149,16 @@ public class Filter implements javax.servlet.Filter {
 		@Override
         public String getRemoteAddress() {
 	        return request.getRemoteAddr();
+        }
+
+		@Override
+        public Object getAttribute(String name) {
+	        return request.getAttribute(name);
+        }
+
+		@Override
+        public void setAttribute(String name, Object value) {
+	        request.setAttribute(name, value);
         }
 	}
 	
@@ -168,7 +182,7 @@ public class Filter implements javax.servlet.Filter {
 			try {
 	            request.getRequestDispatcher(path).forward(request, response);
             } catch (Throwable e) {
-            	throw new ExException(e);
+            	throw new MVCException(e);
             }
         }
 
@@ -177,7 +191,7 @@ public class Filter implements javax.servlet.Filter {
 			try {
 	            response.sendRedirect(url);
             } catch (Throwable e) {
-            	throw new ExException(e);
+            	throw new MVCException(e);
             }
         }
 	}
