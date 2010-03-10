@@ -22,7 +22,7 @@ import org.lightframework.mvc.HTTP.Response;
  * the plugin interface class of mvc framework.
  * 
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public abstract class Plugin {
 

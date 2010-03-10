@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
  * utitlity class, internal used only
  * 
  * @author light.wind(lightworld.me@gmail.com)
- * @since 0.1
+ * @since 1.0
  */
 public final class Utils {
 	

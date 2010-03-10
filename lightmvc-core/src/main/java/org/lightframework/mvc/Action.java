@@ -27,7 +27,7 @@ import org.lightframework.mvc.utils.ClassUtils;
  * definition of an action. <p>
  * 
  * @author light.wind(lightworld.me@gmail.com)
- * @since  0.1
+ * @since  1.0
  */
 public class Action {
     private static final Argument[]   EMPTY_ARGUMENTS   = new Argument[]{};
@@ -156,7 +156,8 @@ public class Action {
 	}
 	
 	/**
-	 * represents an action execution argument 
+	 * represents an action execution argument
+	 * @since 1.0 
 	 */
 	public static class Argument {
 		protected String       name;
