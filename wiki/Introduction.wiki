@@ -29,4 +29,4 @@ _更多内容请看[Features 主要功能]和[GettingStarted 快速开始]._
  * [http://code.google.com/p/light-mvc/wiki 编写文档]
  * [http://code.google.com/p/light-mvc/source/checkout 贡献代码]
 
-_详细内容请浏览wiki文档[ContributeTo 如何参与]._
+_详细内容请浏览wiki文档[HowtoContribute 如何参与]._
