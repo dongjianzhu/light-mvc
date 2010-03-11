@@ -63,13 +63,13 @@ public class RenderPlugin extends Plugin {
 			String className = action.getClazz().getName();
 			
 			if(null != _packpage && !"".equals(_packpage)){
-				//'demoapp.controllers.Product' -> 'controllers.Product' 
+				//'app.controllers.Product' -> 'controllers.Product' 
 				className = className.substring(_packpage.length() + 1);
 			}
 			
-			if(className.startsWith("controllers.")){
+			if(className.startsWith("app.controllers.")){
 				//'controllers.Product' -> 'Product'
-				className = className.substring("controllers.".length());
+				className = className.substring("app.controllers.".length());
 			}
 			
 			String controller = className.toLowerCase();
