@@ -131,7 +131,7 @@ public class Filter implements javax.servlet.Filter {
 				while(paramNames.hasMoreElements()){
 					String paramName = paramNames.nextElement();
 					if(paramName.equalsIgnoreCase(name)){
-						param = request.getParameter(name);
+						param = request.getParameter(paramName);
 					}
 				}
 			}
