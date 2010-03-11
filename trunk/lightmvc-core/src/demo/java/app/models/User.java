@@ -15,6 +15,8 @@
  */
 package app.models;
 
+import java.util.Date;
+
 /**
  * TODO : document me
  *
@@ -23,6 +25,20 @@ package app.models;
 public class User {
 	private String name;
 	private String [] address;
+	
+	private Date birthDay;
+	/**
+     * @return the birthDay
+     */
+    public Date getBirthDay() {
+    	return birthDay;
+    }
+	/**
+     * @param birthDay the birthDay to set
+     */
+    public void setBirthDay(Date birthDay) {
+    	this.birthDay = birthDay;
+    }
 	/**
      * @return the name
      */
