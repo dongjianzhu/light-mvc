@@ -37,7 +37,7 @@
  /product.category/list ：product.category.list
   }}}
 
-===`[o]` action method dynamic resolveing :===
+===`[o]` action method dynamic resolving :===
   
  根据action名称如product.list解析出对应的Java Class和方法以及方法的参数.
 
