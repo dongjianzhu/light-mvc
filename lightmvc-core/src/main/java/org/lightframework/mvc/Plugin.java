@@ -132,7 +132,7 @@ public abstract class Plugin {
 	 * @param exception exception object
 	 * @return true if this plugin handled this exception
 	 */	
-	public boolean error(Request request, Response response, Throwable exception) throws Throwable{
+	public boolean error(Request request, Response response, Throwable exception){
 		return false;
 	}
 }

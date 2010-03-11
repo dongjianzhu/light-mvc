@@ -79,11 +79,4 @@ public final class Utils {
 	public static String[] stringToArray(String string){
 		return null == string ? null : string.split(",");
 	}
-	
-	public final static class Ref<E> {
-		public E value;
-		public Ref(E value){
-			this.value = value;
-		}
-	}
 }

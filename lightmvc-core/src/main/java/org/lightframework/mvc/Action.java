@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lightframework.mvc.Lang.Type;
 import org.lightframework.mvc.utils.ClassUtils;
 
 /**
@@ -29,8 +30,7 @@ import org.lightframework.mvc.utils.ClassUtils;
  * @since  1.0
  */
 public class Action {
-    private static final Argument[]   EMPTY_ARGUMENTS   = new Argument[]{};
-	private static final Annotation[] EMPTY_ANNOTATIONS = new Annotation[]{};
+    private static final Argument[] EMPTY_ARGUMENTS   = new Argument[]{};
 
 	protected String             name;
     protected Class<?>           clazz;
@@ -158,23 +158,12 @@ public class Action {
 	 * represents an action execution argument
 	 * @since 1.0 
 	 */
-	public static class Argument {
-		protected String       name;
-		protected Class<?>     type;
+	public static class Argument extends Type{
 		protected Object       value;
-		protected Annotation[] configs;
 		protected boolean      binded;
-		
-		public String getName() {
-        	return name;
-        }
 		
 		public void setName(String name) {
         	this.name = name;
-        }
-		
-		public Class<?> getType() {
-        	return type;
         }
 		
 		public void setType(Class<?> type) {
@@ -193,13 +182,6 @@ public class Action {
 		public boolean isBinded(){
 			return binded;
 		}
-
-		public Annotation[] getConfigs() {
-			if(null == configs){
-				return EMPTY_ANNOTATIONS;
-			}
-        	return configs;
-        }
 
 		public void setConfigs(Annotation[] annotations) {
         	this.configs = annotations;

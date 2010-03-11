@@ -28,7 +28,7 @@ import org.lightframework.mvc.HTTP.Response;
 public class ErrorPlugin extends Plugin {
 
 	@Override
-    public boolean error(Request request, Response response, Throwable exception) throws Throwable {
+    public boolean error(Request request, Response response, Throwable exception)  {
 	    // TODO implement ErrorPlugin.error
 		
 	    return super.error(request, response, exception);
