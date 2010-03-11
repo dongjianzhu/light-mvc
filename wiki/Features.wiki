@@ -34,7 +34,7 @@
  /welcome               ：home.welcome
  /product/list          ：product.list
  /product/category/list ：product.category.list
- /product.category/list : product.category.list
+ /product.category/list ：product.category.list
   }}}
 
 ===`[o]` action method dynamic resolveing :===
