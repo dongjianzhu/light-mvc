@@ -89,7 +89,7 @@ public class BeanBinder extends Binder {
 	    Object value = null;
 	    Class<?> type = f.getType();
 	    String filedName = f.getName();
-	    if(arg.getType().isArray()){//数组类型处理
+	    if(f.getType().isArray()){//数组类型处理
 	    	String[] paramValues = request.getParameterValues(filedName);
 	    	if(null == paramValues){
 	    		String paramValue = request.getParameter(filedName);
@@ -98,9 +98,9 @@ public class BeanBinder extends Binder {
 	    		}
 	    	}
 	    	if(null == paramValues){//参数值为空,构造一个空的数组
-	    		value = Array.newInstance(arg.getType().getComponentType(), 0);
+	    		value = Array.newInstance(f.getType().getComponentType(), 0);
 	    	}else{//参数值不为空,构造数组并填充值
-	    		value = Array.newInstance(arg.getType().getComponentType(), paramValues.length);
+	    		value = Array.newInstance(f.getType().getComponentType(), paramValues.length);
 				for(int i=0;i<paramValues.length;i++){
 					Object arrayElement = convertParamToTargetType(paramValues[i],type);
 					if(arrayElement != null){
@@ -123,8 +123,8 @@ public class BeanBinder extends Binder {
      * @return
      */
     protected Object convertParamToTargetType(String paramValue,Class<?> type) {
-    	Object value = null;
-	    if(paramValue != null && !"".equals(paramValue.trim())){
+    	Object value = paramValue;
+	    if(!type.isInstance(paramValue) && paramValue != null && !"".equals(paramValue.trim())){
 	    	if (type == Integer.TYPE || type == Integer.class) {
 	            value = Integer.parseInt(paramValue);
 	        } else if (type == Short.TYPE || type == Short.class) {
