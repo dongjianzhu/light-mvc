@@ -13,34 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.controllers;
-
-import app.models.User;
-
-
+package app.models;
 
 /**
- * home controller of application
+ * TODO : document me
  *
  * @author light.wind(lightworld.me@gmail.com)
  */
-public class Home {
+public class User {
+	private String name;
+	private String [] address;
+	/**
+     * @return the name
+     */
+    public String getName() {
+    	return name;
+    }
+	/**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+    	this.name = name;
+    }
+	/**
+     * @return the address
+     */
+    public String[] getAddress() {
+    	return address;
+    }
+	/**
+     * @param address the address to set
+     */
+    public void setAddress(String[] address) {
+    	this.address = address;
+    }
 
-	public void index(){
-		System.out.println("hello");
-	}
-
-	public void hello(String message){
-		System.out.println("hello:" + message);
-	}
-	
-	public void hello1(int[] i){
-		System.out.println("hello:" + i);
-		
-	}
-	public void helloworld(User u){
-		System.out.println(u.getName());
-		System.out.println(u.getAddress());
-	}
-	
 }
