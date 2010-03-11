@@ -15,32 +15,30 @@
  */
 package org.lightframework.mvc.binding;
 
-import org.lightframework.mvc.Action;
-import org.lightframework.mvc.Action.Argument;
-import org.lightframework.mvc.HTTP.Request;
+import java.util.Set;
+
+import org.lightframework.mvc.Lang.Type;
 import org.lightframework.mvc.exceptions.BindingException;
 
 /**
- * {@link Binder} for type {@link Enum}
+ * the interface to convert string to object of the given {@link Type}
  *
  * @author light.wind(lightworld.me@gmail.com)
- * @since 1.0
+ * @since TODO : add version here
  */
-public class EnumBinder extends Binder {
+public interface ITypeBinder {
+	
+	/**
+	 * @return all the supported types by this binder,at least return one
+	 */
+	Set<Class<?>> getSupportedTypes();
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public Object binding(Request request, Action action, Argument arg) throws BindingException {
-		if(Enum.class.isAssignableFrom(arg.getType())){
-			Object value = getStringValue(request, action, arg);
-			if(null != value){
-				if(value.getClass().equals(arg.getType())){
-					return value;
-				}else{
-					return Enum.valueOf(arg.getType().asSubclass(Enum.class), getString(value));
-				}
-			}
-		}
-		return null;
-	}
+	/**
+	 * convert string to object of the given type
+	 * @param type {@link Type}
+	 * @param string string value
+	 * @return translated value of the given {@link Type}
+	 */
+	Object bind(Type type,String string) throws BindingException,Throwable;
+
 }

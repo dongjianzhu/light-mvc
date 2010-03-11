@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lightframework.mvc.Utils;
-import org.lightframework.mvc.Utils.Ref;
+import org.lightframework.mvc.Lang.Ref;
 
 /**
  * TODO : document me

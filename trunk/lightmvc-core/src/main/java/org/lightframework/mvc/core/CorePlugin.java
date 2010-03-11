@@ -67,7 +67,7 @@ public class CorePlugin extends Plugin{
     }
 
 	@Override
-    public boolean error(Request request, Response response, Throwable exception) throws Throwable {
+    public boolean error(Request request, Response response, Throwable exception) {
 	    return error.error(request, response, exception);
     }
 }

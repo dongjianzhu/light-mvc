@@ -20,7 +20,6 @@ import java.util.Collection;
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Render;
-import org.lightframework.mvc.View;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 
@@ -36,27 +35,26 @@ public class RenderPlugin extends Plugin {
     public boolean render(Request request, Response response, Render render) throws Throwable {
 		if(render.isRedirect()){
 			response.redirect(render.getReirectTo());
+			return true;
 		}else if(render.isForward()){
-			response.forward(render.getForwardTo());	
+			request.getAttributes().putAll(render.getAttributes());
+			response.forward(render.getForwardTo());
+			return true;
 		}else{
-			View view = render.getView();
-			
-			if(null == view){
-				String defaultViewPath = findDefaultViewPath(request);
-				if(null != defaultViewPath){
-					view = new View(defaultViewPath);
-				}
-			}
-
+			String view = findViewPath(request);
 			if(null != view){
-				view.render(request, response, render.getData());
+				request.setAttribute("render.status" , render.getStatus());
+				request.setAttribute("render.message", render.getMessage());
+				request.setAttribute("render.data"   , render.getData());
+
+				response.forward(view);
 				return true;
 			}
 		}
 		return false;
     }
 	
-	private String findDefaultViewPath(Request request) {
+	private String findViewPath(Request request) {
 		Action action = request.getAction();
 		if(null != action){
 			String _packpage = request.getApplication().getPackage();

@@ -139,13 +139,9 @@ class Framework {
 		Render render = PluginInvoker.execute(request, response, action);
 		action.afterExecuting();
 		
-		if(null != render){
+		if(null != render && !render.isRendered()){
 			//render action result
-			if(!PluginInvoker.render(request, response, render)){
-				throw new MVCException("@ActionNotRendered",action.getName());
-			}
-		}else{
-			throw new MVCException("@ActionNotExecuted",action.getName());
+			PluginInvoker.render(request, response, render);
 		}
 	}
 	

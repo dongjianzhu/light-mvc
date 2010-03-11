@@ -15,6 +15,9 @@
  */
 package org.lightframework.mvc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * definition of a view render object.
  *
@@ -24,79 +27,93 @@ package org.lightframework.mvc;
 public class Render extends RuntimeException{
 	
     private static final long serialVersionUID = -3174254894841072183L;
+    
+    private static final ThreadLocal<Render> context = new ThreadLocal<Render>();
+    
+    public static final String FAILED_STATUS = "failed";
 
-	private String   redirectTo;
-	private String   forwardTo;
+    protected String  redirectTo;
+    protected String  forwardTo;
+    
+	protected String  status;
+	protected String  message;
+	protected Object  data;
 	
-	protected View   view;
-	protected Object data;
+	protected boolean rendered;
+	
+	protected Map<String, Object> attributes = new HashMap<String, Object>();
 	
 	/**
 	 * redirect to the url
 	 */
 	public static void redirect(String url) {
-		Render render = new Render();
-		render.redirectTo = url;
-		throw render;
+		current().redirectTo = url;
+		_throw();
 	}
 	
 	/**
 	 * forward to the request path in current application 
 	 */
 	public static void forward(String path) {
-		Render render = new Render();
-		render.forwardTo = path;
+		current().forwardTo = path;
+		_throw();
+	}
+	
+	public static void setAttribute(String key,Object value){
+		current().attributes.put(key, value);
+	}
+	
+	public static void failed(){
+		failed(null,null);
+	}
+	
+	public static void failed(String message){
+		failed(message,null);
+	}
+	
+	public static void failed(String message,Object data){
+		result(FAILED_STATUS,message,data);
+	}
+	
+	public static void result(String status){
+		result(status,null,null);
+	}
+	
+	public static void result(String status,String message){
+		result(status,message,null);
+	}
+	
+	public static void result(String status,String message,Object data){
+		Render render  = current();
+		render.status  = status;
+		render.message = message;
+		render.data    = data;
+		_throw();
+	}
+
+	public static void rendered(){
+		current().rendered = true;
+		_throw();
+	}
+	
+	public static Render current(){
+		Render render = context.get();
+		if(null == render){
+			render = new Render();
+			context.set(render);
+		}
+		return render;
+	}
+	
+	private static void _throw(){
+		Render render = current();
+		context.set(null);
 		throw render;
 	}
 	
-//	public static void render(String view){
-//		render(view,null);
-//	}
-//	
-//	public static void render(String view,Object data){
-//		if(data instanceof Map<?,?>){
-//			render(view,(Map<?,?>)data);
-//		}else{
-//			// TODO : Render.render
-//		}
-//	}
-//	
-//	public static void render(String view,Map<?,?> data){
-//		// TODO : Render.render
-//	}
-	
-	public Render(){
+	Render(){
 		
 	}
-	
-	public Render(View view){
-		this.view = view;
-	}
-	
-	public Render(Object data){
-		this.data = data;
-	}
-	
-	public Render(Object data,View view){
-		this.data = data;
-		this.view = view;
-	}
-	
-	public Object getData() {
-    	return data;
-    }
-	
-	public void setData(Object data) {
-    	this.data = data;
-    }	
-	
-	public View getView() {
-    	return view;
-    }
-	
-	public void setView(View view) {
-    	this.view = view;
-    }
 
 	public boolean isRedirect(){
 		return null != redirectTo;
@@ -113,4 +130,36 @@ public class Render extends RuntimeException{
 	public String getForwardTo(){
 		return forwardTo;
 	}
+	
+	public boolean isRendered(){
+		return rendered;
+	}
+	
+	public Map<String, Object> getAttributes(){
+		return attributes;
+	}
+
+	public String getStatus() {
+    	return status;
+    }
+
+	public void setStatus(String status) {
+    	this.status = status;
+    }
+
+	public String getMessage() {
+    	return message;
+    }
+
+	public void setMessage(String message) {
+    	this.message = message;
+    }
+
+	public Object getData() {
+    	return data;
+    }
+
+	public void setData(Object data) {
+    	this.data = data;
+    }
 }

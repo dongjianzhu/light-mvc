@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Render;
-import org.lightframework.mvc.View;
 import org.lightframework.mvc.Action.Argument;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
@@ -55,13 +54,13 @@ public class ExecutePlugin extends Plugin {
 			if(null != value){
 				if(value instanceof Render){
 					return (Render)value;
-				}else if(value instanceof View){
-					return new Render((View)value);
 				}else{
-					return new Render((Object)value);
+					Render render = Render.current();
+					render.setData(value);
+					return render;
 				}
 			}else{
-				return new Render();
+				return Render.current();
 			}
 		} catch(Render render){
 			return render;
