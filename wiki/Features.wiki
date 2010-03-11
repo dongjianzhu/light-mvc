@@ -51,7 +51,7 @@
  示例：
  {{{
  package controllers;
- public class Product {
+ public class ProductController {
     public void delete(int id) {
        ...
     }
