@@ -45,7 +45,7 @@
  {{{
  1. controller class 是一个public的java class，有一个public且无参的constructor.
  2. action method 是一个public（包括静态与非静态）java method.
- 3. controller class都在 controllers package 下
+ 3. controller class都在 app.controllers package 下
  }}}
  
  示例：
@@ -59,7 +59,7 @@
  }}}
   action name 'product.delete '将解析出：
  {{{
- controller class : controllers.ProductController 或者 controllers.Product
+ controller class : app.controllers.ProductController 或者 app.controllers.Product
  action method    : delete
  action arguments : [{name : 'id' , type: Integer.type}]
  }}}
