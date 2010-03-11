@@ -22,7 +22,6 @@ import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Assert;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Utils;
-import org.lightframework.mvc.Application.Clazz;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.utils.ClassUtils;
@@ -40,8 +39,8 @@ public class ResolvePlugin extends Plugin {
 		String fullActionName = action.getName();
 		String[] actionNames  = fullActionName.split(",");
 		for(String name : actionNames){
-			//replace all '_' characters to '.' characters
-			name = Utils.replace(name, "_", ".");
+			//replace all '_' characters to '' characters
+			name = Utils.replace(name, "_", "");
 			if(resolve(request,response,action,name)){
 				action.setName(name);
 				return true;
@@ -66,16 +65,13 @@ public class ResolvePlugin extends Plugin {
 		//search controller class
 		/*
 		 search for classes such as :
-		 1. {app-package}.controllers.{controller}Controller -> demo.controllers.ProductController | demo.controllers.product.CategoryController
-		 2. {app-package}.controllers.{controller}           -> demo.controllers.Product           | demo.controllers.product.Category
-		 3. {app-package}.{controller}Controller             -> demo.ProductController   | demo.product.CategoryController 
-		 4. {app-package}.{controller}.Controller            -> demo.product.Controller  | demo.product.category.Controller
+		 1. app.controllers.{controller}Controller -> app.controllers.ProductController | app.controllers.product.CategoryController
+		 2. app.controllers.{controller}           -> app.controllers.Product           | app.controllers.product.Category
+		 3. app.{controller}Controller             -> app.ProductController   | demo.product.CategoryController 
+		 4. app.{controller}.Controller            -> app.product.Controller  | demo.product.category.Controller
 		 */
 		boolean resolved = false;
-		if(find1and2(request,_package,controller,action) 
-				|| find3(request,_package,controller,action) 
-				|| find4(request,_package,controller,action)){
-			
+		if(find1and2(request,_package,controller,action)){
 			//resolve method and arguments
 			Method method = ClassUtils.findMethodIgnoreCase(action.getClazz(), methodName);
 			
@@ -94,10 +90,10 @@ public class ResolvePlugin extends Plugin {
 	
 	private static boolean find1and2(Request request,String prefix,String controller,Action action) throws Exception{
 		//{app-package}.controllers.{controller}Controller
-		String guessClassName1 = prefix + "controllers." + controller + "Controller";
+		String guessClassName1 = prefix + "app.controllers." + controller + "Controller";
 		
 		//{app-package}.controllers.{controller}
-		String guessClassName2 = prefix + "controllers." + controller;
+		String guessClassName2 = prefix + "app.controllers." + controller;
 		
 		String pkgName = ClassUtils.extractPackageName(guessClassName1);
 		Collection<String> classes = request.getApplication().getClassNames(pkgName, false);
@@ -114,6 +110,7 @@ public class ResolvePlugin extends Plugin {
 		return false;
 	}
 	
+	/*
 	private static boolean find3(Request request,String pkg,String controller,Action action) throws Exception{
 		//{app-package}.{controller}Controller
 		String guessClassName  = pkg + controller + "Controller";
@@ -135,4 +132,5 @@ public class ResolvePlugin extends Plugin {
 		}
 		return false;
 	}
+	*/
 }
