@@ -25,7 +25,7 @@ import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.exceptions.BindingException;
 
 /**
- * TODO : document me
+ * binding value to a {@link Argument}
  *
  * @author light.wind(lightworld.me@gmail.com)
  * @since 1.0

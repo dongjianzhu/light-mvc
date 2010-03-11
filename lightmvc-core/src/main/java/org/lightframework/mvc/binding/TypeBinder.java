@@ -71,7 +71,7 @@ public class TypeBinder extends Binder {
 				return binding(arg,type,value);
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	protected Object binding(Argument arg,Class<?> type,Object value) throws BindingException{
