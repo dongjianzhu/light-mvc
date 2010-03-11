@@ -59,7 +59,7 @@
  }}}
   action name 'product.delete '将解析出：
  {{{
- controller class : controllers.Product
+ controller class : controllers.ProductController 或者 controllers.Product
  action method    : delete
  action arguments : [{name : 'id' , type: Integer.type}]
  }}}
