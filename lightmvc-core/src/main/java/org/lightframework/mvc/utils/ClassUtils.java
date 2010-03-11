@@ -36,6 +36,7 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -921,4 +922,21 @@ public final class ClassUtils {
 	        }
 	    }
 	}	
+	/**
+	 * 获取给定Class定义的属性(包括从父类继承的属性)
+	 * @param clazz
+	 * @param stopClass
+	 * @return
+	 */
+	public static List<Field> getDeclaredFields(Class<?> clazz,Class<?> stopClass){
+		List<Field> fields = new ArrayList<Field>();
+		for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
+			if (stopClass != null && c == stopClass) {
+				break;
+			}else{
+				fields.addAll(Arrays.asList(c.getDeclaredFields()));
+			}
+		}
+		return fields;
+	}
 }
