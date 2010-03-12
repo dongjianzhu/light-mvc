@@ -38,7 +38,7 @@ public class Home {
 		System.out.println("hello:" + i);
 		
 	}
-	public void helloworld(User u){
+	public void helloworld(User u,String name){
 		System.out.println(u.getName());
 		System.out.println(u.getAddress());
 	}
