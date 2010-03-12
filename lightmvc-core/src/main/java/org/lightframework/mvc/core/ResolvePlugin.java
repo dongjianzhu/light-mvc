@@ -90,10 +90,10 @@ public class ResolvePlugin extends Plugin {
 	
 	private static boolean find1and2(Request request,String prefix,String controller,Action action) throws Exception{
 		//{app-package}.controllers.{controller}Controller
-		String guessClassName1 = prefix + "app.controllers." + controller + "Controller";
+		String guessClassName1 = prefix + "controllers." + controller + "Controller";
 		
 		//{app-package}.controllers.{controller}
-		String guessClassName2 = prefix + "app.controllers." + controller;
+		String guessClassName2 = prefix + "controllers." + controller;
 		
 		String pkgName = ClassUtils.extractPackageName(guessClassName1);
 		Collection<String> classes = request.getApplication().getClassNames(pkgName, false);

@@ -37,15 +37,12 @@ public class Application {
     private static final long serialVersionUID = 3816496065687999477L;
     
     public static final String DEFAULT_ENCODING = "UTF-8";
-    public static final String CONTROLLERS_DIR  = "controllers";
-    public static final String PLUGINS_DIR      = "plugins";
+    public static final String DEFAULT_PACKAGE  = "app";
     
     protected ServletContext servletContext;
     
-    protected String _package;
+    protected String _package = DEFAULT_PACKAGE;
     
-    protected String rootPath;
-   
     protected String encoding = DEFAULT_ENCODING;
     
     protected Map<String, Object> parameters = new HashMap<String, Object>();
@@ -54,7 +51,6 @@ public class Application {
     
     void start(){
     	//TODO : load application plugins
-    	
     	
     }
 
@@ -71,10 +67,6 @@ public class Application {
     
 	public String getPackage() {
     	return _package;
-    }
-	
-	public String getRootPath() {
-    	return rootPath;
     }
 	
 	public String getEncoding(){

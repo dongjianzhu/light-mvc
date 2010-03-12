@@ -244,6 +244,10 @@ public final class HTTP {
 			return getParameters().get(name);
 		}
 		
+        public String[] getParameterNames(){
+        	return (String[])getParameters().keySet().toArray(new String[]{});
+        }
+		
 		public Map<String, String[]> getParameters() {
 			if(null == parameters){
 				parameters = new HashMap<String, String[]>();
