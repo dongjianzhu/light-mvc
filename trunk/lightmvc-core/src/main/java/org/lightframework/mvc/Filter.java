@@ -16,7 +16,6 @@
 package org.lightframework.mvc;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -121,21 +120,9 @@ public class Filter implements javax.servlet.Filter {
 	        return request.getContentType();
         }
 		
-		@SuppressWarnings("unchecked")
         @Override
         public String getParameter(String name) {
-			String param = request.getParameter(name);
-			if(null == param || "".equals(param.trim())){
-				//请求参数名称不区分大小写
-				Enumeration<String> paramNames = request.getParameterNames();
-				while(paramNames.hasMoreElements()){
-					String paramName = paramNames.nextElement();
-					if(paramName.equalsIgnoreCase(name)){
-						param = request.getParameter(paramName);
-					}
-				}
-			}
-	        return param;
+			return request.getParameter(name);
         }
 
 		@Override
@@ -144,21 +131,9 @@ public class Filter implements javax.servlet.Filter {
 	        return request.getParameterMap();
         }
 		
-		@SuppressWarnings("unchecked")
         @Override
         public String[] getParameterValues(String name) {
-			String []param = request.getParameterValues(name);
-	        if(null == param){
-				//请求参数名称不区分大小写
-				Enumeration<String> paramNames = request.getParameterNames();
-				while(paramNames.hasMoreElements()){
-					String paramName = paramNames.nextElement();
-					if(paramName.equalsIgnoreCase(name)){
-						param = request.getParameterValues(name);
-					}
-				}
-			}
-	        return param;
+			return request.getParameterValues(name);
         }
 
 		@Override

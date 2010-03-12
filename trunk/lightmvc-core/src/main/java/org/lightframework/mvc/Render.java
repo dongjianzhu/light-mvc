@@ -30,12 +30,13 @@ public class Render extends RuntimeException{
     
     private static final ThreadLocal<Render> context = new ThreadLocal<Render>();
     
+    public static final String OK_STATUS     = "ok";
     public static final String FAILED_STATUS = "failed";
 
     protected String  redirectTo;
     protected String  forwardTo;
     
-	protected String  status;
+	protected String  status   = OK_STATUS;
 	protected String  message;
 	protected Object  data;
 	
