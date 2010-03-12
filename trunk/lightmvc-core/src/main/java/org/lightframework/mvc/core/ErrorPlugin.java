@@ -30,7 +30,14 @@ public class ErrorPlugin extends Plugin {
 	@Override
     public boolean error(Request request, Response response, Throwable exception)  {
 	    // TODO implement ErrorPlugin.error
-		
+		//route by exception 
+		/**
+		 * 1.route excepton (no action found)
+		 * 2.exception while param binding()  detail excepton for debug
+		 * 2.forward exception(no render page found)
+		 * 
+		 * 4.Action invokation exception (app exception )
+		 */
 	    return super.error(request, response, exception);
     }
 	
