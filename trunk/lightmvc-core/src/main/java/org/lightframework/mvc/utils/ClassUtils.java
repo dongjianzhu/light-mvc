@@ -125,6 +125,37 @@ public final class ClassUtils {
 		return clazz.newInstance();
 	}
 	
+	public static List<Field> getDeclaredFields(Class<?> clazz,Class<?> stopClass){
+		List<Field> fields = new ArrayList<Field>();
+		for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
+			if (stopClass != null && c == stopClass) {
+				break;
+			}else{
+				fields.addAll(Arrays.asList(c.getDeclaredFields()));
+			}
+		}
+		return fields;
+	}
+	
+    public static Method findMethod(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
+        try {
+            return clazz.getMethod(methodName, paramTypes);
+        } catch (NoSuchMethodException ex) {
+            return findDeclaredMethod(clazz, methodName, paramTypes);
+        }
+    }
+
+    public static Method findDeclaredMethod(Class<?> clazz, String methodName, Class<?>[] paramTypes) {
+        try {
+            return clazz.getDeclaredMethod(methodName, paramTypes);
+        } catch (NoSuchMethodException ex) {
+            if (clazz.getSuperclass() != null) {
+                return findDeclaredMethod(clazz.getSuperclass(), methodName, paramTypes);
+            }
+            return null;
+        }
+    }	
+	
 	public static ClassLoader getContextClassLoader(){
 		return Thread.currentThread().getContextClassLoader();
 	}
@@ -922,21 +953,4 @@ public final class ClassUtils {
 	        }
 	    }
 	}	
-	/**
-	 * 获取给定Class定义的属性(包括从父类继承的属性)
-	 * @param clazz
-	 * @param stopClass
-	 * @return
-	 */
-	public static List<Field> getDeclaredFields(Class<?> clazz,Class<?> stopClass){
-		List<Field> fields = new ArrayList<Field>();
-		for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
-			if (stopClass != null && c == stopClass) {
-				break;
-			}else{
-				fields.addAll(Arrays.asList(c.getDeclaredFields()));
-			}
-		}
-		return fields;
-	}
 }

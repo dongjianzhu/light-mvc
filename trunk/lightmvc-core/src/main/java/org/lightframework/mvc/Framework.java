@@ -121,25 +121,26 @@ class Framework {
 	private static void invoke(Request request,Response response,Action action) throws Throwable{
 		//resolving action method
 		if(!action.isResolved()){
-			if(!PluginInvoker.resolve(request,response,action)){
-				throw new MVCException("@ActionNotResolved", action.getName());
-			}
-			action.setResolved(true);
+			action.setResolved(PluginInvoker.resolve(request,response,action));
 		}
 		action.afterResolving();
 		
-		//binding method arguments
-		if(!action.isBinded()){
-			PluginInvoker.binding(request, response, action);
-			action.setBinded(true);
+		Render render = null;
+		if(action.isResolved()){
+			//binding method arguments
+			if(!action.isBinded()){
+				PluginInvoker.binding(request, response, action);
+				action.setBinded(true);
+			}
+			action.afterBinding();
+			
+			//executing action method
+			render = PluginInvoker.execute(request, response, action);
+			action.afterExecuting();
+		}else{
+			render = Render.current();
 		}
-		action.afterBinding();
-		
-		//executing action method
-		Render render = PluginInvoker.execute(request, response, action);
-		action.afterExecuting();
-		
-		if(null != render && !render.isRendered()){
+		if(!render.isRendered()){
 			//render action result
 			PluginInvoker.render(request, response, render);
 		}

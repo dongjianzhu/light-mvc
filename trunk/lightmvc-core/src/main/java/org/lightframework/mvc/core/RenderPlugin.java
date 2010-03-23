@@ -43,6 +43,8 @@ public class RenderPlugin extends Plugin {
 		}else{
 			String view = findViewPath(request,render);
 			if(null != view){
+				request.getAttributes().putAll(render.getAttributes());
+				
 				request.setAttribute("render.status" , render.getStatus());
 				request.setAttribute("render.message", render.getMessage());
 				request.setAttribute("render.data"   , render.getData());
@@ -57,21 +59,28 @@ public class RenderPlugin extends Plugin {
 	private String findViewPath(Request request,Render render) {
 		Action action = request.getAction();
 		if(null != action){
-			String _packpage = request.getApplication().getPackage();
-			String className = action.getClazz().getName();
+			String _packpage  = request.getApplication().getPackage();
+			String controller = null;
+			String actionName = null;
 			
-			if(null != _packpage && !"".equals(_packpage)){
+			if(action.isResolved()){
+				controller = action.getClazz().getName().toLowerCase();
+				actionName = action.getMethod().getName().toLowerCase();
+			}else{
+				int lastDotIndex = action.getName().lastIndexOf(".");
+				controller = action.getName().substring(0,lastDotIndex).toLowerCase();
+				actionName = action.getName().substring(lastDotIndex + 1).toLowerCase();
+			}
+			
+			if(null != _packpage && !"".equals(_packpage) && controller.startsWith(_packpage)){
 				//'app.controllers.Product' -> 'controllers.Product' 
-				className = className.substring(_packpage.length() + 1);
+				controller = controller.substring(_packpage.length() + 1);
 			}
 			
-			if(className.startsWith("controllers.")){
+			if(controller.startsWith("controllers.")){
 				//'controllers.Product' -> 'Product'
-				className = className.substring("controllers.".length());
+				controller = controller.substring("controllers.".length());
 			}
-			
-			String controller = className.toLowerCase();
-			String actionName = action.getMethod().getName().toLowerCase();
 			
 			return findDefaultViewPath(request,render,controller,actionName);
 		}

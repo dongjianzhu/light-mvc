@@ -142,12 +142,14 @@ public class Action {
 	}
 	
     void afterResolving() {
-        Assert.notNull("controllerClass", clazz);
-        Assert.notNull("method", method);
-
-        if(!ClassUtils.isStatic(method)){
-        	Assert.notNull("controllerObject", controller);
-        }
+    	if(resolved){
+	        Assert.notNull("controllerClass", clazz);
+	        Assert.notNull("method", method);
+	
+	        if(!ClassUtils.isStatic(method)){
+	        	Assert.notNull("controllerObject", controller);
+	        }
+    	}
     }
 	
 	void afterExecuting(){

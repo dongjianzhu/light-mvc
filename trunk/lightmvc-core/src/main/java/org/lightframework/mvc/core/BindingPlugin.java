@@ -34,7 +34,6 @@ import org.lightframework.mvc.Lang.Type;
 import org.lightframework.mvc.binding.DateBinder;
 import org.lightframework.mvc.binding.ITypeBinder;
 import org.lightframework.mvc.binding.PrimitiveBinder;
-import org.lightframework.mvc.utils.BeanUtils;
 import org.lightframework.mvc.utils.ClassUtils;
 
 /**
@@ -55,13 +54,13 @@ public class BindingPlugin extends Plugin {
     public boolean binding(Request request, Response response, Action action) throws Throwable{
 		for(Argument arg : action.getArguments()){
 			if(!arg.isBinded()){
-				arg.binding(bind(request,action,arg,getParamValue(request, action, arg)));
+				arg.binding(binding(request,action,arg,getParamValue(request, action, arg)));
 			}
 		}
 		return true;
     }
 	
-	private static Object bind(Request request,Action action,Type arg,Object value) throws Throwable{
+	private static Object binding(Request request,Action action,Type arg,Object value) throws Throwable{
 		Class<?> type = arg.getType();
 		
 		//binging default value for primitive type
@@ -82,23 +81,23 @@ public class BindingPlugin extends Plugin {
 		
 		//enum bind
 		if(Enum.class.isAssignableFrom(type)){
-			return enumBind(arg,value);
+			return enumBinding(arg,value);
 		}
 		
 		//array bind
 		if(type.isArray()){
-			return arrayBind(request,action,arg,value);
+			return arrayBinding(request,action,arg,value);
 		}
 		
 		//bean bind
 		if(!ClassUtils.isJdkClass(type)){
-			return beanBind(request,action,arg);
+			return beanBinding(request,action,arg);
 		}
 
 		return null;
 	}
 	
-	private static Object arrayBind(Request request,Action action,Type arg,Object value) throws Throwable{
+	private static Object arrayBinding(Request request,Action action,Type arg,Object value) throws Throwable{
 		Class<?> clazz = arg.getType().getComponentType();
 		if(null == value){
 			return Array.newInstance(arg.getType().getComponentType(), 0);
@@ -113,14 +112,14 @@ public class BindingPlugin extends Plugin {
 			Type type = new Type(arg.getName(),clazz);
 			Object array = Array.newInstance(arg.getType().getComponentType(), values.length);
 			for(int i=0;i<values.length;i++){
-				Array.set(array, i, bind(request,action,type,values[i]));
+				Array.set(array, i, binding(request,action,type,values[i]));
 			}
 			return array;
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static Object enumBind(Type arg,Object value){
+	private static Object enumBinding(Type arg,Object value){
 		if(null != value){
 			if(value.getClass().equals(arg.getType())){
 				return value;
@@ -131,14 +130,14 @@ public class BindingPlugin extends Plugin {
 		return null;
 	}
 	
-	private static Object beanBind(Request request,Action action,Type arg) throws Throwable{
+	private static Object beanBinding(Request request,Action action,Type arg) throws Throwable{
 		Object      bean   = ClassUtils.newInstance(arg.getType());
 		List<Field> fileds = ClassUtils.getDeclaredFields(arg.getType(), null);
 		
         for(Field field : fileds){
         	Type   type  = new Type(field.getName(),field.getType(),field.getAnnotations());
         	Object param = getParamValue(request, action, type);
-        	Object value = bind(request,action,type,param);
+        	Object value = binding(request,action,type,param);
         	
         	if(null != value){
         		Method setterMethod = getSetterMethod(arg.getType(),field.getName(),field.getType());
@@ -156,7 +155,7 @@ public class BindingPlugin extends Plugin {
 	}
 	
     private static Method getSetterMethod(Class<?> beanClass,String fieldName,Class<?> fieldType) {
-    	return BeanUtils.findMethod(beanClass, "set" + Character.toUpperCase(fieldName.charAt(0)) + (fieldName.length() > 1 ? fieldName.substring(1) : ""), new Class[]{fieldType});
+    	return ClassUtils.findMethod(beanClass, "set" + Character.toUpperCase(fieldName.charAt(0)) + (fieldName.length() > 1 ? fieldName.substring(1) : ""), new Class[]{fieldType});
     }
 	
 	private static Object getParamValue(Request request,Action action,Type arg) throws Throwable{
