@@ -41,6 +41,12 @@ public class RenderPlugin extends Plugin {
 			response.forward(render.getForwardTo());
 			return true;
 		}else{
+//			//is ajax ?
+//			boolean ajax = request.isAjax();
+//			
+//			//x-view?
+//			String view  = request.getHeader("x-view");
+			
 			String view = findViewPath(request,render);
 			if(null != view){
 				request.getAttributes().putAll(render.getAttributes());
@@ -51,6 +57,10 @@ public class RenderPlugin extends Plugin {
 
 				response.forward(view);
 				return true;
+			}else if(request.getAction().isResolved()){
+				//render default view
+				
+				
 			}
 		}
 		return false;
@@ -93,6 +103,7 @@ public class RenderPlugin extends Plugin {
 		if("home".equalsIgnoreCase(controller)){
 			path = "/";
 		}else{
+			//TODO : hard code 'module'
 			path = "/modules/" + controller.replace("\\.", "/") + "/";
 		}
 		

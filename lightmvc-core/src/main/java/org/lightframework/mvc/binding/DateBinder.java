@@ -24,8 +24,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.lightframework.mvc.Config.Format;
 import org.lightframework.mvc.Lang.Type;
+import org.lightframework.mvc.config.Format;
 import org.lightframework.mvc.exceptions.BindingException;
 
 /**
