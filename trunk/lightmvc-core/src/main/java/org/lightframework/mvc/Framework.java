@@ -93,13 +93,12 @@ class Framework {
 						
 						action.afterRouting();
 						
-						invoke(request,response,action);
+						managed = invoke(request,response,action);
 					}
 				}
 				return managed;
 			}catch(Render render){
-				PluginInvoker.render(request, response, render);
-				return true;
+				return PluginInvoker.render(request, response, render);
 			}
 		}catch(Throwable e){
 			//handle exception
@@ -118,7 +117,7 @@ class Framework {
 		plugins.add(new CorePlugin());
 	}
 	
-	private static void invoke(Request request,Response response,Action action) throws Throwable{
+	private static boolean invoke(Request request,Response response,Action action) throws Throwable{
 		//resolving action method
 		if(!action.isResolved()){
 			action.setResolved(PluginInvoker.resolve(request,response,action));
@@ -142,8 +141,12 @@ class Framework {
 		}
 		if(!render.isRendered()){
 			//render action result
-			PluginInvoker.render(request, response, render);
+			boolean rendered = PluginInvoker.render(request, response, render);
+			if(!rendered && !action.isResolved()){
+				return false;
+			}
 		}
+		return true;
 	}
 	
 	/**
