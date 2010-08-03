@@ -15,27 +15,54 @@
  */
 package org.lightframework.mvc;
 
-import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class Messages {
+import org.slf4j.helpers.MessageFormatter;
+
+/**
+ * i18n messages of mvc framework.
+ *
+ * @author fenghm (live.fenghm@gmail.com)
+ */
+public class I18n {
 	private static final String BUNDLE_NAME = "org.lightframework.mvc.messages"; //$NON-NLS-1$
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-	public static String getString(String key) {
+	/**
+	 * get i18n message by key
+	 */
+	public static String get(String key) {
 		try {
 			return RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
 			return '!' + key + '!';
 		}
 	}
-	
-	public static String getString(String key,Object ... arguments){
+
+	public static String get(String key,Object ... arguments){
 		if(arguments.length > 0){
-			return MessageFormat.format(getString(key), arguments);	
+			return fmt(get(key), arguments);	
 		}else{
-			return getString(key);
+			return get(key);
 		}
+	}
+	
+	public static String fmt(String message,Object ... arguments){
+		return MessageFormatter.arrayFormat(message, arguments).getMessage();
+	}
+	
+	/**
+	 * the same as {@link #get(String)}
+	 */
+	public static String i18n(String key) {
+		return get(key);
+	}
+	
+	/**
+	 * the same as {@link #get(String, Object...)}
+	 */
+	public static String i18n(String key,Object ... arguments){
+		return get(key,arguments);
 	}
 }

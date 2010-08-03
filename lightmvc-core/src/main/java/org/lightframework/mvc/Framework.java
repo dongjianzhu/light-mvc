@@ -15,6 +15,7 @@
  */
 package org.lightframework.mvc;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lightframework.mvc.HTTP.Request;
@@ -28,6 +29,9 @@ import org.lightframework.mvc.core.CorePlugin;
  * @since 1.0
  */
 class Framework {
+	
+	//mvc framework version
+	public static final String VERSION = getVersion();
 	
 	/** represents was framework initialized ?*/
 	private static boolean initialized = false;
@@ -146,6 +150,15 @@ class Framework {
 			}
 		}
 		return true;
+	}
+	
+	private static String getVersion(){
+		//read version string from /org/lightframework/mvc/version.txt 
+		try {
+	        return Utils.readFromResource("/" + Framework.class.getPackage().getName().replaceAll("\\.", "/") + "/version.txt").trim();
+        } catch (IOException e) {
+        	throw new MVCException("error reading version",e);
+        }
 	}
 	
 	/**

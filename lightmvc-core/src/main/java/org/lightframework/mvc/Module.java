@@ -25,6 +25,10 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.lightframework.mvc.utils.ClassUtils;
+import static org.lightframework.mvc.I18n.i18n;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * represents a mvc web module
@@ -35,6 +39,8 @@ import org.lightframework.mvc.utils.ClassUtils;
 public class Module {
 
     private static final long serialVersionUID = 3816496065687999477L;
+    
+    private static final Logger log = LoggerFactory.getLogger(Module.class);
     
     public static final String DEFAULT_ENCODING = "UTF-8";
     public static final String DEFAULT_PACKAGE  = "app";
@@ -60,7 +66,7 @@ public class Module {
     		try{
     			plugin.unload();
     		}catch(Throwable e){
-    			Logger.error(e,"@Plugin.UnloadError", plugin.getClass().getName());
+    			log.error(i18n("Plugin.UnloadError"), plugin.getClass().getName(),e);
     		}
     	}
     }

@@ -15,6 +15,12 @@
  */
 package org.lightframework.mvc;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 
 /**
  * utitlity class, internal used only
@@ -78,5 +84,25 @@ public final class Utils {
 	
 	public static String[] stringToArray(String string){
 		return null == string ? null : string.split(",");
+	}
+	
+	public static String readFromResource(String resource) throws IOException{
+		InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
+		if(null == stream){
+			stream = Utils.class.getResourceAsStream(resource);
+		}
+		if(null == stream){
+			throw new FileNotFoundException("resource '" + resource + "' not found");
+		}
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		StringBuilder  buffer = new StringBuilder();
+		
+		String line = null;
+        while ((line = reader.readLine()) != null) {
+            buffer.append(line);
+        }
+        reader.close();
+        return buffer.toString();
 	}
 }

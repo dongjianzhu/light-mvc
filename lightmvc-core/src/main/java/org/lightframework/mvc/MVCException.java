@@ -45,7 +45,7 @@ public class MVCException extends RuntimeException {
 	
 	protected static String i18n(String message,Object... args){
 		if(null != message && message.charAt(0) == '@'){
-			return Messages.getString(message,args);
+			return I18n.get(message,args);
 		}else if(null != message && args.length > 0){
 			return MessageFormat.format(message, args);
 		}else{
