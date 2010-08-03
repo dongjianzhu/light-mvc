@@ -26,7 +26,7 @@ import org.lightframework.mvc.HTTP.Response;
 /**
  * core plugin to render action result
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class RenderPlugin extends Plugin {
@@ -69,7 +69,7 @@ public class RenderPlugin extends Plugin {
 	private String findViewPath(Request request,Render render) {
 		Action action = request.getAction();
 		if(null != action){
-			String _packpage  = request.getApplication().getPackage();
+			String _packpage  = request.getModule().getPackage();
 			String controller = null;
 			String actionName = null;
 			
@@ -111,7 +111,7 @@ public class RenderPlugin extends Plugin {
 			name = "_" + render.getStatus();
 		}
 		
-		Collection<String> files = request.getApplication().getViews(path);
+		Collection<String> files = request.getModule().getViews(path);
 		
 		if(null != files){
 			for(String file : files){

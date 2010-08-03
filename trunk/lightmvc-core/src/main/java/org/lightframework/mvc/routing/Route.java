@@ -27,7 +27,7 @@ import org.lightframework.mvc.Lang.Ref;
 /**
  * represents a routing rule of url to action mapping
  * 
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * 
  * @since 1.0 
  */

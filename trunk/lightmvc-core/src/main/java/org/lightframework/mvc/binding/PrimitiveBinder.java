@@ -26,7 +26,7 @@ import org.lightframework.mvc.exceptions.BindingException;
 /**
  * class to bind primitive type itself and primitive type's wrapper type. 
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class PrimitiveBinder implements ITypeBinder {

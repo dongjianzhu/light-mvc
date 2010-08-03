@@ -39,7 +39,7 @@ import org.lightframework.mvc.utils.ClassUtils;
 /**
  * the core plugin to binding parameters in request of action method.
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class BindingPlugin extends Plugin {

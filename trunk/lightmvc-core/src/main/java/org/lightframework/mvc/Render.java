@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * definition of a view render object.
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class Render extends RuntimeException{
@@ -53,7 +53,7 @@ public class Render extends RuntimeException{
 	}
 	
 	/**
-	 * forward to the request path in current application 
+	 * forward to the request path in current module 
 	 */
 	public static void forward(String path) {
 		current().forwardTo = path;

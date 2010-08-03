@@ -32,32 +32,32 @@ import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.HTTP.Url;
 
 /**
- * mvc application http filter,configed in web.xml
+ * mvc web module http filter,configed in web.xml
  * 
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class Filter implements javax.servlet.Filter {
 
-	protected ServletContext servletContext;
-	protected Application    application;
+	protected Module         module;         //current web module
+	protected ServletContext servletContext; //current ServletContext
 	
 	public void init(FilterConfig config) throws ServletException {
-		servletContext = config.getServletContext();
-		application    = new Application();
-		application.servletContext = servletContext;
+		servletContext        = config.getServletContext();
+		module                = new Module();
+		module.servletContext = servletContext;
 		
-		Framework.start(application);
+		Framework.start(module);
 	}
 	
 	public void destroy() {
-		Framework.stop(application);
+		Framework.stop(module);
 	}
 
 	public void doFilter(final ServletRequest servletRequest,final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 		//create mvc framework http request and response
-		Request request   = new RequestWrapper((HttpServletRequest)servletRequest,application);
-		Response response = new ResponseWrapper((HttpServletRequest)servletRequest,(HttpServletResponse)servletResponse,application);
+		Request request   = new RequestWrapper((HttpServletRequest)servletRequest,module);
+		Response response = new ResponseWrapper((HttpServletRequest)servletRequest,(HttpServletResponse)servletResponse,module);
 		
 		try{
 			boolean managed = false;
@@ -84,10 +84,9 @@ public class Filter implements javax.servlet.Filter {
 	public static final class RequestWrapper extends Request {
 		private final HttpServletRequest request;
 		
-		public RequestWrapper(HttpServletRequest request,Application application){
-			this.request      = request;
-			this.application  = application;
-			
+		public RequestWrapper(HttpServletRequest request,Module module){
+			this.request         = request;
+			this.module  		 = module;
 			this.url             = new Url();
 			this.url.port        = request.getServerPort(); //TODO : is server port right ?
 			this.url.protocol    = request.getProtocol();
@@ -166,10 +165,10 @@ public class Filter implements javax.servlet.Filter {
 		private final HttpServletRequest  request;
         private final HttpServletResponse response;
 		
-		public ResponseWrapper(HttpServletRequest request,HttpServletResponse response,Application application){
+		public ResponseWrapper(HttpServletRequest request,HttpServletResponse response,Module module){
 			this.request  = request;
 			this.response = response;
-			this.encoding = application.getEncoding();
+			this.encoding = module.getEncoding();
 		}
 
 		@Override

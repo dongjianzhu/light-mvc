@@ -23,7 +23,7 @@ import org.lightframework.mvc.routing.Route;
 /**
  * Test Case to test {@link Route}
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  */
 public class TestRouterRoute extends TestCase{
 

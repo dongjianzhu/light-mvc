@@ -23,7 +23,7 @@ import org.lightframework.mvc.exceptions.BindingException;
 /**
  * the interface to convert string to object of the given {@link Type}
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public interface ITypeBinder {

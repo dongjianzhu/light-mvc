@@ -24,7 +24,7 @@ import org.lightframework.mvc.HTTP.Response;
 /**
  * core plugin of mvc framework
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class CorePlugin extends Plugin{

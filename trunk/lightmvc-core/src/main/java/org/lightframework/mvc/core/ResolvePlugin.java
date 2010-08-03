@@ -29,7 +29,7 @@ import org.lightframework.mvc.utils.ClassUtils;
 /**
  * core plugin to resolve action's method
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class ResolvePlugin extends Plugin {
@@ -57,7 +57,7 @@ public class ResolvePlugin extends Plugin {
 		
 		String controller = fullActionName.substring(0,lastDotIndex);
 		String methodName = fullActionName.substring(lastDotIndex + 1);
-		String _package   = request.getApplication().getPackage();
+		String _package   = request.getModule().getPackage();
 		
 		//append "." to the end of _package if not empty 
 		_package = null == _package || "".equals(_package) ? "" : _package + ".";
@@ -96,7 +96,7 @@ public class ResolvePlugin extends Plugin {
 		String guessClassName2 = prefix + "controllers." + controller;
 		
 		String pkgName = ClassUtils.extractPackageName(guessClassName1);
-		Collection<String> classes = request.getApplication().getClassNames(pkgName, false);
+		Collection<String> classes = request.getModule().getClassNames(pkgName, false);
 		
 		for(String className : classes){
 			if(className.equalsIgnoreCase(guessClassName1)){

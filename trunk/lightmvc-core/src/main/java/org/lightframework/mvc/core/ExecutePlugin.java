@@ -29,7 +29,7 @@ import org.lightframework.mvc.utils.ClassUtils;
 /**
  * core plugin to resolve and execute an {@link Action}
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class ExecutePlugin extends Plugin {

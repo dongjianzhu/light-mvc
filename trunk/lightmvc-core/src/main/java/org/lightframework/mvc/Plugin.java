@@ -21,7 +21,7 @@ import org.lightframework.mvc.HTTP.Response;
 /**
  * the plugin interface class of mvc framework.
  * 
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public abstract class Plugin {

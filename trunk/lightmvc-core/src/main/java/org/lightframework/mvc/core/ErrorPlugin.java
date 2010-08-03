@@ -22,7 +22,7 @@ import org.lightframework.mvc.HTTP.Response;
 /**
  * core plugin to handle exceptions
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class ErrorPlugin extends Plugin {

@@ -29,7 +29,7 @@ import org.lightframework.mvc.routing.Route;
 /**
  * core router plugin of mvc framework mapping a request url to action 
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class RoutePlugin extends Plugin {
