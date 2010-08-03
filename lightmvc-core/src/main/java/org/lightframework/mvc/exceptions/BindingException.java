@@ -20,7 +20,7 @@ import org.lightframework.mvc.MVCException;
 /**
  * represents the error at binding value to action's argument
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  */
 public class BindingException extends MVCException {
 

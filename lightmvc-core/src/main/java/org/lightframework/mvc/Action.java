@@ -26,7 +26,7 @@ import org.lightframework.mvc.utils.ClassUtils;
 /**
  * definition of an action. <p>
  * 
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since  1.0
  */
 public class Action {

@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * defines http request and response 
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public final class HTTP {
@@ -145,17 +145,16 @@ public final class HTTP {
 	public static class Request {
 	    protected static final InheritableThreadLocal<Request> current = new InheritableThreadLocal<Request>();
 
-	    protected Url     url;
-	    protected String  context;
-	    protected String  path;
-	    protected String  remoteAddress;
-	    protected String  contentType;
-	    protected String  method;
-	    protected boolean secure;
-	    
-	    protected Action      action;
-	    protected Response    response;
-	    protected Application application;
+	    protected Url      url;
+	    protected String   context;
+	    protected String   path;
+	    protected String   remoteAddress;
+	    protected String   contentType;
+	    protected String   method;
+	    protected boolean  secure;
+	    protected Action   action;
+	    protected Response response;
+	    protected Module   module;
 
 	    protected Map<String, Header>   headers;
 	    protected Map<String, Cookie>   cookies;
@@ -277,8 +276,8 @@ public final class HTTP {
 	    	return cookies;
 	    }
 
-		public Application getApplication() {
-	    	return application;
+		public Module getModule() {
+	    	return module;
 	    }
 		
 		public Action getAction(){
@@ -297,7 +296,7 @@ public final class HTTP {
 	public static class Response {
 
 	    protected int          status = 200;
-	    protected String       encoding = Application.DEFAULT_ENCODING;
+	    protected String       encoding = Module.DEFAULT_ENCODING;
 	    protected String       contentType;
 	    protected OutputStream out;
 	    

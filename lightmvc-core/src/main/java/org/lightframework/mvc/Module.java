@@ -27,12 +27,12 @@ import javax.servlet.ServletContext;
 import org.lightframework.mvc.utils.ClassUtils;
 
 /**
- * represents a mvc web application
+ * represents a mvc web module
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
-public class Application {
+public class Module {
 
     private static final long serialVersionUID = 3816496065687999477L;
     
@@ -50,7 +50,7 @@ public class Application {
     protected LinkedList<Plugin> plugins = new LinkedList<Plugin>();
     
     void start(){
-    	//TODO : load application plugins
+    	//TODO : load module plugins
     	
     }
 
@@ -102,7 +102,7 @@ public class Application {
 	}
 
 	public Collection<Clazz> getClasses(String _package,boolean recursion) {
-		// TODO : Application.getClasses
+		// TODO : Module.getClasses
 		return null;
 	}
 	
@@ -128,7 +128,7 @@ public class Application {
 	
 	@SuppressWarnings("unchecked")
 	public Collection<String> getViews(String path,boolean recursion){
-		// TODO : Application.getViews
+		// TODO : Module.getViews
 		return servletContext.getResourcePaths(path);
 	}
 

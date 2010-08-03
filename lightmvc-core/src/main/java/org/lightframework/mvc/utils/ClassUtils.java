@@ -51,7 +51,7 @@ import org.lightframework.mvc.Action.Argument;
 /**
  * class utility,used by mvc framework only
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public final class ClassUtils {

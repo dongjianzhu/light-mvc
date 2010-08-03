@@ -24,7 +24,7 @@ import org.lightframework.mvc.core.CorePlugin;
 /**
  * the main class of mvc framework
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 class Framework {
@@ -36,9 +36,9 @@ class Framework {
 	private static final ArrayList<Plugin> plugins = new ArrayList<Plugin>();
 	
 	/**
-	 * start the application
+	 * start the module
 	 */
-	public static void start(Application application){
+	public static void start(Module module){
 		if(!initialized){
 			synchronized (Framework.class) {
 	            if(!initialized){
@@ -47,18 +47,18 @@ class Framework {
 	            }
             }
 		}
-		application.start();
+		module.start();
 	}
 	
 	/**
-	 * stop the application
+	 * stop the module
 	 */
-	public static void stop(Application application){
-		application.stop();
+	public static void stop(Module module){
+		module.stop();
 	}
 	
 	/**
-	 * is this request ignored by current application
+	 * is this request ignored by current module
 	 */
 	public static boolean ignore(Request request){
 		return false;
@@ -71,7 +71,7 @@ class Framework {
 	 * @return true if mvc framework has handled this request
 	 */
 	public static boolean handle(Request request,Response response) throws Throwable {
-		Assert.notNull("request.application", request.getApplication());
+		Assert.notNull("request.module", request.getModule());
 		
 		//is hanlded by mvc framework
 		boolean managed = false;
@@ -88,12 +88,11 @@ class Framework {
 					Action action = PluginInvoker.route(request, response);
 					
 					if(null != action){
-						managed = true;
 						request.action = action;
 						
 						action.afterRouting();
 						
-						managed = invoke(request,response,action);
+						managed = invokeAction(request,response,action);
 					}
 				}
 				return managed;
@@ -117,7 +116,7 @@ class Framework {
 		plugins.add(new CorePlugin());
 	}
 	
-	private static boolean invoke(Request request,Response response,Action action) throws Throwable{
+	private static boolean invokeAction(Request request,Response response,Action action) throws Throwable{
 		//resolving action method
 		if(!action.isResolved()){
 			action.setResolved(PluginInvoker.resolve(request,response,action));
@@ -154,7 +153,7 @@ class Framework {
 	 */
 	private static final class PluginInvoker{
 		static boolean request(Request request,Response response) throws Throwable{
-			for(Plugin plugin : request.getApplication().getPlugins()){
+			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.request(request, response)){
 					return true;
 				}
@@ -168,7 +167,7 @@ class Framework {
 		}
 		
 		static Action route(Request request,Response response) throws Throwable{
-			for(Plugin plugin : request.getApplication().getPlugins()){
+			for(Plugin plugin : request.getModule().getPlugins()){
 				Action action = plugin.route(request, response);
 				if(null != action){
 					return action;
@@ -184,7 +183,7 @@ class Framework {
 		}
 		
 		static boolean resolve(Request request,Response response,Action action) throws Throwable{
-			for(Plugin plugin : request.getApplication().getPlugins()){
+			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.resolve(request, response, action)){
 					return true;
 				}
@@ -198,7 +197,7 @@ class Framework {
 		}
 		
 		static boolean binding(Request request,Response response,Action action) throws Throwable{
-			for(Plugin plugin : request.getApplication().getPlugins()){
+			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.binding(request, response, action)){
 					return true;
 				}
@@ -212,7 +211,7 @@ class Framework {
 		}
 		
 		static Render execute(Request request,Response response,Action action) throws Throwable{
-			for(Plugin plugin : request.getApplication().getPlugins()){
+			for(Plugin plugin : request.getModule().getPlugins()){
 				Render render = plugin.execute(request, response, action);
 				if(null != render){
 					return render;
@@ -228,7 +227,7 @@ class Framework {
 		}
 		
 		static boolean render(Request request,Response response,Render render) throws Throwable{
-			for(Plugin plugin : request.getApplication().getPlugins()){
+			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.render(request, response, render)){
 					return true;
 				}
@@ -242,7 +241,7 @@ class Framework {
 		}
 		
 		static boolean exception(Request request,Response response,Throwable e) throws Throwable{
-			for(Plugin plugin : request.getApplication().getPlugins()){
+			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.error(request, response, e)){
 					return true;
 				}

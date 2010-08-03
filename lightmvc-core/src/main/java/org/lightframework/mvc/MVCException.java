@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 /**
  * exception class of mvc framework
  *
- * @author light.wind(lightworld.me@gmail.com)
+ * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
 public class MVCException extends RuntimeException {
