@@ -56,8 +56,8 @@ public class Filter implements javax.servlet.Filter {
 
 	public void doFilter(final ServletRequest servletRequest,final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 		//create mvc framework http request and response
-		Request request   = new RequestWrapper((HttpServletRequest)servletRequest,module);
-		Response response = new ResponseWrapper((HttpServletRequest)servletRequest,(HttpServletResponse)servletResponse,module);
+		Request request   = new RequestImpl((HttpServletRequest)servletRequest,module);
+		Response response = new ResponseImpl((HttpServletRequest)servletRequest,(HttpServletResponse)servletResponse,module);
 		
 		try{
 			boolean managed = false;
@@ -81,10 +81,10 @@ public class Filter implements javax.servlet.Filter {
 		}
 	}
 
-	public static final class RequestWrapper extends Request {
+	public static final class RequestImpl extends Request {
 		private final HttpServletRequest request;
 		
-		public RequestWrapper(HttpServletRequest request,Module module){
+		public RequestImpl(HttpServletRequest request,Module module){
 			this.request         = request;
 			this.module  		 = module;
 			this.url             = new Url();
@@ -161,11 +161,11 @@ public class Filter implements javax.servlet.Filter {
         }
 	}
 	
-	public final class ResponseWrapper extends Response{
+	public final class ResponseImpl extends Response{
 		private final HttpServletRequest  request;
         private final HttpServletResponse response;
 		
-		public ResponseWrapper(HttpServletRequest request,HttpServletResponse response,Module module){
+		public ResponseImpl(HttpServletRequest request,HttpServletResponse response,Module module){
 			this.request  = request;
 			this.response = response;
 			this.encoding = module.getEncoding();
