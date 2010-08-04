@@ -22,7 +22,7 @@ package org.lightframework.mvc;
  * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
-public final class Assert extends MVCException {
+public final class Assert extends MvcException {
 	
     private static final long serialVersionUID = -4499551185792411201L;
     

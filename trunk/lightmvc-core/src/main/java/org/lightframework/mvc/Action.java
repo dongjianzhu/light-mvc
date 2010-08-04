@@ -133,15 +133,15 @@ public class Action {
     	this.method = actionMethod;
     }
 
-	void afterRouting(){
+	void onRouted(){
 		Assert.notNull("action.name", name);
 	}
 	
-	void afterBinding(){
+	void onBinded(){
 		
 	}
 	
-    void afterResolving() {
+    void onResolved() {
     	if(resolved){
 	        Assert.notNull("controllerClass", clazz);
 	        Assert.notNull("method", method);
@@ -152,7 +152,7 @@ public class Action {
     	}
     }
 	
-	void afterExecuting(){
+	void onExecuted(){
 		
 	}
 	

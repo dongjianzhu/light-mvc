@@ -13,32 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.exceptions;
+package org.lightframework.mvc;
 
-import org.lightframework.mvc.MvcException;
+import org.lightframework.mvc.HTTP.Request;
+import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.Result.IRender;
 
 /**
- * represents the error at binding value to action's argument
+ * TODO : document me
  *
- * @author fenghm(live.fenghm@gmail.com)
+ * @author fenghm (live.fenghm@gmail.com)
  */
-public class BindingException extends MvcException {
+public class View extends Result implements IRender {
 
-    private static final long serialVersionUID = -8713208104815817L;
+	public void render(Request request, Response response) {
+		// TODO implement View.render
 
-	public BindingException() {
-		
 	}
-
-	public BindingException(Throwable cause) {
-		super(cause);
-	}
-
-	public BindingException(String message, Object... args) {
-		super(message, args);
-	}
-
-	public BindingException(String message, Throwable cause, Object... args) {
-		super(message, cause, args);
-	}
+	
 }

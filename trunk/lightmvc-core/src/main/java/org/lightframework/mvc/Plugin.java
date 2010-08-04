@@ -104,9 +104,9 @@ public abstract class Plugin {
 	 * @param request  http request
 	 * @param response http response
 	 * @param action   {@link Action} object
-	 * @return {@link Render} object if action executed by this plugin , else return null
+	 * @return {@link Result} object if action executed by this plugin , else return null
 	 */	
-	public Render execute(Request request, Response response, Action action) throws Throwable {
+	public Result execute(Request request, Response response, Action action) throws Throwable {
 	    return null;
     }
 
@@ -114,14 +114,14 @@ public abstract class Plugin {
 	 * render result for displaying something to user.<p>
 	 * 
 	 * <p/>
-	 * called at {@link #execute} method executed and returned <code>not null</code> {@link Render} object
+	 * called at {@link #execute} method executed and returned <code>not null</code> {@link Result} object
 	 * 
 	 * @param request  http request
 	 * @param response http response
-	 * @param result   {@link Render} object
+	 * @param result   {@link Result} object
 	 * @return true if rendered by this plugin
 	 */	
-	public boolean render(Request request, Response response, Render render) throws Throwable {
+	public boolean render(Request request, Response response, Result result) throws Throwable {
 	    return false;
     }
 

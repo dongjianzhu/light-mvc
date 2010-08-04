@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.Result.Return;
 import org.lightframework.mvc.core.CorePlugin;
 
 /**
@@ -94,14 +95,14 @@ class Framework {
 					if(null != action){
 						request.action = action;
 						
-						action.afterRouting();
+						action.onRouted();
 						
 						managed = invokeAction(request,response,action);
 					}
 				}
 				return managed;
-			}catch(Render render){
-				return PluginInvoker.render(request, response, render);
+			}catch(Return e){
+				return PluginInvoker.render(request, response, e.result());
 			}
 		}catch(Throwable e){
 			//handle exception
@@ -125,31 +126,29 @@ class Framework {
 		if(!action.isResolved()){
 			action.setResolved(PluginInvoker.resolve(request,response,action));
 		}
-		action.afterResolving();
+		action.onResolved();
 		
-		Render render = null;
 		if(action.isResolved()){
 			//binding method arguments
 			if(!action.isBinded()){
 				PluginInvoker.binding(request, response, action);
 				action.setBinded(true);
 			}
-			action.afterBinding();
+			action.onBinded();
 			
 			//executing action method
-			render = PluginInvoker.execute(request, response, action);
-			action.afterExecuting();
-		}else{
-			render = Render.current();
-		}
-		if(!render.isRendered()){
+			Result result = PluginInvoker.execute(request, response, action);
+			action.onExecuted();
+			
 			//render action result
-			boolean rendered = PluginInvoker.render(request, response, render);
+			boolean rendered = PluginInvoker.render(request, response, result);
 			if(!rendered && !action.isResolved()){
 				return false;
+			}else{
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 	
 	private static String getVersion(){
@@ -157,7 +156,7 @@ class Framework {
 		try {
 	        return Utils.readFromResource("/" + Framework.class.getPackage().getName().replaceAll("\\.", "/") + "/version.txt").trim();
         } catch (IOException e) {
-        	throw new MVCException("error reading version",e);
+        	throw new MvcException("error reading version",e);
         }
 	}
 	
@@ -223,30 +222,30 @@ class Framework {
 			return false;
 		}
 		
-		static Render execute(Request request,Response response,Action action) throws Throwable{
+		static Result execute(Request request,Response response,Action action) throws Throwable{
 			for(Plugin plugin : request.getModule().getPlugins()){
-				Render render = plugin.execute(request, response, action);
-				if(null != render){
-					return render;
+				Result result = plugin.execute(request, response, action);
+				if(null != result){
+					return result;
 				}
 			}				
 			for(Plugin plugin : plugins){
-				Render render = plugin.execute(request, response, action);
-				if(null != render){
-					return render;
+				Result result = plugin.execute(request, response, action);
+				if(null != result){
+					return result;
 				}
 			}				
 			return null;
 		}
 		
-		static boolean render(Request request,Response response,Render render) throws Throwable{
+		static boolean render(Request request,Response response,Result result) throws Throwable{
 			for(Plugin plugin : request.getModule().getPlugins()){
-				if(plugin.render(request, response, render)){
+				if(plugin.render(request, response, result)){
 					return true;
 				}
 			}			
 			for(Plugin plugin : plugins){
-				if(plugin.render(request, response, render)){
+				if(plugin.render(request, response, result)){
 					return true;
 				}
 			}

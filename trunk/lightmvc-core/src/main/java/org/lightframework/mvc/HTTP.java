@@ -29,6 +29,13 @@ import java.util.Map;
  * @since 1.0
  */
 public final class HTTP {
+	
+	public static final class ContentType {
+		public static final String TEXT_PLAIN      = "text/plain";
+		public static final String TEXT_HTML       = "text/html";
+		public static final String TEXT_CSS   	   = "text/css";
+		public static final String TEXT_JAVASCRIPT = "text/javascript";
+	}
 
 	/**
 	 * a http cookie
