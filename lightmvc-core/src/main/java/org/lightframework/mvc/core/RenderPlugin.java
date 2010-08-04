@@ -15,13 +15,11 @@
  */
 package org.lightframework.mvc.core;
 
-import java.util.Collection;
-
-import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
-import org.lightframework.mvc.Render;
+import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.Result.IRender;
 
 /**
  * core plugin to render action result
@@ -32,40 +30,35 @@ import org.lightframework.mvc.HTTP.Response;
 public class RenderPlugin extends Plugin {
 
 	@Override
-    public boolean render(Request request, Response response, Render render) throws Throwable {
-		if(render.isRedirect()){
-			response.redirect(render.getReirectTo());
-			return true;
-		}else if(render.isForward()){
-			request.getAttributes().putAll(render.getAttributes());
-			response.forward(render.getForwardTo());
-			return true;
+    public boolean render(Request request, Response response, Result result) throws Throwable {
+		
+		setAttributes(request,result);
+		
+		if(result instanceof IRender){
+			((IRender) result).render(request, response);
 		}else{
-//			//is ajax ?
-//			boolean ajax = request.isAjax();
-//			
-//			//x-view?
-//			String view  = request.getHeader("x-view");
-			
-			String view = findViewPath(request,render);
-			if(null != view){
-				request.getAttributes().putAll(render.getAttributes());
-				
-				request.setAttribute("render.status" , render.getStatus());
-				request.setAttribute("render.message", render.getMessage());
-				request.setAttribute("render.data"   , render.getData());
-
-				response.forward(view);
-				return true;
-			}else if(request.getAction().isResolved()){
-				//render default view
-				
-				
-			}
+			renderResult(request,response,result);
 		}
-		return false;
+		
+		return true;
     }
+
+	protected void setAttributes(Request request,Result result){
+		request.getAttributes().putAll(Result.Context.getAttributes());
+		request.setAttribute("result", result);
+		request.setAttribute("result.status", result.getStatus());
+		request.setAttribute("result.description",result.getDescription());
+		request.setAttribute("result.value", result.getValue());
+	}
 	
+	protected void renderResult(Request request,Response response,Result result){
+		//TODO : render result
+		
+		//is ajax request ?
+		
+	}
+	
+	/*
 	private String findViewPath(Request request,Render render) {
 		Action action = request.getAction();
 		if(null != action){
@@ -123,4 +116,5 @@ public class RenderPlugin extends Plugin {
 		
 		return null;
 	}
+	*/
 }

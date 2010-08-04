@@ -20,10 +20,11 @@ import java.lang.reflect.Method;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
-import org.lightframework.mvc.Render;
+import org.lightframework.mvc.Result;
 import org.lightframework.mvc.Action.Argument;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.Result.Return;
 import org.lightframework.mvc.utils.ClassUtils;
 
 /**
@@ -37,7 +38,7 @@ public class ExecutePlugin extends Plugin {
 	private static final Object[] EMPTY_EXECUTE_ARGS = new Object[]{};
 	
 	@Override
-    public Render execute(Request request, Response response, Action action) throws Throwable{
+    public Result execute(Request request, Response response, Action action) throws Throwable{
 		//execute java method
 		Method method = action.getMethod();
 		
@@ -51,22 +52,16 @@ public class ExecutePlugin extends Plugin {
 				value = method.invoke(action.getController(), args);
 			}
 			
-			if(null != value){
-				if(value instanceof Render){
-					return (Render)value;
-				}else{
-					Render render = Render.current();
-					render.setData(value);
-					return render;
-				}
+			if(value instanceof Result){
+				return (Result)value;
 			}else{
-				return Render.current();
+				return new Result.Empty();
 			}
-		} catch(Render render){
-			return render;
+		} catch(Return returned){
+			return returned.result();
 		} catch(InvocationTargetException e){
-			if(e.getTargetException() instanceof Render){
-				return (Render)e.getTargetException();
+			if(e.getTargetException() instanceof Return){
+				return ((Return)e.getTargetException()).result();
 			}else{
 				throw e;
 			}

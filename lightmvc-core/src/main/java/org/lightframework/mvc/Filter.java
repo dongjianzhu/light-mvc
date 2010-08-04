@@ -181,7 +181,7 @@ public class Filter implements javax.servlet.Filter {
 			try {
 	            request.getRequestDispatcher(path).forward(request, response);
             } catch (Throwable e) {
-            	throw new MVCException(e);
+            	throw new MvcException(e);
             }
         }
 
@@ -190,7 +190,7 @@ public class Filter implements javax.servlet.Filter {
 			try {
 	            response.sendRedirect(url);
             } catch (Throwable e) {
-            	throw new MVCException(e);
+            	throw new MvcException(e);
             }
         }
 	}

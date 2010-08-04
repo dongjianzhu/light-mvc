@@ -95,7 +95,7 @@ public class Module {
 	        }
 	        return null;
         } catch (IOException e) {
-        	throw new MVCException(e);
+        	throw new MvcException(e);
         }
 	}
 	
@@ -116,7 +116,7 @@ public class Module {
 		try {
 	        return ClassUtils.findAllClassNames(_package);
         } catch (IOException e) {
-        	throw new MVCException(e);
+        	throw new MvcException(e);
         }
 	}
 	

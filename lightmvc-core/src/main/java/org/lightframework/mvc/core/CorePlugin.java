@@ -17,7 +17,7 @@ package org.lightframework.mvc.core;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
-import org.lightframework.mvc.Render;
+import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 
@@ -57,12 +57,12 @@ public class CorePlugin extends Plugin{
     }
 	
 	@Override
-    public Render execute(Request request, Response response, Action action) throws Throwable {
+    public Result execute(Request request, Response response, Action action) throws Throwable {
 	    return executor.execute(request, response, action);
     }
 
 	@Override
-    public boolean render(Request request, Response response, Render render) throws Throwable {
+    public boolean render(Request request, Response response, Result render) throws Throwable {
 	    return renderer.render(request, response, render);
     }
 
