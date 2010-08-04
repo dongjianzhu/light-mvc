@@ -37,7 +37,7 @@ import org.lightframework.mvc.HTTP.Url;
  * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0
  */
-public class Filter implements javax.servlet.Filter {
+public class MvcFilter implements javax.servlet.Filter {
 
 	protected Module         module;         //current web module
 	protected ServletContext servletContext; //current ServletContext
