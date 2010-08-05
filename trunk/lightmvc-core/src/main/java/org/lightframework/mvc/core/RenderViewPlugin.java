@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.config;
+package org.lightframework.mvc.core;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import org.lightframework.mvc.Plugin;
+import org.lightframework.mvc.Result;
+import org.lightframework.mvc.HTTP.Request;
+import org.lightframework.mvc.HTTP.Response;
 
 /**
- * 
  * TODO : document me
  *
  * @author fenghm (live.fenghm@gmail.com)
- * 
  * @since 1.0.0
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Default {
-	String value();
+public class RenderViewPlugin extends Plugin {
+
+	@Override
+    public boolean render(Request request, Response response, Result result) throws Exception {
+	    // TODO implement RenderViewPlugin.render
+	    return super.render(request, response, result);
+    }
+	
 }

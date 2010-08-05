@@ -24,6 +24,8 @@ import java.lang.annotation.Target;
  * TODO : document me
  *
  * @author light wind(lightworld.me@gmail.com)
+ * 
+ * @since 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER,ElementType.FIELD,ElementType.METHOD})

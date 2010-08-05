@@ -32,7 +32,7 @@ import org.lightframework.mvc.exceptions.BindingException;
  * class to bind date value
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class DateBinder implements ITypeBinder {
 	
@@ -49,7 +49,7 @@ public class DateBinder implements ITypeBinder {
 		return types;
 	}
 
-	public Object bind(Type type, String string) throws BindingException, Throwable {
+	public Object bind(Type type, String string) throws BindingException, Exception {
 		Class<?> clazz = type.getType();
 		if(Time.class == clazz){
 			return toDate(Time.class,string, Format.DEFAULT_TIME);

@@ -18,7 +18,6 @@ package org.lightframework.mvc;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lightframework.mvc.HTTP.ContentType;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 
@@ -27,7 +26,7 @@ import org.lightframework.mvc.HTTP.Response;
  * represents the result returned by action after exectuted.
  * 
  * @author fenghm (live.fenghm@bingosoft.net)
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class Result {
 	//------public static constatns--------
@@ -74,7 +73,7 @@ public abstract class Result {
 	//--------static methods of Result classs-----------
 
 	
-	
+	//TODO : ADD SOME STATUS METHODS HERE
 	
 	
 	//--------built in interface and classes used by Result class----------
@@ -166,6 +165,10 @@ public abstract class Result {
 			this.description = e.getMessage();
 			this.exception   = e;
 		}
+		
+		public Throwable getException(){
+			return exception;
+		}
 	}
 	
 	/**
@@ -181,7 +184,7 @@ public abstract class Result {
 	public static final class Content extends Result implements IRender{
 		
 		protected String content;
-		protected String contentType = ContentType.TEXT_PLAIN;
+		protected String contentType = HTTP.CONTENT_TYPE_TEXT_PLAIN;
 		
 		public Content(String content){
 			this.content = content;
@@ -200,6 +203,9 @@ public abstract class Result {
         }
 	}
 	
+	/**
+	 * a {@link Result} object sends redirect to browser of the given url.
+	 */
 	public static final class Redirect extends Result implements IRender{
 		
 		private String url;
@@ -213,6 +219,9 @@ public abstract class Result {
         }
 	}
 	
+	/**
+	 * a {@link Result} object forward to another request path in server.
+	 */
 	public static final class Forward extends Result implements IRender{
 		
 		private String path;

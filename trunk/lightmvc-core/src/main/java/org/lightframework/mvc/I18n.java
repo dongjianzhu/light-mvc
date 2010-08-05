@@ -24,6 +24,8 @@ import org.slf4j.helpers.MessageFormatter;
  * i18n messages of mvc framework.
  *
  * @author fenghm (live.fenghm@gmail.com)
+ * 
+ * @since 1.0.0
  */
 public class I18n {
 	private static final String BUNDLE_NAME = "org.lightframework.mvc.messages"; //$NON-NLS-1$

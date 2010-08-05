@@ -25,7 +25,7 @@ import org.lightframework.mvc.HTTP.Response;
  * core plugin of mvc framework
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class CorePlugin extends Plugin{
 
@@ -37,32 +37,32 @@ public class CorePlugin extends Plugin{
 	protected ErrorPlugin   error    = new ErrorPlugin();
 	
 	@Override
-    public boolean request(Request request, Response response) throws Throwable {
+    public boolean request(Request request, Response response) throws Exception {
 	    return super.request(request, response);
     }
 
 	@Override
-    public Action route(Request request, Response response) throws Throwable {
+    public Action route(Request request, Response response) throws Exception {
 	    return router.route(request, response);
     }
 
 	@Override
-    public boolean resolve(Request request, Response response, Action action) throws Throwable {
+    public boolean resolve(Request request, Response response, Action action) throws Exception {
 	    return resolver.resolve(request, response, action);
     }
 	
 	@Override
-    public boolean binding(Request request, Response response, Action action) throws Throwable {
+    public boolean binding(Request request, Response response, Action action) throws Exception {
 	    return binder.binding(request, response, action);
     }
 	
 	@Override
-    public Result execute(Request request, Response response, Action action) throws Throwable {
+    public Result execute(Request request, Response response, Action action) throws Exception {
 	    return executor.execute(request, response, action);
     }
 
 	@Override
-    public boolean render(Request request, Response response, Result render) throws Throwable {
+    public boolean render(Request request, Response response, Result render) throws Exception {
 	    return renderer.render(request, response, render);
     }
 

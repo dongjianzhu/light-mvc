@@ -30,7 +30,7 @@ import org.lightframework.mvc.routing.Route;
  * core router plugin of mvc framework mapping a request url to action 
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class RoutePlugin extends Plugin {
 	
@@ -45,7 +45,7 @@ public class RoutePlugin extends Plugin {
 	
 	protected List<Route> routes = new ArrayList<Route>();
 	
-	public Action route(Request request, Response response) throws Throwable{
+	public Action route(Request request, Response response) throws Exception{
 		String method = request.getMethod();
 		String path   = request.getPath();
 		
