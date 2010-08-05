@@ -30,12 +30,12 @@ import org.lightframework.mvc.utils.ClassUtils;
  * core plugin to resolve action's method
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class ResolvePlugin extends Plugin {
 
 	@Override
-    public boolean resolve(Request request, Response response, Action action) throws Throwable{
+    public boolean resolve(Request request, Response response, Action action) throws Exception{
 		String fullActionName = action.getName();
 		String[] actionNames  = fullActionName.split(",");
 		for(String name : actionNames){
@@ -49,7 +49,7 @@ public class ResolvePlugin extends Plugin {
 		return false;
 	}
 	
-	protected boolean resolve(Request request,Response response,Action action,String fullActionName) throws Throwable{
+	protected boolean resolve(Request request,Response response,Action action,String fullActionName) throws Exception{
 		//resolve controller and action method
 		int lastDotIndex = fullActionName.lastIndexOf(".");
 		

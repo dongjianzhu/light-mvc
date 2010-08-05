@@ -22,7 +22,7 @@ import java.util.Map;
  * definition of a view render object.
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class Render extends RuntimeException{
 	

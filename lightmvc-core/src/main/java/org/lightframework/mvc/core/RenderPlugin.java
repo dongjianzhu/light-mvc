@@ -25,22 +25,25 @@ import org.lightframework.mvc.Result.IRender;
  * core plugin to render action result
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class RenderPlugin extends Plugin {
+	
+	protected RenderAjaxPlugin renderAjax = new RenderAjaxPlugin();
+	
+	protected RenderViewPlugin renderView = new RenderViewPlugin();
 
 	@Override
-    public boolean render(Request request, Response response, Result result) throws Throwable {
+    public boolean render(Request request, Response response, Result result) throws Exception {
 		
 		setAttributes(request,result);
 		
 		if(result instanceof IRender){
 			((IRender) result).render(request, response);
+			return true;
 		}else{
-			renderResult(request,response,result);
+			return renderResult(request,response,result);
 		}
-		
-		return true;
     }
 
 	protected void setAttributes(Request request,Result result){
@@ -51,11 +54,11 @@ public class RenderPlugin extends Plugin {
 		request.setAttribute("result.value", result.getValue());
 	}
 	
-	protected void renderResult(Request request,Response response,Result result){
-		//TODO : render result
-		
-		//is ajax request ?
-		
+	protected boolean renderResult(Request request,Response response,Result result) throws Exception {
+		if(!renderAjax.render(request, response, result)){
+			return renderView.render(request, response, result);
+		}
+		return true;
 	}
 	
 	/*

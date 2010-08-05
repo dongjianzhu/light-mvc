@@ -24,7 +24,7 @@ import org.lightframework.mvc.exceptions.BindingException;
  * the interface to convert string to object of the given {@link Type}
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public interface ITypeBinder {
 	
@@ -39,6 +39,6 @@ public interface ITypeBinder {
 	 * @param string string value
 	 * @return translated value of the given {@link Type}
 	 */
-	Object bind(Type type,String string) throws BindingException,Throwable;
+	Object bind(Type type,String string) throws BindingException,Exception;
 
 }

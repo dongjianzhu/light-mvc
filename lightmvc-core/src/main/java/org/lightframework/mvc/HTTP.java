@@ -26,16 +26,17 @@ import java.util.Map;
  * defines http request and response 
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public final class HTTP {
+	//---http header constants
+	public static final String HEADER_AJAX_REQUEST = "x-requested-with";
 	
-	public static final class ContentType {
-		public static final String TEXT_PLAIN      = "text/plain";
-		public static final String TEXT_HTML       = "text/html";
-		public static final String TEXT_CSS   	   = "text/css";
-		public static final String TEXT_JAVASCRIPT = "text/javascript";
-	}
+	//---http content type constatns
+	public static final String CONTENT_TYPE_TEXT_PLAIN      = "text/plain";
+	public static final String CONTENT_TYPE_TEXT_HTML       = "text/html";
+	public static final String CONTENT_TYPE_TEXT_CSS   	    = "text/css";
+	public static final String CONTENT_TYPE_TEXT_JAVASCRIPT = "text/javascript";
 
 	/**
 	 * a http cookie
@@ -219,6 +220,11 @@ public final class HTTP {
 		public boolean isSecure() {
 	    	return secure;
 	    }
+		
+		public boolean isAjax(){
+			//jQuery.ajax will send a header "X-Requested-With=XMLHttpRequest"
+			return "XMLHttpRequest".equals(getHeader(HEADER_AJAX_REQUEST));
+		}
 		
 		public Object getAttribute(String name){
 			return getAttributes().get(name);

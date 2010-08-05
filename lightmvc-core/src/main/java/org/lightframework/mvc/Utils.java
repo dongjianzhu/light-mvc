@@ -26,7 +26,7 @@ import java.io.InputStreamReader;
  * utitlity class, internal used only
  * 
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public final class Utils {
 	

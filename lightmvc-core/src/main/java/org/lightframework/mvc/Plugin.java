@@ -22,7 +22,7 @@ import org.lightframework.mvc.HTTP.Response;
  * the plugin interface class of mvc framework.
  * 
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public abstract class Plugin {
 
@@ -34,14 +34,14 @@ public abstract class Plugin {
 	 * 
 	 * @return true if this plugin should be loaded by framework
 	 */
-	public boolean load() throws Throwable{
+	public boolean load() throws Exception{
 		return true;
 	}
 	
 	/**
 	 * called at framework destroying and this plugin had been unloading by framework.
 	 */	
-	public void unload()  throws Throwable{
+	public void unload()  throws Exception{
 	    
     }
 
@@ -51,7 +51,7 @@ public abstract class Plugin {
 	 * @param response http response
 	 * @return true if this plugin manage current request
 	 */	
-	public boolean request(Request request, Response response) throws Throwable{
+	public boolean request(Request request, Response response) throws Exception{
 		return false;
 	}
 	
@@ -65,7 +65,7 @@ public abstract class Plugin {
 	 * @param response http response
 	 * @return {@link Action} which reprensents an action if matched,else return <code>null</code>
 	 */	
-	public Action route(Request request, Response response) throws Throwable{
+	public Action route(Request request, Response response) throws Exception{
 		return null;
 	}
 
@@ -80,7 +80,7 @@ public abstract class Plugin {
 	 * @param action    {@link Action} object
 	 * @return true if this plugin aleady resolved the action method
 	 */	
-	public boolean resolve(Request request, Response response, Action action)  throws Throwable{
+	public boolean resolve(Request request, Response response, Action action)  throws Exception{
 	    return false;
     }
 	
@@ -95,7 +95,7 @@ public abstract class Plugin {
 	 * @param action {@link Action} object
 	 * @return true if this plugin managed the binding of action parameters
 	 */	
-	public boolean binding(Request request, Response response, Action action)  throws Throwable{
+	public boolean binding(Request request, Response response, Action action)  throws Exception{
 	    return false;
     }
 
@@ -106,7 +106,7 @@ public abstract class Plugin {
 	 * @param action   {@link Action} object
 	 * @return {@link Result} object if action executed by this plugin , else return null
 	 */	
-	public Result execute(Request request, Response response, Action action) throws Throwable {
+	public Result execute(Request request, Response response, Action action) throws Exception {
 	    return null;
     }
 
@@ -121,7 +121,7 @@ public abstract class Plugin {
 	 * @param result   {@link Result} object
 	 * @return true if rendered by this plugin
 	 */	
-	public boolean render(Request request, Response response, Result result) throws Throwable {
+	public boolean render(Request request, Response response, Result result) throws Exception {
 	    return false;
     }
 

@@ -40,7 +40,7 @@ import org.lightframework.mvc.utils.ClassUtils;
  * the core plugin to binding parameters in request of action method.
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class BindingPlugin extends Plugin {
 	
@@ -51,7 +51,7 @@ public class BindingPlugin extends Plugin {
 	}
 	
 	@Override
-    public boolean binding(Request request, Response response, Action action) throws Throwable{
+    public boolean binding(Request request, Response response, Action action) throws Exception{
 		for(Argument arg : action.getArguments()){
 			if(!arg.isBinded()){
 				arg.binding(binding(request,action,arg,getParamValue(request, action, arg)));
@@ -60,7 +60,7 @@ public class BindingPlugin extends Plugin {
 		return true;
     }
 	
-	private static Object binding(Request request,Action action,Type arg,Object value) throws Throwable{
+	private static Object binding(Request request,Action action,Type arg,Object value) throws Exception{
 		Class<?> type = arg.getType();
 		
 		//binging default value for primitive type
@@ -97,7 +97,7 @@ public class BindingPlugin extends Plugin {
 		return null;
 	}
 	
-	private static Object arrayBinding(Request request,Action action,Type arg,Object value) throws Throwable{
+	private static Object arrayBinding(Request request,Action action,Type arg,Object value) throws Exception{
 		Class<?> clazz = arg.getType().getComponentType();
 		if(null == value){
 			return Array.newInstance(arg.getType().getComponentType(), 0);
@@ -130,7 +130,7 @@ public class BindingPlugin extends Plugin {
 		return null;
 	}
 	
-	private static Object beanBinding(Request request,Action action,Type arg) throws Throwable{
+	private static Object beanBinding(Request request,Action action,Type arg) throws Exception{
 		Object      bean   = ClassUtils.newInstance(arg.getType());
 		List<Field> fileds = ClassUtils.getDeclaredFields(arg.getType(), null);
 		
@@ -158,7 +158,7 @@ public class BindingPlugin extends Plugin {
     	return ClassUtils.findMethod(beanClass, "set" + Character.toUpperCase(fieldName.charAt(0)) + (fieldName.length() > 1 ? fieldName.substring(1) : ""), new Class[]{fieldType});
     }
 	
-	private static Object getParamValue(Request request,Action action,Type arg) throws Throwable{
+	private static Object getParamValue(Request request,Action action,Type arg) throws Exception{
 		//get arg's raw value
 		Object value = action.getParameter(arg.getName());
 		if(null == value){

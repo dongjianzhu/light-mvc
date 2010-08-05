@@ -15,11 +15,12 @@
  */
 package org.lightframework.mvc.config;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * 
  * TODO : document me
  *
  * @author fenghm (live.fenghm@gmail.com)
@@ -27,6 +28,7 @@ import java.lang.annotation.RetentionPolicy;
  * @since 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Default {
-	String value();
+@Target({ElementType.METHOD})
+public @interface Ajax {
+
 }

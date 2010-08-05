@@ -23,6 +23,8 @@ import org.lightframework.mvc.Result.IRender;
  * TODO : document me
  *
  * @author fenghm (live.fenghm@gmail.com)
+ * 
+ * @since 1.0.0
  */
 public class View extends Result implements IRender {
 

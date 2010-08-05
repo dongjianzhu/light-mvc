@@ -35,7 +35,7 @@ import org.lightframework.mvc.HTTP.Url;
  * mvc web module http filter,configed in web.xml
  * 
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class MvcFilter implements javax.servlet.Filter {
 

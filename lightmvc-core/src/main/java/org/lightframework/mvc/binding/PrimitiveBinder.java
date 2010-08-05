@@ -27,7 +27,7 @@ import org.lightframework.mvc.exceptions.BindingException;
  * class to bind primitive type itself and primitive type's wrapper type. 
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class PrimitiveBinder implements ITypeBinder {
 
@@ -58,7 +58,7 @@ public class PrimitiveBinder implements ITypeBinder {
 		return types;
 	}
 
-	public Object bind(Type type, String string) throws BindingException, Throwable {
+	public Object bind(Type type, String string) throws BindingException, Exception {
 		Object   value = null;
 		Class<?> clazz = type.getType();
 		

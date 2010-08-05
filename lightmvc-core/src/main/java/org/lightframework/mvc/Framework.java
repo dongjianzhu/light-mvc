@@ -27,7 +27,7 @@ import org.lightframework.mvc.core.CorePlugin;
  * the main class of mvc framework
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 class Framework {
 	
@@ -154,7 +154,7 @@ class Framework {
 	private static String getVersion(){
 		//read version string from /org/lightframework/mvc/version.txt 
 		try {
-	        return Utils.readFromResource("/" + Framework.class.getPackage().getName().replaceAll("\\.", "/") + "/version.txt").trim();
+	        return Utils.readFromResource("/" + Framework.class.getPackage().getName().replaceAll("\\.", "/") + "/version").trim();
         } catch (IOException e) {
         	throw new MvcException("error reading version",e);
         }

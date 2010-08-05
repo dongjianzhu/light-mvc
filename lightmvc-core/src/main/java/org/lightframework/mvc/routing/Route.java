@@ -29,7 +29,7 @@ import org.lightframework.mvc.Lang.Ref;
  * 
  * @author fenghm(live.fenghm@gmail.com)
  * 
- * @since 1.0 
+ * @since 1.0.0
  */
 public class Route {
 	private static Pattern PARAMS_PATTERN = Pattern.compile("\\{([a-zA-Z0-9_]+[\\*]?)\\}");

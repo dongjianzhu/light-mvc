@@ -30,7 +30,7 @@ public class TestFramework extends TestCase {
 	private static final Logger log = LoggerFactory.getLogger(TestFramework.class);
 	
 	public void testGetVersion(){
-		log.info("mvc version:{0}",Framework.VERSION);
+		log.info("mvc version:{}",Framework.VERSION);
 		assertNotNull(Framework.VERSION);
 	}
 	

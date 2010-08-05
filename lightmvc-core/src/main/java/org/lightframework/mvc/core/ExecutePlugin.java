@@ -31,14 +31,14 @@ import org.lightframework.mvc.utils.ClassUtils;
  * core plugin to resolve and execute an {@link Action}
  *
  * @author fenghm(live.fenghm@gmail.com)
- * @since 1.0
+ * @since 1.0.0
  */
 public class ExecutePlugin extends Plugin {
 	
 	private static final Object[] EMPTY_EXECUTE_ARGS = new Object[]{};
 	
 	@Override
-    public Result execute(Request request, Response response, Action action) throws Throwable{
+    public Result execute(Request request, Response response, Action action) throws Exception{
 		//execute java method
 		Method method = action.getMethod();
 		
