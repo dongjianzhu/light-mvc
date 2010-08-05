@@ -33,6 +33,9 @@
 
 package org.slf4j.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
@@ -69,12 +72,12 @@ public class SimpleLogger extends MarkerIgnoringBase {
 	/**
 	 * Mark the time when this class gets loaded into memory.
 	 */
-	private static long startTime = System.currentTimeMillis();
-	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	private static final SimpleDateFormat formtter = new SimpleDateFormat("HH:mm:ss.SSS");
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final String TRACE = "TRACE";
 	private static final String DEBUG = "DEBUG";
-	private static final String INFO = "INFO";
-	private static final String WARN = "WARN";
+	private static final String INFO  = "INFO ";
+	private static final String WARN  = "WARN ";
 	private static final String ERROR = "ERROR";
 
 	/**
@@ -213,8 +216,7 @@ public class SimpleLogger extends MarkerIgnoringBase {
 	private void log(String level, String message, Throwable t) {
 		StringBuffer buf = new StringBuffer();
 
-		long millis = System.currentTimeMillis();
-		buf.append(millis - startTime);
+		buf.append(formtter.format(new Date()));
 
 		buf.append(" [");
 		buf.append(Thread.currentThread().getName());
