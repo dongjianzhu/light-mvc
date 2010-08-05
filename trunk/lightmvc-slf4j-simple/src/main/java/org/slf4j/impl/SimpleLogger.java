@@ -86,7 +86,7 @@ public class SimpleLogger extends MarkerIgnoringBase {
 	}
 
 	public boolean isTraceEnabled() {
-		return false;
+		return true;
 	}
 
 	public boolean isDebugEnabled() {
