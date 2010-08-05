@@ -178,6 +178,16 @@ public abstract class Result {
 	}
 	
 	/**
+	 * a {@link Result} object represents an object value which stored in {@link Result#value} property
+	 * @since 1.0.0
+	 */
+	public static final class Value extends Result {
+		public Value(Object value){
+			this.value = value;
+		}
+	}
+	
+	/**
 	 * a {@link Result} object represents empty output.
 	 * @since 1.0.0
 	 */
@@ -192,10 +202,11 @@ public abstract class Result {
 	public static final class Content extends Result implements IRender{
 		
 		protected String content;
-		protected String contentType = HTTP.CONTENT_TYPE_TEXT_PLAIN;
+		protected String contentType = HTTP.CONTENT_TYPE_TEXT;
 		
 		public Content(String content){
 			this.content = content;
+			this.value   = content;
 		}
 		
 		public Content(String content,String contentType){

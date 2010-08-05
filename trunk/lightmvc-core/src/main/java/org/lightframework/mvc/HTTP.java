@@ -31,13 +31,16 @@ import java.util.Map;
  */
 public final class HTTP {
 	//---http header constants
-	public static final String HEADER_AJAX_REQUEST = "x-requested-with";
-	
+	public static final String HEADER_NAME_AJAX_REQUEST  = "x-requested-with";
+    public static final String HEADER_VALUE_AJAX_REQUEST = "XMLHttpRequest";
+
 	//---http content type constatns
-	public static final String CONTENT_TYPE_TEXT_PLAIN      = "text/plain";
-	public static final String CONTENT_TYPE_TEXT_HTML       = "text/html";
-	public static final String CONTENT_TYPE_TEXT_CSS   	    = "text/css";
-	public static final String CONTENT_TYPE_TEXT_JAVASCRIPT = "text/javascript";
+	public static final String CONTENT_TYPE_TEXT       = "text/plain";
+	public static final String CONTENT_TYPE_HTML       = "text/html";
+	public static final String CONTENT_TYPE_CSS   	   = "text/css";
+	public static final String CONTENT_TYPE_JAVASCRIPT = "text/javascript";
+	public static final String CONTENT_TYPE_JSON       = "application/json"; //rfc4627
+	public static final String CONTENT_TYPE_XML        = "text/xml";
 
 	/**
 	 * a http cookie
@@ -190,6 +193,10 @@ public final class HTTP {
 	    	return current.get();
 	    }
 	    
+	    static void reset(){
+	    	current.set(null);
+	    }
+	    
 	    protected Request(){
 	    	
 	    }
@@ -240,7 +247,7 @@ public final class HTTP {
 		
 		public boolean isAjax(){
 			//jQuery.ajax will send a header "X-Requested-With=XMLHttpRequest"
-			return "XMLHttpRequest".equals(getHeader(HEADER_AJAX_REQUEST));
+			return HEADER_VALUE_AJAX_REQUEST.equals(getHeader(HEADER_NAME_AJAX_REQUEST));
 		}
 		
 		public Object getAttribute(String name){

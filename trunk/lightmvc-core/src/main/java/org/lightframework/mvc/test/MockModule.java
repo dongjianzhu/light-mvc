@@ -15,6 +15,10 @@
  */
 package org.lightframework.mvc.test;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.lightframework.mvc.Module;
 
 /**
@@ -25,9 +29,29 @@ import org.lightframework.mvc.Module;
  * @since 1.0.0
  */
 public class MockModule extends Module {
+	
+	protected List<String> addClasses = new ArrayList<String>();
+	protected List<String> removeClasses = new ArrayList<String>();
 
 	public void setPackages(String packages){
 		this.packages = packages.split(",");
 	}
 	
+	public void addClassName(String name){
+		addClasses.add(name);
+		removeClasses.remove(name);
+	}
+	
+	public void removeClassName(String name){
+		removeClasses.add(name);
+		addClasses.remove(name);
+	}
+
+	@Override
+    protected Collection<String> findAllClassNames() {
+	    Collection<String> classes = super.findAllClassNames();
+	    classes.addAll(addClasses);
+	    classes.removeAll(removeClasses);
+	    return classes;
+    }
 }

@@ -15,6 +15,10 @@
  */
 package org.lightframework.mvc.test;
 
+import java.io.ByteArrayInputStream;
+
+import javassist.ClassPool;
+import javassist.CtClass;
 import junit.framework.TestCase;
 
 /**
@@ -24,7 +28,7 @@ import junit.framework.TestCase;
  *
  * @since 1.0.0
  */
-public class MvcTestCase extends TestCase {
+public abstract class MvcTestCase extends TestCase {
 
 	protected MockModule    module;
 	protected MockRequest   request;
@@ -64,11 +68,11 @@ public class MvcTestCase extends TestCase {
 		}
 	}
 	
-	protected boolean isManaged(){
+	protected final boolean isManaged(){
 		return managed;
 	}
 	
-	protected boolean isIgnored(){
+	protected final boolean isIgnored(){
 		return ignored;
 	}
 	
@@ -79,8 +83,35 @@ public class MvcTestCase extends TestCase {
 		response  = new MockResponse();
 	}
 	
-	//example : coverage tools will found all test case,but will throw a warning if not test method found.
-	public final void testForToolsToRunTest(){
-		assertTrue(true);
+	protected final Class<?> loadClass(String className) throws Exception {
+		try {
+	        return Thread.currentThread().getContextClassLoader().loadClass(className);
+        } catch (ClassNotFoundException e) {
+        	return null;
+        }
+	}
+	
+	protected final Class<?> renameClass(Class<?> originalClass,String newClassName) throws Exception{
+		CtClass ctclass = ClassPool.getDefault().getAndRename(originalClass.getName(), newClassName);
+		Class<?> clazz  = ctclass.toClass();
+		module.addClassName(clazz.getName());
+		return clazz;
+	}
+	
+	protected final Class<?> copyNewClass(Class<?> originalClass,String newClassName) throws Exception{
+		CtClass oldClass = ClassPool.getDefault().get(originalClass.getName());
+		ByteArrayInputStream classStream = new ByteArrayInputStream(oldClass.toBytecode());
+		CtClass newClass = ClassPool.getDefault().makeClass(classStream);
+		Class<?> clazz   = newClass.toClass();
+		module.addClassName(clazz.getName());
+		return clazz;
+	}
+	
+	protected final void removeClass(Class<?> clazz){
+		module.removeClassName(clazz.getName());
+	}
+	
+	protected final void removeClass(String className){
+		module.removeClassName(className);
 	}
 }

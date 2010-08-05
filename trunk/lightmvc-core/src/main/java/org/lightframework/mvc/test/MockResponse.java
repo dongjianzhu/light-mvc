@@ -33,6 +33,9 @@ public class MockResponse extends Response {
 	private ByteArrayOutputStream bytesOut;
 
 	public String getContent() {
+		if(null == bytesOut){
+			return null;
+		}
 		try {
 	        return bytesOut.toString(encoding);
         } catch (UnsupportedEncodingException e) {

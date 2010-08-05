@@ -72,6 +72,7 @@ public class Framework {
 		
 		//release all context data
 		Result.Context.release();
+		Request.reset();
 	}
 	
 	/**
