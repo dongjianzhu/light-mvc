@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.routing;
+package org.lightframework.mvc.test;
 
-import org.lightframework.mvc.Action;
+import org.lightframework.mvc.Module;
 
 /**
- * reprensents a matched action return by {@link Route#matches(String)}
- * @author fenghm(live.fenghm@gmail.com)
+ * mock object of {@link Module} for testing.
+ * 
+ * @author fenghm (live.fenghm@gmail.com)
+ *
  * @since 1.0.0
  */
-public final class Match extends Action{
-    boolean matched;
-	
-	public boolean isMatched(){
-		return matched;
+public class MockModule extends Module {
+
+	public void setPackages(String packages){
+		this.packages = packages.split(",");
 	}
 	
-	void setName(String name){
-		this.name = name;
-	}
 }

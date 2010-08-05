@@ -16,6 +16,7 @@
 package org.lightframework.mvc;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -45,7 +46,6 @@ public class MvcFilter implements javax.servlet.Filter {
 	public void init(FilterConfig config) throws ServletException {
 		servletContext        = config.getServletContext();
 		module                = new Module();
-		module.servletContext = servletContext;
 		
 		Framework.start(module);
 	}
@@ -180,7 +180,7 @@ public class MvcFilter implements javax.servlet.Filter {
         public void forward(String path) {
 			try {
 	            request.getRequestDispatcher(path).forward(request, response);
-            } catch (Throwable e) {
+            } catch (Exception e) {
             	throw new MvcException(e);
             }
         }
@@ -189,10 +189,26 @@ public class MvcFilter implements javax.servlet.Filter {
         public void redirect(String url) {
 			try {
 	            response.sendRedirect(url);
-            } catch (Throwable e) {
+            } catch (Exception e) {
             	throw new MvcException(e);
             }
         }
+
+		@Override
+        public OutputStream getOut() {
+			try {
+				return response.getOutputStream();
+			}catch(IOException e){
+				throw new MvcException(e);
+			}
+        }
+
+		@Override
+        public void setContentType(String contentType) {
+			response.setContentType(contentType);
+        }
+		
+		//TODO : implement Response
 	}
 	
 	private static String getContextPath(HttpServletRequest request){

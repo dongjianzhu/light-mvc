@@ -71,6 +71,15 @@ public class RoutePlugin extends Plugin {
 			}
 		}
 		
+		if(null != matched){
+			if(matched.getName().startsWith("home.")){
+				Action.Setter.setHome(matched, true);
+			}
+			if(matched.getName().endsWith(".index")){
+				Action.Setter.setIndex(matched, true);
+			}
+		}
+		
 		return matched;
 	}
 	

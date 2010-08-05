@@ -71,49 +71,45 @@ public abstract class Result {
     }
 	
 	//--------static methods of Result classs-----------
+	
+	public static void set(Result result){
+		Context.get().result = result;
+	}
+	
+	public static Result get(){
+		return Context.get().result;
+	}	
 
+	public static void setAttribute(String key,Object value){
+		getAttributes().put(key, value);
+	}
 	
-	//TODO : ADD SOME STATUS METHODS HERE
+	public static void removeAttribute(String key){
+		getAttributes().remove(key);
+	}
 	
+	public static Object getAttribute(String key){
+		return getAttributes().get(key);
+	}
+	
+	public static Map<String, Object> getAttributes(){
+		Context context = Context.get();
+		if(null == context.attributes){
+			context.attributes = new HashMap<String, Object>();
+		}
+		return context.attributes;
+	}
 	
 	//--------built in interface and classes used by Result class----------
 	
 	/**
 	 * @since 1.0.0
 	 */
-	public static final class Context {
+	static final class Context {
 		private static ThreadLocal<Context> ctx = new ThreadLocal<Context>();
 		
 		private Result              result;
 		private Map<String, Object> attributes;
-		
-		public static void setResult(Result result){
-			get().result = result;
-		}
-		
-		public static Result getResult(){
-			return get().result;
-		}
-		
-		public static void setAttribute(String key,Object value){
-			getAttributes().put(key, value);
-		}
-		
-		public static void removeAttribute(String key){
-			getAttributes().remove(key);
-		}
-		
-		public static Object getAttribute(String key){
-			return getAttributes().get(key);
-		}
-		
-		public static Map<String, Object> getAttributes(){
-			Context context = get();
-			if(null == context.attributes){
-				context.attributes = new HashMap<String, Object>();
-			}
-			return context.attributes;
-		}
 		
 		static Context get(){
 			Context context = ctx.get();
@@ -168,10 +164,10 @@ public abstract class Result {
 	 */
 	public static final class Error extends Result{
 		
-		protected String    status = STATUS_SERVER_ERROR;
 		protected Throwable exception;
 		
 		public Error(Throwable e){
+			this.status      = STATUS_SERVER_ERROR;
 			this.description = e.getMessage();
 			this.exception   = e;
 		}

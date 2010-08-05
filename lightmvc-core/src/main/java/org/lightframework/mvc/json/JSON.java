@@ -353,7 +353,7 @@ public final class JSON {
     
     public static String quote(String string,boolean trim){
         if(trim){
-            return quote(null == string ? string : string.trim());
+            return quote(null == string ? null : string.trim());
         }else{
             return quote(string);
         }

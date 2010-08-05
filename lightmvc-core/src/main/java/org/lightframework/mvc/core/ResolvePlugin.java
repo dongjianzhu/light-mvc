@@ -16,7 +16,6 @@
 package org.lightframework.mvc.core;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Assert;
@@ -25,6 +24,8 @@ import org.lightframework.mvc.Utils;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.utils.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * core plugin to resolve action's method
@@ -33,6 +34,7 @@ import org.lightframework.mvc.utils.ClassUtils;
  * @since 1.0.0
  */
 public class ResolvePlugin extends Plugin {
+	private static final Logger log = LoggerFactory.getLogger(ResolvePlugin.class);
 
 	@Override
     public boolean resolve(Request request, Response response, Action action) throws Exception{
@@ -42,7 +44,7 @@ public class ResolvePlugin extends Plugin {
 			//replace all '_' characters to '' characters
 			name = Utils.replace(name, "_", "");
 			if(resolve(request,response,action,name)){
-				action.setName(name);
+				Action.Setter.setName(action,name);
 				return true;
 			}
 		}
@@ -57,80 +59,101 @@ public class ResolvePlugin extends Plugin {
 		
 		String controller = fullActionName.substring(0,lastDotIndex);
 		String methodName = fullActionName.substring(lastDotIndex + 1);
-		String _package   = request.getModule().getPackage();
 		
+		if(log.isTraceEnabled()){
+			log.trace("[action:'{}'] -> parsed {controller:'{}',method:'{}'}",
+					  new Object[]{action.getName(),controller,methodName});
+		}
+		
+		for(String pkg : request.getModule().getPackages()){
+			if(resolve(request,response,action,controller,methodName,pkg)){
+				return true;
+			}
+		}
+		
+		return false;
+    }
+	
+	protected boolean resolve(Request request,Response response,Action action,String controller,String methodName,String pkg) throws Exception{
 		//append "." to the end of _package if not empty 
-		_package = null == _package || "".equals(_package) ? "" : _package + ".";
+		pkg = null == pkg || "".equals(pkg) ? "" : pkg + ".";
 		
-		//search controller class
-		/*
-		 search for classes such as :
-		 1. app.controllers.{controller}Controller -> app.controllers.ProductController | app.controllers.product.CategoryController
-		 2. app.controllers.{controller}           -> app.controllers.Product           | app.controllers.product.Category
-		 3. app.{controller}Controller             -> app.ProductController   | demo.product.CategoryController 
-		 4. app.{controller}.Controller            -> app.product.Controller  | demo.product.category.Controller
-		 */
-		boolean resolved = false;
-		if(find1and2(request,_package,controller,action)){
+		//search controller class such as
+		if(resolveControllerClass(request,pkg,controller,action)){
 			//resolve method and arguments
-			Method method = ClassUtils.findMethodIgnoreCase(action.getClazz(), methodName);
+			Method method = ClassUtils.findMethodIgnoreCase(action.getControllerClass(), methodName);
 			
 			if(null != method){
 				if(!ClassUtils.isStatic(method)){
-					action.setController(ClassUtils.newInstance(action.getClazz()));
+					Action.Setter.setControllerObject(action,ClassUtils.newInstance(action.getControllerClass()));
 				}
-				action.setMethod(method);
+				Action.Setter.setMethod(action,method);
 				action.setArguments(ClassUtils.getMethodParameters(method));
-				resolved = true;
+				
+				return true;
+			}else{
+				if(log.isTraceEnabled()){
+					log.trace("[action:'{}'] -> method '{}' not exists in controller '{}'",
+							  new Object[]{action.getName(),methodName,action.getControllerClass().getName()}
+					);
+				}
 			}
 		}
 		
-		return resolved;
-    }
-	
-	private static boolean find1and2(Request request,String prefix,String controller,Action action) throws Exception{
-		//{app-package}.controllers.{controller}Controller
-		String guessClassName1 = prefix + "controllers." + controller + "Controller";
-		
-		//{app-package}.controllers.{controller}
-		String guessClassName2 = prefix + "controllers." + controller;
-		
-		String pkgName = ClassUtils.extractPackageName(guessClassName1);
-		Collection<String> classes = request.getModule().getClassNames(pkgName, false);
-		
-		for(String className : classes){
-			if(className.equalsIgnoreCase(guessClassName1)){
-				action.setClazz(ClassUtils.forName(className));
-				return true;
-			}else if(className.equalsIgnoreCase(guessClassName2)){
-				action.setClazz(ClassUtils.forName(className));
-				return true;
-			}
-		}
 		return false;
 	}
 	
-	/*
-	private static boolean find3(Request request,String pkg,String controller,Action action) throws Exception{
-		//{app-package}.{controller}Controller
-		String guessClassName  = pkg + controller + "Controller";
-		Clazz  controllerClazz = request.getApplication().getClazz(guessClassName);
-		if(null != controllerClazz){
-			action.setClazz(controllerClazz.Class());
+	private static boolean resolveControllerClass(Request request,String pkg,String controller,Action action) throws Exception{
+		/*
+        example : {user}.{list}
+		 1. {module-package}.UserController        -> {module-package}.{controller}Controller
+		 2. {module-package}.UserService           -> {module-package}.{controller}Service
+		 3. {module-package}.user.UserController   -> {module-package}.{controller}.{controller}Controller
+		 4. {module-package}.user.UserService      -> {module-package}.{controller}.{controller}Service
+		 5. {module-package}.User                  -> {module-package}.{controller}
+		 
+		 example : {product.category}.{list}
+		 1. {module-package}.product.CategoryController
+		 2. {module-package}.product.CategoryService
+		 3. {module-package}.product.category.CategoryController
+		 4. {module-package}.product.category.CategoryService
+		 5. {module-package}.product.Category
+		 */
+		
+		String guessName1 = pkg + upperClassName(controller) + "Controller";
+		String guessName2 = pkg + upperClassName(controller) + "Service";
+		String guessName3 = pkg + controller + "." + upperClassName(controller) + "Controller";
+		String guessName4 = pkg + controller + "." + upperClassName(controller) + "Service";
+		String guessName5 = pkg + upperClassName(controller);
+		
+		if(log.isTraceEnabled()){
+			log.trace("[action:'{}'] -> guess the names by orders :",action.getName());
+			log.trace(" 1. '{}'",guessName1);
+			log.trace(" 2. '{}'",guessName2);
+			log.trace(" 3. '{}'",guessName3);
+			log.trace(" 4. '{}'",guessName4);
+			log.trace(" 5. '{}'",guessName5);
+		}
+		
+		Class<?> clazz = 
+			request.getModule().findClass(new String[]{guessName1,guessName2,guessName3,guessName4,guessName5});
+		
+		if(null != clazz){
+			Action.Setter.setControllerClass(action, clazz);
 			return true;
 		}
+
 		return false;
 	}
 	
-	private static boolean find4(Request request,String pkg,String controller,Action action) throws Exception{
-		//{app-package}.{controller}Controller
-		String guessClassName = pkg + controller + ".Controller";
-		String realClassName  = ClassUtils.findClassNameIgnoreCase(guessClassName);
-		if(null != realClassName){
-			action.setClazz(ClassUtils.forName(realClassName));
-			return true;
+	private static String upperClassName(String string){
+		int index = string.lastIndexOf(".");
+		if(index > 0){
+			String pkg  = string.substring(0,index + 1);
+			String name = string.substring(index + 1);
+			return pkg + name.substring(0,1).toUpperCase() + name.substring(1);	 
+		}else{
+			return string.substring(0,1).toUpperCase() + string.substring(1);	
 		}
-		return false;
 	}
-	*/
 }

@@ -17,16 +17,10 @@ package org.lightframework.mvc;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
 
 import org.lightframework.mvc.utils.ClassUtils;
-import static org.lightframework.mvc.I18n.i18n;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,18 +36,19 @@ public class Module {
     
     private static final Logger log = LoggerFactory.getLogger(Module.class);
     
+    public static final String DEFAULT_NAME     = "default";
     public static final String DEFAULT_ENCODING = "UTF-8";
     public static final String DEFAULT_PACKAGE  = "app";
     
-    protected ServletContext servletContext;
-    
-    protected String _package = DEFAULT_PACKAGE;
-    
-    protected String encoding = DEFAULT_ENCODING;
-    
-    protected Map<String, Object> parameters = new HashMap<String, Object>();
-    
+    protected String   name     = DEFAULT_NAME;
+    protected String   encoding = DEFAULT_ENCODING;
+    protected String[] packages = new String[]{DEFAULT_PACKAGE};
+
     protected LinkedList<Plugin> plugins = new LinkedList<Plugin>();
+    
+    //used to cache classes names
+    private long lastFindClassesTime;
+    private Collection<String> classNames;
     
     void start(){
     	//TODO : load module plugins
@@ -65,105 +60,105 @@ public class Module {
     	for(Plugin plugin : plugins){
     		try{
     			plugin.unload();
-    		}catch(Throwable e){
-    			log.error(i18n("Plugin.UnloadError"), plugin.getClass().getName(),e);
+    		}catch(Exception e){
+    			log.error("module '{}' -> unload plugin '{}' error", plugin.getName(),e);
     		}
     	}
     }
     
-	public String getPackage() {
-    	return _package;
+    public String getName(){
+    	return name;
+    }
+    
+    public String[] getPackages(){
+    	return packages;
     }
 	
 	public String getEncoding(){
 		return encoding;
 	}
 	
-	public Map<String, Object> getParameters(){
-		return parameters;
+	public Class<?> findClass(String name) {
+		return findClass(new String[]{name});
+	}
+	
+	public Class<?> findClass(String[] names) {
+		Collection<String> classes = findAllClassNames();
+		
+		for(String clazz : classes){
+			for(String name : names){
+				if(clazz.equalsIgnoreCase(name)){
+					if(log.isTraceEnabled()){
+						log.trace("[module:'{}'] -> found class name '{}'",getName(),clazz);
+					}
+					return loadClassForName(clazz);
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
-	 * load {@link Clazz} by name ignore case.
-	 * @return a {@link Clazz} object that contains the {@link Class} matched the name ignorecase,else null
+	 * @return all the class names in this module and the {@link #packages} 
 	 */
-	public Clazz getClazz(String name){
-		try {
-	        String className = ClassUtils.findClassNameIgnoreCase(name);
-	        if(null != className){
-	        	return new Clazz(ClassUtils.forName(className));
-	        }
-	        return null;
-        } catch (IOException e) {
-        	throw new MvcException(e);
-        }
-	}
-	
-	public Collection<Clazz> getClasses(){
-		return getClasses(null);
-	}
-	
-	public Collection<Clazz> getClasses(String _package){
-		return getClasses(_package,false);
-	}
+	protected Collection<String> findAllClassNames() {
+		long now = System.currentTimeMillis();
+		if(null == classNames || now - lastFindClassesTime > 10000){
+			synchronized (this) {
+				if(null != classNames){
+					classNames.clear();
+					classNames = null;
+				}
+				
+				try {
+	                for(String pkg : getPackages()){
+	                	Collection<String> foundClassNames = ClassUtils.findAllClassNames(getClassLoader(), pkg);
+	                	if(null == classNames){
+	                		classNames = foundClassNames;
+	                	}else{
+	                		classNames.addAll(foundClassNames);
+	                	}
 
-	public Collection<Clazz> getClasses(String _package,boolean recursion) {
-		// TODO : Module.getClasses
-		return null;
+	                	if(log.isTraceEnabled()){
+		                	log.trace("[module:'{}'] -> found {} classes in package '{}'",
+		                			  new Object[]{getName(),foundClassNames.size(),pkg}
+		                	);
+	                	}
+	                }
+                } catch (IOException e) {
+                	throw new MvcException("error find classes in module '" + getName() + "'",e);
+                }
+				
+				lastFindClassesTime = now;
+            }
+		}
+		return classNames;
 	}
 	
-	public Collection<String> getClassNames(String _package,boolean recursion) {
+	/**
+	 * @return {@link ClassLoader} in this web module,default is {@link Thread#currentThread()#getClassLoader()};
+	 */
+	protected ClassLoader getClassLoader(){
+		return Thread.currentThread().getContextClassLoader();
+	}
+	
+	/**
+	 * @see Class#forName(String);
+	 * 
+	 * @return {@link Class} object of the given class name, return null if {@link ClassNotFoundException} occurs.
+	 */
+	protected Class<?> loadClassForName(String className) {
+		Class<?> clazz = null;
 		try {
-	        return ClassUtils.findAllClassNames(_package);
-        } catch (IOException e) {
-        	throw new MvcException(e);
+	        clazz = getClassLoader().loadClass(className);
+        } catch (ClassNotFoundException e) {
+        	log.debug("[module:'{}'] -> class '{}' not found",getName(),className);
         }
+        return clazz;
 	}
 	
-	public String getView(String path){
-		return null;
-	}
-	
-	public Collection<String> getViews(){
-		return getViews(null);
-	}
-	
-	public Collection<String> getViews(String path){
-		return getViews(path,false);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Collection<String> getViews(String path,boolean recursion){
-		// TODO : Module.getViews
-		return servletContext.getResourcePaths(path);
-	}
-
 	protected List<Plugin> getPlugins(){
 		return plugins;
-	}
-
-	/**
-	 * @since 1.0
-	 */
-	public static final class Clazz {
-		protected Class<?> _class;
-		protected long lastReloaded;
-		protected long lastModified;
-		
-		Clazz(Class<?> _class){
-			this._class = _class;
-		}
-		
-		public Class<?> Class(){
-			return _class;
-		}
-		
-		public boolean isModified(){
-			return lastModified != lastReloaded;
-		}
-		
-		public boolean isPlugin(){
-			return Plugin.class.isAssignableFrom(_class);
-		}
 	}
 }
