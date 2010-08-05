@@ -40,7 +40,7 @@ public final class HTTP {
 
 	/**
 	 * a http cookie
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	public static class Cookie{
 		protected String  name;
@@ -82,7 +82,7 @@ public final class HTTP {
 	
 	/**
 	 * a http url
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	public static class Url {
 		protected String urlString;   //full url 
@@ -114,7 +114,7 @@ public final class HTTP {
 	
 	/**
 	 * a http header
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	public static class Header {
 		protected String name;
@@ -148,7 +148,7 @@ public final class HTTP {
 	
 	/**
 	 * a http request
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	public static class Request {
 	    protected static final InheritableThreadLocal<Request> current = new InheritableThreadLocal<Request>();
@@ -304,7 +304,7 @@ public final class HTTP {
 	
 	/**
 	 * a http response
-	 * @since 1.0
+	 * @since 1.0.0
 	 */
 	public static class Response {
 
