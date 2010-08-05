@@ -33,37 +33,35 @@ public class Action {
     private static final Argument[] EMPTY_ARGUMENTS   = new Argument[]{};
 
 	protected String             name;
-    protected Class<?>           clazz;
+    protected Class<?>           controllerClass;
+    protected Object             controllerObject;
 	protected Method             method;
 	protected Map<String,Object> parameters;
 	protected Argument[]         arguments;
-    protected Object             controller;
     
-	protected boolean            resolved;
-	protected boolean            binded;
+    private boolean              home;
+    private boolean              index;
+    private boolean              resolved;
+    private boolean              binded;
 
 	public String getName() {
     	return name;
     }
 
-	public void setName(String name) {
-    	this.name = name;
-    }
-	
 	public boolean isResolved() {
     	return resolved;
     }
 
-	public void setResolved(boolean resolved) {
-    	this.resolved = resolved;
-    }
-	
 	public boolean isBinded() {
     	return binded;
     }
 
-	public void setBinded(boolean binded) {
-    	this.binded = binded;
+	public boolean isHome() {
+    	return home;
+    }
+	
+	public boolean isIndex() {
+    	return index;
     }
 
 	public Object getParameter(String name){
@@ -105,20 +103,12 @@ public class Action {
     	this.arguments = args;
     }
 	
-	public Class<?> getClazz() {
-    	return clazz;
+	public Class<?> getControllerClass() {
+    	return controllerClass;
     }
 
-	public void setClazz(Class<?> controllerClass) {
-    	this.clazz = controllerClass;
-    }
-
-	public Object getController() {
-    	return controller;
-    }
-
-	public void setController(Object controllerObject) {
-    	this.controller = controllerObject;
+	public Object getControllerObject() {
+    	return controllerObject;
     }
 
 	public Class<?> getReturnType(){
@@ -127,10 +117,6 @@ public class Action {
 
 	public Method getMethod() {
     	return method;
-    }
-
-	public void setMethod(Method actionMethod) {
-    	this.method = actionMethod;
     }
 
 	void onRouted(){
@@ -143,11 +129,11 @@ public class Action {
 	
     void onResolved() {
     	if(resolved){
-	        Assert.notNull("controllerClass", clazz);
+	        Assert.notNull("controllerClass", controllerClass);
 	        Assert.notNull("method", method);
 	
 	        if(!ClassUtils.isStatic(method)){
-	        	Assert.notNull("controllerObject", controller);
+	        	Assert.notNull("controllerObject", controllerObject);
 	        }
     	}
     }
@@ -157,8 +143,48 @@ public class Action {
 	}
 	
 	/**
+	 * used to set the protected properties of an {@link Action} object.
+	 * 
+	 * @since 1.0.0
+	 */
+	public static final class Setter {
+		
+		public static void setName(Action action,String name) {
+			action.name = name;
+	    }
+		
+		public static void setControllerObject(Action action,Object controllerObject) {
+			action.controllerObject = controllerObject;
+	    }
+		
+		public static void setMethod(Action action,Method actionMethod) {
+			action.method = actionMethod;
+	    }
+		
+		public static void setBinded(Action action, boolean binded) {
+			action.binded = binded;
+	    }		
+		
+		public static void setResolved(Action action,boolean resolved) {
+			action.resolved = resolved;
+	    }
+		
+		public static void setControllerClass(Action action, Class<?> controllerClass) {
+			action.controllerClass = controllerClass;
+	    }
+		
+		public static void setHome(Action action,boolean home){
+			action.home = home;
+		}
+		
+		public static void setIndex(Action action,boolean index){
+			action.index = index;
+		}
+	}
+	
+	/**
 	 * represents an action execution argument
-	 * @since 1.0 
+	 * @since 1.0.0 
 	 */
 	public static class Argument extends Type{
 		protected Object       value;

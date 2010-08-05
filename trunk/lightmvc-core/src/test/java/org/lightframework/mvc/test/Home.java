@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc;
+package org.lightframework.mvc.test;
 
-import org.lightframework.mvc.HTTP.Request;
-import org.lightframework.mvc.HTTP.Response;
-import org.lightframework.mvc.Result.IRender;
+import static org.lightframework.mvc.Result.*;
 
 /**
- * TODO : document me
+ * home controller for testing in this package
  *
  * @author fenghm (live.fenghm@gmail.com)
- * 
+ *
  * @since 1.0.0
  */
-public class View extends Result implements IRender {
+public class Home {
 
-	public void render(Request request, Response response) {
-		// TODO implement View.render
-
+	public void index() {
+		setAttribute("just_for_test", "executed");
 	}
 	
 }

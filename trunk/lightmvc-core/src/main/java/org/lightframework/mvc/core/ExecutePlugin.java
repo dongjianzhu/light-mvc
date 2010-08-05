@@ -49,7 +49,7 @@ public class ExecutePlugin extends Plugin {
 			if(ClassUtils.isStatic(action.getMethod())){
 				value = method.invoke(null, args); //static invoke
 			}else{
-				value = method.invoke(action.getController(), args);
+				value = method.invoke(action.getControllerObject(), args);
 			}
 			
 			if(value instanceof Result){

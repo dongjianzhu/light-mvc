@@ -22,6 +22,8 @@ import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.Result.Return;
 import org.lightframework.mvc.core.CorePlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * the main class of mvc framework
@@ -29,7 +31,8 @@ import org.lightframework.mvc.core.CorePlugin;
  * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0.0
  */
-class Framework {
+public class Framework {
+	private static final Logger log = LoggerFactory.getLogger(Framework.class);
 	
 	//mvc framework version
 	public static final String VERSION = getVersion();
@@ -43,29 +46,39 @@ class Framework {
 	/**
 	 * start the module
 	 */
-	public static void start(Module module){
+	protected static void start(Module module){
 		if(!initialized){
+			log.info("[mvc] -> initializing... ");
 			synchronized (Framework.class) {
 	            if(!initialized){
 	            	init();
 	            	initialized = true;
 	            }
             }
+			log.info("[mvc] -> initialized!");
 		}
+		log.debug("[module:'{}'] -> starting...",module.getName());
 		module.start();
+		log.debug("[module:'{}'] -> started!",module.getName());
 	}
 	
 	/**
 	 * stop the module
 	 */
-	public static void stop(Module module){
+	protected static void stop(Module module){
+		log.debug("[module:'{}'] -> stopping...",module.getName());
 		module.stop();
+		log.debug("[module:'{}'] -> stopped!",module.getName());
+		
+		//release all context data
+		Result.Context.release();
 	}
 	
 	/**
 	 * is this request ignored by current module
 	 */
-	public static boolean ignore(Request request){
+	protected static boolean ignore(Request request){
+		// TODO : Framework.ignore
 		return false;
 	}
 
@@ -75,7 +88,7 @@ class Framework {
 	 * @param response     mvc http response
 	 * @return true if mvc framework has handled this request
 	 */
-	public static boolean handle(Request request,Response response) throws Throwable {
+	protected static boolean handle(Request request,Response response) throws Exception {
 		Assert.notNull("request.module", request.getModule());
 		
 		//is hanlded by mvc framework
@@ -93,18 +106,28 @@ class Framework {
 					Action action = PluginInvoker.route(request, response);
 					
 					if(null != action){
+						if(log.isTraceEnabled()){
+							log.trace("[action] -> route uri '{}' to action '{}'",request.getUriString(),action.getName());
+						}
+						
 						request.action = action;
 						
 						action.onRouted();
 						
 						managed = invokeAction(request,response,action);
+						
+						
+					}else{
+						if(log.isTraceEnabled()){
+							log.trace("[action] -> not found for uri '{}'",request.getUriString());
+						}
 					}
 				}
 				return managed;
 			}catch(Return e){
 				return PluginInvoker.render(request, response, e.result());
 			}
-		}catch(Throwable e){
+		}catch(Exception e){
 			//handle exception
 			if(!PluginInvoker.exception(request, response, e)){
 				throw e;
@@ -121,18 +144,27 @@ class Framework {
 		plugins.add(new CorePlugin());
 	}
 	
-	private static boolean invokeAction(Request request,Response response,Action action) throws Throwable{
+	private static boolean invokeAction(Request request,Response response,Action action) throws Exception{
 		//resolving action method
 		if(!action.isResolved()){
-			action.setResolved(PluginInvoker.resolve(request,response,action));
+			Action.Setter.setResolved(action,PluginInvoker.resolve(request,response,action));
 		}
 		action.onResolved();
 		
 		if(action.isResolved()){
+			if(log.isTraceEnabled()){
+				log.trace("[action:'{}'] -> resolved as '{}${}'",
+						  new Object[]{
+							  action.getName(),
+							  action.getControllerClass().getName(),
+							  action.getMethod().getName()
+						  });
+			}
+			
 			//binding method arguments
 			if(!action.isBinded()){
 				PluginInvoker.binding(request, response, action);
-				action.setBinded(true);
+				Action.Setter.setBinded(action,true);
 			}
 			action.onBinded();
 			
@@ -147,8 +179,13 @@ class Framework {
 			}else{
 				return true;
 			}
+		}else{
+			//TODO : handle action cant not resolved.
+			if(log.isTraceEnabled()){
+				log.trace("[action:'{}'] -> can not resolved",action.getName());
+			}
+			return false;
 		}
-		return false;
 	}
 	
 	private static String getVersion(){
@@ -161,24 +198,26 @@ class Framework {
 	}
 	
 	/**
-	 * @since 1.0 
+	 * @since 1.0.0 
 	 */
 	private static final class PluginInvoker{
-		static boolean request(Request request,Response response) throws Throwable{
+		static boolean request(Request request,Response response) throws Exception{
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.request(request, response)){
+					log.trace("request managed by plugin '{}'",plugin.getName());
 					return true;
 				}
 			}
 			for(Plugin plugin : plugins){
 				if(plugin.request(request, response)){
+					log.trace("request managed by plugin '{}'",plugin.getName());
 					return true;
 				}
 			}
 			return false;
 		}
 		
-		static Action route(Request request,Response response) throws Throwable{
+		static Action route(Request request,Response response) throws Exception{
 			for(Plugin plugin : request.getModule().getPlugins()){
 				Action action = plugin.route(request, response);
 				if(null != action){
@@ -194,7 +233,7 @@ class Framework {
 			return null;
 		}
 		
-		static boolean resolve(Request request,Response response,Action action) throws Throwable{
+		static boolean resolve(Request request,Response response,Action action) throws Exception{
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.resolve(request, response, action)){
 					return true;
@@ -208,7 +247,7 @@ class Framework {
 			return false;
 		}
 		
-		static boolean binding(Request request,Response response,Action action) throws Throwable{
+		static boolean binding(Request request,Response response,Action action) throws Exception{
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.binding(request, response, action)){
 					return true;
@@ -222,7 +261,7 @@ class Framework {
 			return false;
 		}
 		
-		static Result execute(Request request,Response response,Action action) throws Throwable{
+		static Result execute(Request request,Response response,Action action) throws Exception{
 			for(Plugin plugin : request.getModule().getPlugins()){
 				Result result = plugin.execute(request, response, action);
 				if(null != result){
@@ -238,7 +277,9 @@ class Framework {
 			return null;
 		}
 		
-		static boolean render(Request request,Response response,Result result) throws Throwable{
+		static boolean render(Request request,Response response,Result result) throws Exception {
+			request.result = result;
+			
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.render(request, response, result)){
 					return true;
@@ -252,7 +293,7 @@ class Framework {
 			return false;
 		}
 		
-		static boolean exception(Request request,Response response,Throwable e) throws Throwable{
+		static boolean exception(Request request,Response response,Throwable e) throws Exception{
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.error(request, response, e)){
 					return true;

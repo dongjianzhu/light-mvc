@@ -15,6 +15,7 @@
  */
 package org.lightframework.mvc;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -49,6 +50,21 @@ public final class HTTP {
 		protected String  value;
 		protected int     maxAge = -1;
 		protected boolean secure = false;
+		
+		public Cookie(){
+			
+		}
+		
+		public Cookie(String name,String value){
+			this.name  = name;
+			this.value = value;
+		}
+		
+		public Cookie(String name,String value,String domain,String path){
+			this(name,value);
+			this.domain = domain;
+			this.path   = path;
+		}
 		
 		public String getName() {
 	    	return name;
@@ -154,15 +170,16 @@ public final class HTTP {
 	    protected static final InheritableThreadLocal<Request> current = new InheritableThreadLocal<Request>();
 
 	    protected Url      url;
-	    protected String   context;
-	    protected String   path;
+	    protected String   context = "";
+	    protected String   path    = "";
 	    protected String   remoteAddress;
 	    protected String   contentType;
 	    protected String   method;
 	    protected boolean  secure;
-	    protected Action   action;
 	    protected Response response;
 	    protected Module   module;
+	    protected Action   action;	    
+	    protected Result   result;
 
 	    protected Map<String, Header>   headers;
 	    protected Map<String, Cookie>   cookies;
@@ -267,8 +284,9 @@ public final class HTTP {
 	    	return parameters;
 	    }
 		
-		public Header getHeader(String name){
-			return getHeaders().get(name);
+		public String getHeader(String name){
+			Header header = getHeaders().get(name);
+			return null == header ? null : header.value();
 		}
 
 		public Map<String, Header> getHeaders() {
@@ -295,6 +313,10 @@ public final class HTTP {
 		
 		public Action getAction(){
 			return action;
+		}
+		
+		public Result getResult(){
+			return result;
 		}
 		
 		public Response getResponse(){
@@ -397,14 +419,21 @@ public final class HTTP {
 		
 		public void write(String content) throws IOException{
 			if(null != content){
-	            out.write(content.getBytes(encoding));
+	            getOut().write(content.getBytes(encoding));
 			}
 		}
 		
 		public void writeln(String content) throws IOException{
 			if(null != content){
-	            out.write(content.getBytes(encoding + "\n"));
+				getOut().write(content.getBytes(encoding + "\n"));
 			}
+		}
+		
+		public OutputStream getOut(){
+			if(null == out){
+				out = new ByteArrayOutputStream();
+			}
+			return out;
 		}
 	}	
 }

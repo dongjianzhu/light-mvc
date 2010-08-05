@@ -47,7 +47,7 @@ public class RenderPlugin extends Plugin {
     }
 
 	protected void setAttributes(Request request,Result result){
-		request.getAttributes().putAll(Result.Context.getAttributes());
+		request.getAttributes().putAll(Result.getAttributes());
 		request.setAttribute("result", result);
 		request.setAttribute("result.status", result.getStatus());
 		request.setAttribute("result.description",result.getDescription());

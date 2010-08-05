@@ -25,6 +25,13 @@ import org.lightframework.mvc.HTTP.Response;
  * @since 1.0.0
  */
 public abstract class Plugin {
+	
+	/**
+	 * @return the display name of this plugin
+	 */
+	public String getName() {
+		return this.getClass().getName();
+	}
 
 	/**
 	 * called at framework initializing and this plugin had been loading.<p>
