@@ -54,6 +54,8 @@ public class ExecutePlugin extends Plugin {
 			
 			if(value instanceof Result){
 				return (Result)value;
+			}else if(null != value){
+				return new Result.Value(value);
 			}else{
 				return new Result.Empty();
 			}

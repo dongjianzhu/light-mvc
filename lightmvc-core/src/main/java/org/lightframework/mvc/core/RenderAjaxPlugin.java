@@ -19,6 +19,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.lightframework.mvc.Action;
+import org.lightframework.mvc.HTTP;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
@@ -27,13 +28,18 @@ import org.lightframework.mvc.config.Ajax;
 import org.lightframework.mvc.json.JSON;
 
 /**
- * TODO : document me
+ * core {@link Plugin} to render {@link Result} to json or xml format if current request is ajax request.
  *
  * @author fenghm (live.fenghm@gmail.com)
  * 
  * @since 1.0.0
  */
 public class RenderAjaxPlugin extends Plugin {
+	
+	public static final String RETURN_CODE  = "returnCode";
+	public static final String RETURN_DESC  = "returnDesc";
+	public static final String RETURN_VALUE = "returnValue";
+	public static final String RETURN_ERROR = "error";
 	
 	protected JSON json = new JSON();
 	
@@ -71,20 +77,27 @@ public class RenderAjaxPlugin extends Plugin {
     }
 	
 	protected void renderJson(Request request,Response response,Result result) throws Exception{
-		
+		String content = encodeJson(result);
+		response.write(content);
+		response.setContentType(HTTP.CONTENT_TYPE_JSON);
+	}
+	
+	protected String encodeJson(Result result) throws Exception{
 		JSON.Writer writer = new JSON.Writer();
 		
 		writer.startObject();
-		writer.add("returnCode",result.getStatus())
-		      .add("returnDesc",result.getDescription());
+		writer.add(RETURN_CODE,result.getStatus())
+		      .add(RETURN_DESC,result.getDescription());
 		
 		if(result instanceof Result.Error){
-			writer.add("error",generateErrorContent((Result.Error)result));
+			writer.add(RETURN_ERROR,generateErrorContent((Result.Error)result));
 		}
 		
-		writer.add("returnValue", json.encode(result.getValue()));
+		writer.add(RETURN_VALUE, json.encode(result.getValue()));
 		
 		writer.endObject();
+		
+		return writer.toString();
 	}
 	
 	protected String generateErrorContent(Result.Error error){
