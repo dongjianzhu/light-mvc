@@ -78,6 +78,9 @@ public abstract class Result {
 	
 	//--------built in interface and classes used by Result class----------
 	
+	/**
+	 * @since 1.0.0
+	 */
 	public static final class Context {
 		private static ThreadLocal<Context> ctx = new ThreadLocal<Context>();
 		
@@ -132,10 +135,16 @@ public abstract class Result {
 		}
 	}
 
+	/**
+	 * @since 1.0.0 
+	 */
 	public static interface IRender {
 		void render(Request request,Response response) throws Exception;
 	}
 	
+	/**
+	 * @since 1.0.0
+	 */
 	public static final class Return extends RuntimeException{
 		
         private static final long serialVersionUID = -4405493230296254488L;
@@ -155,6 +164,7 @@ public abstract class Result {
 	
 	/**
 	 * a {@link Result} object represents an error.
+	 * @since 1.0.0
 	 */
 	public static final class Error extends Result{
 		
@@ -173,6 +183,7 @@ public abstract class Result {
 	
 	/**
 	 * a {@link Result} object represents empty output.
+	 * @since 1.0.0
 	 */
 	public static final class Empty extends Result {
 		
@@ -180,6 +191,7 @@ public abstract class Result {
 	
 	/**
 	 * a {@link Result} object output text contents to browser. 
+	 * @since 1.0.0
 	 */
 	public static final class Content extends Result implements IRender{
 		
@@ -205,6 +217,7 @@ public abstract class Result {
 	
 	/**
 	 * a {@link Result} object sends redirect to browser of the given url.
+	 * @since 1.0.0
 	 */
 	public static final class Redirect extends Result implements IRender{
 		
@@ -221,6 +234,7 @@ public abstract class Result {
 	
 	/**
 	 * a {@link Result} object forward to another request path in server.
+	 * @since 1.0.0
 	 */
 	public static final class Forward extends Result implements IRender{
 		
