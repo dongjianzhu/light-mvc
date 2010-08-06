@@ -18,7 +18,6 @@ package org.lightframework.mvc.core;
 import java.lang.reflect.Method;
 
 import org.lightframework.mvc.Action;
-import org.lightframework.mvc.Assert;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Utils;
 import org.lightframework.mvc.HTTP.Request;
@@ -38,32 +37,8 @@ public class ResolvePlugin extends Plugin {
 
 	@Override
     public boolean resolve(Request request, Response response, Action action) throws Exception{
-		String fullActionName = action.getName();
-		String[] actionNames  = fullActionName.split(",");
-		for(String name : actionNames){
-			//replace all '_' characters to '' characters
-			name = Utils.replace(name, "_", "");
-			if(resolve(request,response,action,name)){
-				Action.Setter.setName(action,name);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	protected boolean resolve(Request request,Response response,Action action,String fullActionName) throws Exception{
-		//resolve controller and action method
-		int lastDotIndex = fullActionName.lastIndexOf(".");
-		
-		Assert.isTrue(lastDotIndex > 0, "@ActionName.NoControllerDefined",fullActionName);
-		
-		String controller = fullActionName.substring(0,lastDotIndex);
-		String methodName = fullActionName.substring(lastDotIndex + 1);
-		
-		if(log.isTraceEnabled()){
-			log.trace("[action:'{}'] -> parsed {controller:'{}',method:'{}'}",
-					  new Object[]{action.getName(),controller,methodName});
-		}
+		String controller = action.getControllerName();
+		String methodName = action.getSimpleName();
 		
 		for(String pkg : request.getModule().getPackages()){
 			if(resolve(request,response,action,controller,methodName,pkg)){
@@ -75,6 +50,10 @@ public class ResolvePlugin extends Plugin {
     }
 	
 	protected boolean resolve(Request request,Response response,Action action,String controller,String methodName,String pkg) throws Exception{
+		//replace all '_' characters to '' characters
+		controller = Utils.replace(controller, "_", "");
+		methodName = Utils.replace(methodName, "_", "");
+		
 		//append "." to the end of _package if not empty 
 		pkg = null == pkg || "".equals(pkg) ? "" : pkg + ".";
 		

@@ -13,32 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.core;
+package org.lightframework.mvc;
 
-import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 
 /**
- * core plugin to handle exceptions
+ * TODO : document me
  *
- * @author fenghm(live.fenghm@gmail.com)
+ * @author fenghm (live.fenghm@gmail.com)
+ *
  * @since 1.0.0
  */
-public class ErrorPlugin extends Plugin {
+public abstract class View implements IRender {
 
-	@Override
-    public boolean error(Request request, Response response, Throwable exception)  {
-	    // TODO : implement ErrorPlugin.error
-		//route by exception 
-		/**
-		 * 1.route excepton (no action found)
-		 * 2.exception while param binding()  detail excepton for debug
-		 * 2.forward exception(no render page found)
-		 * 
-		 * 4.Action invokation exception (app exception )
-		 */
-	    return super.error(request, response, exception);
-    }
 	
+	public static class ViewResult extends Result implements IRender {
+		private View view;
+		
+		public ViewResult(View view){
+			this.view = view;
+		}
+
+		public void render(Request request, Response response) throws Exception {
+			view.render(request, response);
+        }
+	}
 }

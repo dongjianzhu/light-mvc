@@ -43,6 +43,10 @@ public abstract class Result {
 	protected String description;
 	protected Object value;
 
+	public boolean isOk(){
+		return STATUS_OK.equals(getStatus());
+	}
+	
 	public String getStatus() {
 		if(null == status){
 			status = STATUS_OK;
@@ -131,13 +135,6 @@ public abstract class Result {
 		}
 	}
 
-	/**
-	 * @since 1.0.0 
-	 */
-	public static interface IRender {
-		void render(Request request,Response response) throws Exception;
-	}
-	
 	/**
 	 * @since 1.0.0
 	 */
