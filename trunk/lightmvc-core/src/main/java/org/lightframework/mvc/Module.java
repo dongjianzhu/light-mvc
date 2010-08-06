@@ -96,6 +96,10 @@ public class Module {
 			}
 		}
 		
+		if(log.isTraceEnabled()){
+			log.trace("[module:'{}'] -> no class found of the given class names",getName());
+		}
+		
 		return null;
 	}
 	
@@ -139,7 +143,7 @@ public class Module {
 	/**
 	 * @return {@link ClassLoader} in this web module,default is {@link Thread#currentThread()#getClassLoader()};
 	 */
-	protected ClassLoader getClassLoader(){
+	public ClassLoader getClassLoader(){
 		return Thread.currentThread().getContextClassLoader();
 	}
 	
@@ -148,7 +152,7 @@ public class Module {
 	 * 
 	 * @return {@link Class} object of the given class name, return null if {@link ClassNotFoundException} occurs.
 	 */
-	protected Class<?> loadClassForName(String className) {
+	public Class<?> loadClassForName(String className) {
 		Class<?> clazz = null;
 		try {
 	        clazz = getClassLoader().loadClass(className);

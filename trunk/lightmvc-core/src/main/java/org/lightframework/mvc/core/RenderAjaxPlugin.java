@@ -41,6 +41,8 @@ public class RenderAjaxPlugin extends Plugin {
 	public static final String RETURN_VALUE = "returnValue";
 	public static final String RETURN_ERROR = "error";
 	
+	public static final String PARAM_AJAX_REQUEST = "x-ajax";
+	
 	protected JSON json = new JSON();
 	
 	public RenderAjaxPlugin(){
@@ -62,7 +64,7 @@ public class RenderAjaxPlugin extends Plugin {
 		
 		if(!isAjax){
 			//is request send a ajax parameter 'x-ajax' 
-			isAjax = null != request.getParameter("x-ajax");
+			isAjax = null != request.getParameter(PARAM_AJAX_REQUEST);
 		}
 
 		if(isAjax){
@@ -86,11 +88,11 @@ public class RenderAjaxPlugin extends Plugin {
 		JSON.Writer writer = new JSON.Writer();
 		
 		writer.startObject();
-		writer.add(RETURN_CODE,result.getStatus())
-		      .add(RETURN_DESC,result.getDescription());
+		writer.add(RETURN_CODE,json.encode(result.getStatus()))
+		      .add(RETURN_DESC,json.encode(result.getDescription()));
 		
 		if(result instanceof Result.Error){
-			writer.add(RETURN_ERROR,generateErrorContent((Result.Error)result));
+			writer.add(RETURN_ERROR,json.encode(generateErrorContent((Result.Error)result)));
 		}
 		
 		writer.add(RETURN_VALUE, json.encode(result.getValue()));

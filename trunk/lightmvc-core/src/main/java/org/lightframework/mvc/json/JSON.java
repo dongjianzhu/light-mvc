@@ -41,8 +41,6 @@ public final class JSON {
 	
     public static final String NULL_STRING = "null";
     
-    public static final String EMPTY_OBJECT = "{}";
-    
     public final static SimpleDateFormat RFC_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");    
     
     private boolean trimSpace   = true;
@@ -238,7 +236,7 @@ public final class JSON {
                 return json.toString();
             }   
         }else{
-            return EMPTY_OBJECT;
+            return NULL_STRING;
         }
     }
     

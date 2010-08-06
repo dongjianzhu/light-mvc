@@ -69,6 +69,14 @@ public class MockRequest extends Request {
 		mockUrl.setPath(path);
 	}
 	
+	public void setAjax(boolean ajax){
+		if(ajax){
+			setHeader(HTTP.HEADER_NAME_AJAX_REQUEST, HTTP.HEADER_VALUE_AJAX_REQUEST);
+		}else{
+			removeHeader(HTTP.HEADER_NAME_AJAX_REQUEST);
+		}
+	}
+	
 	public void setRemoteAddress(String remoteAddress) {
 		this.remoteAddress = remoteAddress;
 	}
@@ -83,6 +91,10 @@ public class MockRequest extends Request {
 
 	public void setSecure(boolean secure) {
 		this.secure = secure;
+	}
+	
+	public void removeHeader(String name){
+		getHeaders().remove(name);
 	}
 
 	public void setHeader(String name,String value){

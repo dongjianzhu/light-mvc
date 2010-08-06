@@ -28,7 +28,7 @@ import org.lightframework.mvc.Result;
 public class TestMvcTestCase extends MvcTestCase {
 	
 	@Override
-    protected void setUpTest() throws Exception {
+    protected void setUpEveryTest() throws Exception {
 		module.setPackages(Home.class.getPackage().getName());
     }
 

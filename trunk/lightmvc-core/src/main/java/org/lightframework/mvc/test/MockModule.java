@@ -46,7 +46,7 @@ public class MockModule extends Module {
 		removeClasses.add(name);
 		addClasses.remove(name);
 	}
-
+	
 	@Override
     protected Collection<String> findAllClassNames() {
 	    Collection<String> classes = super.findAllClassNames();
