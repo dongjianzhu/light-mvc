@@ -33,15 +33,41 @@ public final class HTTP {
 	//---http header constants
 	public static final String HEADER_NAME_AJAX_REQUEST  = "x-requested-with";
     public static final String HEADER_VALUE_AJAX_REQUEST = "XMLHttpRequest";
+    public static final String HEADER_NAME_USER_AGENT    = "User-Agent";
 
 	//---http content type constatns
 	public static final String CONTENT_TYPE_TEXT       = "text/plain";
 	public static final String CONTENT_TYPE_HTML       = "text/html";
 	public static final String CONTENT_TYPE_CSS   	   = "text/css";
 	public static final String CONTENT_TYPE_JAVASCRIPT = "text/javascript";
-	public static final String CONTENT_TYPE_JSON       = "application/json"; //rfc4627
+	public static final String CONTENT_TYPE_JSON_RFC   = "application/json"; //rfc4627
+	public static final String CONTENT_TYPE_JSON_TEXT  = "text/plain";
 	public static final String CONTENT_TYPE_XML        = "text/xml";
 
+	/**
+	 * http user agent
+	 * @since 1.0.0
+	 */
+	public static class UserAgent {
+		
+		public static final UserAgent UNKNOW = new UserAgent("Unknow");
+		
+		protected String description;
+		
+		public UserAgent(){
+			
+		}
+		
+		public UserAgent(String description){
+			this.description = description;
+		}
+		
+		public boolean isMozilla(){
+			//XXX : Mozilla User Agent
+			return null != description && description.startsWith("Mozilla/");
+		}
+	}
+	
 	/**
 	 * a http cookie
 	 * @since 1.0.0
@@ -184,6 +210,7 @@ public final class HTTP {
 	    protected Action   action;	    
 	    protected Result   result;
 
+	    protected UserAgent             userAgent;
 	    protected Map<String, Header>   headers;
 	    protected Map<String, Cookie>   cookies;
 	    protected Map<String, String[]> parameters;
@@ -313,6 +340,18 @@ public final class HTTP {
 			}
 	    	return cookies;
 	    }
+		
+		public UserAgent getUserAgent(){
+			if(null == userAgent){
+				String description = getHeader(HEADER_NAME_USER_AGENT);
+				if(null == description){
+					userAgent = UserAgent.UNKNOW;
+				}else{
+					userAgent = new UserAgent(description);
+				}
+			}
+			return userAgent;
+		}
 
 		public Module getModule() {
 	    	return module;
