@@ -50,7 +50,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		
 		String json = plugin.encodeJson(content);
 		
-		assertEquals(HTTP.CONTENT_TYPE_JSON, response.getContentType());
+		assertEquals(HTTP.CONTENT_TYPE_JSON_RFC, response.getContentType());
 		assertEquals(json, response.getContent());
 		
 		JSONObject jsonObject = new JSONObject(json);

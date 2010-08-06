@@ -9,6 +9,6 @@
 	
 	<filter-mapping>
 		<filter-name>mvc</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/services/*</url-pattern>
 	</filter-mapping>
 </web-app>

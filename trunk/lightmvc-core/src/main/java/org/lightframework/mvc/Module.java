@@ -39,10 +39,14 @@ public class Module {
     public static final String DEFAULT_NAME     = "default";
     public static final String DEFAULT_ENCODING = "UTF-8";
     public static final String DEFAULT_PACKAGE  = "app";
+    public static final String DEFAULT_ROOTPATH = "/";
+    public static final String DEFAULT_VIEWPATH = "/modules";
     
     protected String   name     = DEFAULT_NAME;
     protected String   encoding = DEFAULT_ENCODING;
     protected String[] packages = new String[]{DEFAULT_PACKAGE};
+    protected String   rootPath = DEFAULT_ROOTPATH;
+    protected String   viewPath = DEFAULT_VIEWPATH;
 
     protected LinkedList<Plugin> plugins = new LinkedList<Plugin>();
     
@@ -76,6 +80,14 @@ public class Module {
 	
 	public String getEncoding(){
 		return encoding;
+	}
+	
+	public String getRootPath(){
+		return rootPath;
+	}
+	
+	public String getViewPath(){
+		return viewPath;
 	}
 	
 	public Class<?> findClass(String name) {
@@ -125,7 +137,7 @@ public class Module {
         return clazz;
 	}
 	
-	public View findView(String[] names){
+	public View findView(Action action){
 		// TODO : Module.findView
 		return null;
 	}
@@ -165,11 +177,6 @@ public class Module {
             }
 		}
 		return classNames;
-	}
-	
-	protected Collection<String> findAllWebResources(){
-		// TODO : Module.findAllWebResources
-		return null;
 	}
 	
 	protected List<Plugin> getPlugins(){

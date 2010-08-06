@@ -28,6 +28,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.lightframework.mvc.HTTP.Cookie;
+import org.lightframework.mvc.HTTP.Header;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.HTTP.Url;
@@ -55,6 +57,9 @@ public class MvcFilter implements javax.servlet.Filter {
 	}
 
 	public void doFilter(final ServletRequest servletRequest,final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
+		//XXX : setCharacterEncoding ?
+		servletRequest.setCharacterEncoding(module.getEncoding());
+		
 		//create mvc framework http request and response
 		Request request   = new RequestImpl((HttpServletRequest)servletRequest,module);
 		Response response = new ResponseImpl((HttpServletRequest)servletRequest,(HttpServletResponse)servletResponse,module);
@@ -93,27 +98,32 @@ public class MvcFilter implements javax.servlet.Filter {
 			this.url.urlString   = request.getRequestURL().toString();
 			this.url.uriString   = request.getRequestURI();
 			this.url.queryString = request.getQueryString();
+			this.init();
 		}
 		
 		@Override
-        public String getContext() {
-			if(null == context){
-				context = getContextPath(request);
-			}
-			return context;
+        public String getHeader(String name) {
+			return request.getHeader(name);
         }
 		
 		@Override
-        public String getPath() {
-			if(null == path){
-				path = getUriString().substring(getContext().length());
-				if(!path.startsWith("/")){
-					path = "/" + path;
-				}
-			}
-	        return super.getPath();
+        public Map<String, Header> getHeaders() {
+	        // TODO implement RequestImpl.getHeaders
+	        return super.getHeaders();
         }
 		
+		@Override
+        public Cookie getCookie(String name) {
+	        // TODO implement RequestImpl.getCookie
+	        return super.getCookie(name);
+        }
+
+		@Override
+        public Map<String, Cookie> getCookies() {
+	        // TODO implement RequestImpl.getCookies
+	        return super.getCookies();
+        }
+
 		@Override
         public String getContentType() {
 	        return request.getContentType();
@@ -159,6 +169,15 @@ public class MvcFilter implements javax.servlet.Filter {
         public void setAttribute(String name, Object value) {
 	        request.setAttribute(name, value);
         }
+		
+		private void init(){
+			context = getContextPath(request);			
+
+			path = getUriString().substring(context.length());
+			if(!path.startsWith("/")){
+				path = "/" + path;
+			}
+		}
 	}
 	
 	public final class ResponseImpl extends Response{

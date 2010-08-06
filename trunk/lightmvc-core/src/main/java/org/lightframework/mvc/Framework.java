@@ -92,6 +92,10 @@ public class Framework {
 	protected static boolean handle(Request request,Response response) throws Exception {
 		Assert.notNull("request.module", request.getModule());
 		
+		if(log.isTraceEnabled()){
+			log.trace("[mvc] -> request path '{}' handling...",request.getPath());
+		}
+		
 		//is hanlded by mvc framework
 		boolean managed = false;
 		
@@ -123,7 +127,7 @@ public class Framework {
 							request.action = action;
 							managed = invokeAction(request,response,action);
 						}else{
-							//TODO : handle action cant not resolved.
+							//TODO : handle action not resolved.
 							return false;
 						}
 					}else{
@@ -143,6 +147,10 @@ public class Framework {
 			}
 		}finally {
 			Request.current.set(null);
+		}
+		
+		if(log.isTraceEnabled()){
+			log.trace("[mvc] -> request path '{}' managed is {}",request.getPath(),managed);
 		}
 		
 		return managed;

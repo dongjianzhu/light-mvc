@@ -377,8 +377,15 @@ public final class ClassUtils {
 
 							// Either a file or a hidden directory (such as .svn)
 
-							if (line.contains("."))
+							if (line.contains(".")){
 								continue;
+							}else{
+								//directory?
+								List<String> childs = findAllClassNames(loader, pkgName + line);
+								for(String child : childs){
+									list.add(child);
+								}
+							}
 						}
 						lineReader.close();
 						lineReader = null;
