@@ -85,7 +85,7 @@ public class Route {
 		if(null == method || this.method.equals("*") || this.method.equalsIgnoreCase(method.trim())){
 			if(this.path.equals("*")){
 				match.matched = true;
-				match.setName(this.action);
+				match.name    = this.action;
 			}else{
 				if(null == path || "".equals(path = path.trim())){
 					path = "/";
@@ -99,20 +99,20 @@ public class Route {
 	            		String param = compiled.pathParams[i];
 	            		params.put(param, matcher.group(i+1));
 	            	}
-	            	match.matched = true;
-	            	match.setName(this.action);
-	            	match.setParameters(params);
+	            	match.matched    = true;
+	            	match.name       = this.action;
+	            	match.parameters = params;
 	            	
 	            	//replace action params to values
 	            	if(compiled.actionParams.length > 0){
 	            		for(String param : compiled.actionParams){
 	            			String value = (String)params.get(param);
 	            			if(null != value){
-	            				match.setName(Utils.replace(match.getName(), "{" + param + "}", value));
+	            				match.name = Utils.replace(match.getName(), "{" + param + "}", value);
 	            			}
 	            		}
 	            		//replace all '/' characters to '.' characters
-	            		match.setName(Utils.replace(match.getName(), "/", "."));
+	            		match.name = Utils.replace(match.getName(), "/", ".");
 	            	}
 	            }					
 			}

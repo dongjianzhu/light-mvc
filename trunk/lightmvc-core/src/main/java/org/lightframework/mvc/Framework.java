@@ -48,14 +48,14 @@ public class Framework {
 	 */
 	protected static void start(Module module){
 		if(!initialized){
-			log.info("[mvc] -> initializing... ");
+			log.info("[mvc:version'{}'] -> initializing... ",VERSION);
 			synchronized (Framework.class) {
 	            if(!initialized){
 	            	init();
 	            	initialized = true;
 	            }
             }
-			log.info("[mvc] -> initialized!");
+			log.info("[mvc:version'{}'] -> initialized!",VERSION);
 		}
 		log.debug("[module:'{}'] -> starting...",module.getName());
 		module.start();
@@ -104,20 +104,28 @@ public class Framework {
 
 				if(!managed){
 					//if not managed by plugin , mapping this request to action
-					Action action = PluginInvoker.route(request, response);
+					Action[] actions = PluginInvoker.route(request, response);
 					
-					if(null != action){
-						if(log.isTraceEnabled()){
-							log.trace("[action] -> route uri '{}' to action '{}'",request.getUriString(),action.getName());
+					if(actions.length > 0){
+						for(Action action : actions){
+							if(log.isTraceEnabled()){
+								log.trace("[action] -> route uri '{}' to action '{}'",request.getUriString(),action.getName());
+							}							
+							action.onRouted();
 						}
 						
-						request.action = action;
-						
-						action.onRouted();
-						
-						managed = invokeAction(request,response,action);
-						
-						
+						//resolve action
+						Action action = resolveAction(request, response, actions);
+						if(null != action){
+							Action.Setter.setResolved(action, true);
+							action.onResolved();
+							
+							request.action = action;
+							managed = invokeAction(request,response,action);
+						}else{
+							//TODO : handle action cant not resolved.
+							return false;
+						}
 					}else{
 						if(log.isTraceEnabled()){
 							log.trace("[action] -> not found for uri '{}'",request.getUriString());
@@ -145,47 +153,47 @@ public class Framework {
 		plugins.add(new CorePlugin());
 	}
 	
-	private static boolean invokeAction(Request request,Response response,Action action) throws Exception{
-		//resolving action method
-		if(!action.isResolved()){
-			Action.Setter.setResolved(action,PluginInvoker.resolve(request,response,action));
-		}
-		action.onResolved();
-		
-		if(action.isResolved()){
-			if(log.isTraceEnabled()){
-				log.trace("[action:'{}'] -> resolved as '{}${}'",
-						  new Object[]{
-							  action.getName(),
-							  action.getControllerClass().getName(),
-							  action.getMethod().getName()
-						  });
+	private static Action resolveAction(Request request,Response response,Action[] actions) throws Exception{
+		for(Action action : actions){
+			if(action.isResolved()){
+				return action;
+			}else if(PluginInvoker.resolve(request,response,action)){
+				return action;
 			}
-			
-			//binding method arguments
-			if(!action.isBinded()){
-				PluginInvoker.binding(request, response, action);
-				Action.Setter.setBinded(action,true);
-			}
-			action.onBinded();
-			
-			//executing action method
-			Result result = PluginInvoker.execute(request, response, action);
-			action.onExecuted();
-			
-			//render action result
-			boolean rendered = PluginInvoker.render(request, response, result);
-			if(!rendered && !action.isResolved()){
-				return false;
-			}else{
-				return true;
-			}
-		}else{
-			//TODO : handle action cant not resolved.
 			if(log.isTraceEnabled()){
 				log.trace("[action:'{}'] -> can not resolved",action.getName());
-			}
+			}			
+		}
+		return null;
+	}
+	
+	private static boolean invokeAction(Request request,Response response,Action action) throws Exception{
+		if(log.isTraceEnabled()){
+			log.trace("[action:'{}'] -> resolved as '{}${}'",
+					  new Object[]{
+						  action.getName(),
+						  action.getControllerClass().getName(),
+						  action.getMethod().getName()
+					  });
+		}
+		
+		//binding method arguments
+		if(!action.isBinded()){
+			PluginInvoker.binding(request, response, action);
+			Action.Setter.setBinded(action,true);
+		}
+		action.onBinded();
+		
+		//executing action method
+		Result result = PluginInvoker.execute(request, response, action);
+		action.onExecuted();
+		
+		//render action result
+		boolean rendered = PluginInvoker.render(request, response, result);
+		if(!rendered && !action.isResolved()){
 			return false;
+		}else{
+			return true;
 		}
 	}
 	
@@ -218,20 +226,20 @@ public class Framework {
 			return false;
 		}
 		
-		static Action route(Request request,Response response) throws Exception{
+		static Action[] route(Request request,Response response) throws Exception{
 			for(Plugin plugin : request.getModule().getPlugins()){
-				Action action = plugin.route(request, response);
-				if(null != action){
-					return action;
+				Action[] actions = plugin.route(request, response);
+				if(null != actions && actions.length > 0){
+					return actions;
 				}
 			}			
 			for(Plugin plugin : plugins){
-				Action action = plugin.route(request, response);
-				if(null != action){
-					return action;
+				Action[] actions = plugin.route(request, response);
+				if(null != actions && actions.length > 0){
+					return actions;
 				}
 			}
-			return null;
+			return Plugin.EMPTY_ACTIONS;
 		}
 		
 		static boolean resolve(Request request,Response response,Action action) throws Exception{

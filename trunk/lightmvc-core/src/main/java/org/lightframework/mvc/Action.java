@@ -33,8 +33,10 @@ public class Action {
     private static final Argument[] EMPTY_ARGUMENTS   = new Argument[]{};
 
 	protected String             name;
+	protected String             controllerName;
     protected Class<?>           controllerClass;
     protected Object             controllerObject;
+    protected String             simpleName;
 	protected Method             method;
 	protected Map<String,Object> parameters;
 	protected Argument[]         arguments;
@@ -43,10 +45,27 @@ public class Action {
     private boolean              index;
     private boolean              resolved;
     private boolean              binded;
+    
+    public Action(){
+    	
+    }
+    
+    public Action(String name){
+    	this.name = name;
+    }
+    
+    public Action(String name,Map<String, Object> parameters){
+    	this(name);
+    	this.parameters = parameters;
+    }
 
 	public String getName() {
     	return name;
     }
+	
+	public String getSimpleName(){
+		return simpleName;
+	}
 
 	public boolean isResolved() {
     	return resolved;
@@ -103,6 +122,10 @@ public class Action {
     	this.arguments = args;
     }
 	
+	public String getControllerName() {
+    	return controllerName;
+    }
+
 	public Class<?> getControllerClass() {
     	return controllerClass;
     }
@@ -153,6 +176,10 @@ public class Action {
 			action.name = name;
 	    }
 		
+		public static void setSimpleName(Action action,String name){
+			action.simpleName = name;
+		}
+		
 		public static void setControllerObject(Action action,Object controllerObject) {
 			action.controllerObject = controllerObject;
 	    }
@@ -168,6 +195,10 @@ public class Action {
 		public static void setResolved(Action action,boolean resolved) {
 			action.resolved = resolved;
 	    }
+		
+		public static void setControllerName(Action action,String name){
+			action.controllerName = name;
+		}
 		
 		public static void setControllerClass(Action action, Class<?> controllerClass) {
 			action.controllerClass = controllerClass;

@@ -25,6 +25,7 @@ import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.config.Ajax;
+import org.lightframework.mvc.core.RenderViewPlugin.IViewNotFoundRender;
 import org.lightframework.mvc.json.JSON;
 
 /**
@@ -34,7 +35,7 @@ import org.lightframework.mvc.json.JSON;
  * 
  * @since 1.0.0
  */
-public class RenderAjaxPlugin extends Plugin {
+public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 	
 	public static final String RETURN_CODE  = "returnCode";
 	public static final String RETURN_DESC  = "returnDesc";
@@ -68,16 +69,24 @@ public class RenderAjaxPlugin extends Plugin {
 		}
 
 		if(isAjax){
-			//TODO : add xml format support
-			
-			renderJson(request, response, result);
-			
-			return true;
+			return renderAjax(request,response,result);
 		}
 		
 	    return false;
     }
 	
+	public boolean renderViewNotFound(Request request, Response response, Result result) throws Exception {
+	    return renderAjax(request, response, result);
+    }
+	
+	protected boolean renderAjax(Request request,Response response,Result result) throws Exception{
+		//XXX : add xml format support
+		
+		renderJson(request, response, result);
+		
+		return true;
+	}
+
 	protected void renderJson(Request request,Response response,Result result) throws Exception{
 		String content = encodeJson(result);
 		response.write(content);

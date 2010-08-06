@@ -15,21 +15,32 @@
  */
 package org.lightframework.mvc.routing;
 
-import org.lightframework.mvc.Action;
+import java.util.Map;
 
 /**
- * reprensents a matched action return by {@link Route#matches(String)}
+ * reprensents a matched result return by {@link Route#matches(String)}
  * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0.0
  */
-public final class Match extends Action{
+public final class Match {
+	
+	String  name;
     boolean matched;
+    Map<String, Object> parameters;
 	
 	public boolean isMatched(){
 		return matched;
 	}
 	
-	void setName(String name){
-		this.name = name;
+	public String getName(){
+		return name;
+	}
+	
+	public Map<String, Object> getParameters() {
+    	return parameters;
+    }
+	
+	public Object getParameter(String name){
+		return null == parameters ? null : parameters.get(name);
 	}
 }

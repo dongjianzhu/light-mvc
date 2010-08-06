@@ -42,7 +42,7 @@ public class CorePlugin extends Plugin{
     }
 
 	@Override
-    public Action route(Request request, Response response) throws Exception {
+    public Action[] route(Request request, Response response) throws Exception {
 	    return router.route(request, response);
     }
 

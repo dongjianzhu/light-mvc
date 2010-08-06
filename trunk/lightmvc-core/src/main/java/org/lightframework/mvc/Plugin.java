@@ -26,6 +26,8 @@ import org.lightframework.mvc.HTTP.Response;
  */
 public abstract class Plugin {
 	
+	protected static final Action[] EMPTY_ACTIONS = new Action[]{};
+	
 	/**
 	 * @return the display name of this plugin
 	 */
@@ -41,14 +43,14 @@ public abstract class Plugin {
 	 * 
 	 * @return true if this plugin should be loaded by framework
 	 */
-	public boolean load() throws Exception{
+	protected boolean load() throws Exception{
 		return true;
 	}
 	
 	/**
 	 * called at framework destroying and this plugin had been unloading by framework.
 	 */	
-	public void unload()  throws Exception{
+	protected void unload()  throws Exception{
 	    
     }
 
@@ -70,10 +72,10 @@ public abstract class Plugin {
 	 * 
 	 * @param request  http request
 	 * @param response http response
-	 * @return {@link Action} which reprensents an action if matched,else return <code>null</code>
+	 * @return {@link Action} array which reprensents any actions if matched,else return empty {@link Action}[]
 	 */	
-	public Action route(Request request, Response response) throws Exception{
-		return null;
+	public Action[] route(Request request, Response response) throws Exception{
+		return EMPTY_ACTIONS;
 	}
 
 	/**

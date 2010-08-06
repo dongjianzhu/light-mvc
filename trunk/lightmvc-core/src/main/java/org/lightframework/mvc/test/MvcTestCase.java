@@ -19,6 +19,9 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import junit.framework.TestCase;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * junit {@link TestCase} for mvc framework
  *
@@ -27,6 +30,7 @@ import junit.framework.TestCase;
  * @since 1.0.0
  */
 public abstract class MvcTestCase extends TestCase {
+	private static final Logger log = LoggerFactory.getLogger(MvcTestCase.class);
 	
 	private static boolean setUpOnce;
 
@@ -38,6 +42,9 @@ public abstract class MvcTestCase extends TestCase {
 	
 	@Override
     protected final void setUp() throws Exception {
+		
+		log.info("===========================BEGIN==============================");
+		
 		module = new MockModule();
 		
 		reset();
@@ -55,6 +62,9 @@ public abstract class MvcTestCase extends TestCase {
 	@Override
     protected final void tearDown() throws Exception {
 		MockFramework.mockStop(module);
+		
+		log.info("============================END===============================");
+		log.info("EOT");//add blank line for viewing log better. (EOT : END OF TEST)
     }
 	
 	protected void setUpOnlyOnce() throws Exception{

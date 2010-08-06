@@ -104,6 +104,33 @@ public class Module {
 	}
 	
 	/**
+	 * @return {@link ClassLoader} in this web module,default is {@link Thread#currentThread()#getClassLoader()};
+	 */
+	public ClassLoader getClassLoader(){
+		return Thread.currentThread().getContextClassLoader();
+	}
+	
+	/**
+	 * @see Class#forName(String);
+	 * 
+	 * @return {@link Class} object of the given class name, return null if {@link ClassNotFoundException} occurs.
+	 */
+	public Class<?> loadClassForName(String className) {
+		Class<?> clazz = null;
+		try {
+	        clazz = getClassLoader().loadClass(className);
+        } catch (ClassNotFoundException e) {
+        	log.debug("[module:'{}'] -> class '{}' not found",getName(),className);
+        }
+        return clazz;
+	}
+	
+	public View findView(String[] names){
+		// TODO : Module.findView
+		return null;
+	}
+	
+	/**
 	 * @return all the class names in this module and the {@link #packages} 
 	 */
 	protected Collection<String> findAllClassNames() {
@@ -140,26 +167,9 @@ public class Module {
 		return classNames;
 	}
 	
-	/**
-	 * @return {@link ClassLoader} in this web module,default is {@link Thread#currentThread()#getClassLoader()};
-	 */
-	public ClassLoader getClassLoader(){
-		return Thread.currentThread().getContextClassLoader();
-	}
-	
-	/**
-	 * @see Class#forName(String);
-	 * 
-	 * @return {@link Class} object of the given class name, return null if {@link ClassNotFoundException} occurs.
-	 */
-	public Class<?> loadClassForName(String className) {
-		Class<?> clazz = null;
-		try {
-	        clazz = getClassLoader().loadClass(className);
-        } catch (ClassNotFoundException e) {
-        	log.debug("[module:'{}'] -> class '{}' not found",getName(),className);
-        }
-        return clazz;
+	protected Collection<String> findAllWebResources(){
+		// TODO : Module.findAllWebResources
+		return null;
 	}
 	
 	protected List<Plugin> getPlugins(){
