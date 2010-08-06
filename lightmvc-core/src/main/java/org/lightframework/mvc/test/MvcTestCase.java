@@ -15,8 +15,6 @@
  */
 package org.lightframework.mvc.test;
 
-import java.io.ByteArrayInputStream;
-
 import javassist.ClassPool;
 import javassist.CtClass;
 import junit.framework.TestCase;
@@ -29,6 +27,8 @@ import junit.framework.TestCase;
  * @since 1.0.0
  */
 public abstract class MvcTestCase extends TestCase {
+	
+	private static boolean setUpOnce;
 
 	protected MockModule    module;
 	protected MockRequest   request;
@@ -42,7 +42,12 @@ public abstract class MvcTestCase extends TestCase {
 		
 		reset();
 		
-	    setUpTest();
+		if(!setUpOnce){
+			setUpOnlyOnce();
+			setUpOnce = true;
+		}
+		
+	    setUpEveryTest();
 	    
 	    MockFramework.mockStart(module);
     }
@@ -51,12 +56,16 @@ public abstract class MvcTestCase extends TestCase {
     protected final void tearDown() throws Exception {
 		MockFramework.mockStop(module);
     }
+	
+	protected void setUpOnlyOnce() throws Exception{
+		
+	}
 
-	protected void setUpTest() throws Exception{
+	protected void setUpEveryTest() throws Exception{
 		
 	}
 	
-	protected void tearDownTest() throws Exception{
+	protected void tearDownEveryTest() throws Exception{
 		
 	}
 	
@@ -91,19 +100,30 @@ public abstract class MvcTestCase extends TestCase {
         }
 	}
 	
-	protected final Class<?> renameClass(Class<?> originalClass,String newClassName) throws Exception{
-		CtClass ctclass = ClassPool.getDefault().getAndRename(originalClass.getName(), newClassName);
-		Class<?> clazz  = ctclass.toClass();
-		module.addClassName(clazz.getName());
+	protected final Class<?> newCopiedClass(Class<?> originalClass,String newClassName) throws Exception{
+		Class<?> clazz = module.loadClassForName(newClassName);
+		
+		if(null == clazz){
+			CtClass ctclass = ClassPool.getDefault().getAndRename(originalClass.getName(), newClassName);
+			clazz  = ctclass.toClass();
+		}
+		
+		module.addClassName(newClassName);
+		
 		return clazz;
 	}
 	
-	protected final Class<?> copyNewClass(Class<?> originalClass,String newClassName) throws Exception{
-		CtClass oldClass = ClassPool.getDefault().get(originalClass.getName());
-		ByteArrayInputStream classStream = new ByteArrayInputStream(oldClass.toBytecode());
-		CtClass newClass = ClassPool.getDefault().makeClass(classStream);
-		Class<?> clazz   = newClass.toClass();
-		module.addClassName(clazz.getName());
+	protected final Class<?> newChildClass(Class<?> superClass,String childClassName) throws Exception{
+		Class<?> clazz = module.loadClassForName(childClassName);
+		
+		if(null == clazz){
+			CtClass ctSuperClass = ClassPool.getDefault().get(superClass.getName());
+			CtClass newClass = ClassPool.getDefault().makeClass(childClassName,ctSuperClass);
+			clazz = newClass.toClass();
+		}
+
+		module.addClassName(childClassName);
+		
 		return clazz;
 	}
 	

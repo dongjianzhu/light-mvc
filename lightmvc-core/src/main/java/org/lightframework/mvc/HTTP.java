@@ -270,7 +270,7 @@ public final class HTTP {
 			if(values == null){
 				return null;
 			}else if(values.length == 1){
-				return values[1];
+				return values[0];
 			}else{
 				return Utils.arrayToString(values);
 			}
