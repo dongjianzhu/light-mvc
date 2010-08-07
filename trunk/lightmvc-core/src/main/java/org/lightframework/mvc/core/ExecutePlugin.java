@@ -64,19 +64,35 @@ public class ExecutePlugin extends Plugin {
 			}
 			
 			if(value instanceof Result){
+				if(log.isTraceEnabled()){
+					Result result = (Result)value;
+					log.trace("[action:'{}'] -> return result - status : '{}' , desc : '{}' , value : '{}'",
+							  new Object[]{action.getName(),result.getStatus(),result.getDescription(),result.getValue()});
+				}
 				return (Result)value;
 			}else if(null != value){
+				if(log.isTraceEnabled()){
+					log.trace("[action:'{}'] -> return value : '{}'",action.getName(),value);
+				}
 				return new Result.Value(value);
 			}else{
+				if(log.isTraceEnabled()){
+					log.trace("[action:'{}'] -> return empty result",action.getName());
+				}
 				return new Result.Empty();
 			}
-		} catch(Return returned){
-			if(log.isTraceEnabled()){
-				log.trace("[action:'{}'] -> returned!",action.getName());
-			}
-			return returned.result();
+//		} catch(Return returned){
+//			if(log.isTraceEnabled()){
+//				log.trace("[action:'{}'] -> returned '{}'!",action.getName(),returned.result().getClass().getName());
+//			}
+//			return returned.result();
 		} catch(InvocationTargetException e){
 			if(e.getTargetException() instanceof Return){
+				if(log.isTraceEnabled()){
+					log.trace("[action:'{}'] -> returned '{}'!",
+							  action.getName(),
+							  ((Return)e.getTargetException()).result().getClass().getName());
+				}
 				return ((Return)e.getTargetException()).result();
 			}else{
 				throw e;

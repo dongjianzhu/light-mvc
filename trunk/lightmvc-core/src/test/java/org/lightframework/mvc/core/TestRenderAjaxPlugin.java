@@ -20,7 +20,7 @@ import org.lightframework.mvc.MvcException;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.Result.Content;
 import org.lightframework.mvc.config.Ajax;
-import org.lightframework.mvc.json.JSONObject;
+import org.lightframework.mvc.test.JSONResult;
 import org.lightframework.mvc.test.MvcTestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,10 +53,11 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		assertEquals(HTTP.CONTENT_TYPE_JSON_RFC, response.getContentType());
 		assertEquals(json, response.getContent());
 		
-		JSONObject jsonObject = new JSONObject(json);
-		assertEquals("200", jsonObject.get(RenderAjaxPlugin.RETURN_CODE));
-		assertEquals(JSONObject.NULL, jsonObject.get(RenderAjaxPlugin.RETURN_DESC));
-		assertEquals("text", jsonObject.get(RenderAjaxPlugin.RETURN_VALUE));
+		JSONResult result = JSONResult.parse(json);
+		assertNotNull(result);
+		assertEquals("200", result.getStatus());
+		assertEquals(null, result.getDescription());
+		assertEquals("text", result.getValue());
 	}
 	
 	public void testNotAjaxRequest() throws Exception{
@@ -86,29 +87,29 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		request.setAjax(true);
 		request.setPath("/error");
 		
-		newCopiedClass(Home.class, packages + ".Home");
+		createSubClass(Home.class, packages + ".Home");
 		
 		execute();
 		
 		log.info("result : {}",response.getContent());
 		
-		assertNotNull(response.getContent());
-		JSONObject jsonObject = new JSONObject(response.getContent());
-		assertEquals("500", jsonObject.get(RenderAjaxPlugin.RETURN_CODE));
-		assertEquals("hello", jsonObject.get(RenderAjaxPlugin.RETURN_DESC));
-		assertNotNull(jsonObject.get(RenderAjaxPlugin.RETURN_ERROR));
+		JSONResult result = response.getJSONResult();
+		assertNotNull(result);
+		assertEquals("500", result.getStatus());
+		assertEquals("hello", result.getDescription());
+		assertNotNull(result.getError());
 	}
 	
 	protected void executeAjaxRequest() throws Exception {
-		newCopiedClass(Home.class, packages + ".Home");
+		createSubClass(Home.class, packages + ".Home");
 		
 		execute();
 		
-		assertNotNull(response.getContent());
-		JSONObject jsonObject = new JSONObject(response.getContent());
-		assertEquals("200", jsonObject.get(RenderAjaxPlugin.RETURN_CODE));
-		assertEquals(JSONObject.NULL, jsonObject.get(RenderAjaxPlugin.RETURN_DESC));
-		assertEquals("hello", jsonObject.get(RenderAjaxPlugin.RETURN_VALUE));
+		JSONResult result = response.getJSONResult();
+		assertNotNull(result);
+		assertEquals("200", result.getStatus());
+		assertEquals(null, result.getDescription());
+		assertEquals("hello", result.getValue());
 		
 		log.info("result : {}",response.getContent());
 	}
@@ -125,6 +126,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		}
 		
 		public Result.Error error() {
+			log.info("execute error");
 			return new Result.Error(new MvcException("hello"));
 		}
 	}

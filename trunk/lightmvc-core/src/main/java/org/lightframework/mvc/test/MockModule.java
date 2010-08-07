@@ -15,6 +15,8 @@
  */
 package org.lightframework.mvc.test;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,8 +32,12 @@ import org.lightframework.mvc.Module;
  */
 public class MockModule extends Module {
 	
-	protected List<String> addClasses = new ArrayList<String>();
+	protected boolean      findWebRoot   = true; 
+	protected String       webRootDir    = null;
+	protected List<String> addClasses    = new ArrayList<String>();
 	protected List<String> removeClasses = new ArrayList<String>();
+	protected List<String> webResources  = new ArrayList<String>();
+	protected ClassLoader  classLoader   = null;
 
 	public void setPackages(String packages){
 		this.packages = packages.split(",");
@@ -47,6 +53,57 @@ public class MockModule extends Module {
 		addClasses.remove(name);
 	}
 	
+	public String getWebRootDir() {
+		if(null == webRootDir && findWebRoot){
+			webRootDir = findWebRootDir();
+		}
+    	return webRootDir;
+    }
+
+	public void setWebRootDir(String webRootDir) {
+    	this.webRootDir = webRootDir;
+    }
+	
+	public void setFindWebRoot(boolean isFindWebRoot){
+		this.findWebRoot = isFindWebRoot;
+	}
+	
+	public void addWebResource(String resource){
+		webResources.add(resource);
+	}
+	
+	public void removeWebResource(String resource){
+		webResources.remove(resource);
+	}
+	
+	public String getViewResourcePath(String view){
+		return getViewPath() + view;
+	}
+	
+	public void addViewResource(String view){
+		addWebResource(getViewResourcePath(view));
+	}
+	
+	public void removeViewResource(String view){
+		removeWebResource(getViewResourcePath(view));
+	}	
+	
+	public void clearWebResources(){
+		webResources.clear();
+	}
+	
+	public void setClassLoader(ClassLoader classLoader){
+		this.classLoader = classLoader;
+	}
+	
+	@Override
+    public ClassLoader getClassLoader() {
+		if(null != classLoader){
+			return classLoader;
+		}
+	    return super.getClassLoader();
+    }
+
 	@Override
     protected Collection<String> findAllClassNames() {
 	    Collection<String> classes = super.findAllClassNames();
@@ -54,4 +111,55 @@ public class MockModule extends Module {
 	    classes.removeAll(removeClasses);
 	    return classes;
     }
+
+	@Override
+    protected Collection<String> findWebResources(String path) {
+		String webRootPath = getWebRootDir();
+		if(null == webRootPath){
+			return webResources;
+		}
+		
+		String resourcesPath = webRootPath + path;
+		File resourcesFolder = new File(resourcesPath);
+		List<String> resources = new ArrayList<String>();
+		
+		if(resourcesFolder.exists()){
+			File[] files = resourcesFolder.listFiles();
+			for(int i=0;i<files.length;i++){
+				File file = files[i];
+				if(!file.isDirectory()){
+					resources.add(path + (path.endsWith("/") ? "" : "/") + file.getName());
+				}
+			}
+		}
+		
+		resources.addAll(webResources);
+
+		return resources;
+    }
+	
+	protected String findWebRootDir(){
+		String current = System.getProperty("user.dir");
+		
+		//search folder has a 'WEB-INF' sub-folder in current directory
+		File root = new File(current);
+		
+		FileFilter filter = new FileFilter() {
+			public boolean accept(File pathname) {
+				return pathname.isDirectory() && !pathname.getName().startsWith(".");
+			}
+		};
+		
+		File[] childs = root.listFiles(filter);
+		for(File child : childs){
+			File[] childChilds = child.listFiles(filter);
+			for(File dir : childChilds){
+				if(dir.getName().equals("WEB-INF")){
+					return child.getAbsolutePath();
+				}
+			}
+		}
+		
+		return null;
+	}
 }
