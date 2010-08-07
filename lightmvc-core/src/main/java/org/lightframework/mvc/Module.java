@@ -16,6 +16,7 @@
 package org.lightframework.mvc;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,6 +96,7 @@ public class Module {
 	}
 	
 	public Class<?> findClass(String[] names) {
+		//XXX : improve performance in production mode 
 		Collection<String> classes = findAllClassNames();
 		
 		for(String clazz : classes){
@@ -109,7 +111,7 @@ public class Module {
 		}
 		
 		if(log.isTraceEnabled()){
-			log.trace("[module:'{}'] -> no class found of the given class names",getName());
+			log.trace("[module:'{}'] -> no class found with the given names",getName());
 		}
 		
 		return null;
@@ -119,7 +121,11 @@ public class Module {
 	 * @return {@link ClassLoader} in this web module,default is {@link Thread#currentThread()#getClassLoader()};
 	 */
 	public ClassLoader getClassLoader(){
-		return Thread.currentThread().getContextClassLoader();
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		if(null == loader){
+			loader = Module.class.getClassLoader();
+		}
+		return loader;
 	}
 	
 	/**
@@ -138,8 +144,55 @@ public class Module {
 	}
 	
 	public View findView(Action action){
-		// TODO : Module.findView
+		//XXX : is support controller fromat such as product.category ? 
+		String controller = action.getControllerName();
+		String actionName = action.getSimpleName();
+		
+		//guess the path : {module-view-path}/{controller}
+		String root  = getViewPath();
+		String path = root + (root.endsWith("/") ? ""  : "/") + controller;
+		String view = findView(path, controller, actionName);
+		
+		if(null == view && action.isHome()){
+			
+			//guess the path of home controller : {module-view-path}
+			path = root;
+			view = findView(path, controller, actionName);
+			
+			if(null == view && action.isHome() && !root.equals(getRootPath())){
+				//guess the path of home controller : {module-root-path}
+				root = getRootPath();
+				path = root;
+				view = findView(path, controller, actionName);
+			}
+		}
+
+		if(null != view){
+			return new View.WebResource(view);
+		}
+		
 		return null;
+	}
+	
+	protected String findView(String path,String controller,String action){
+		String prefix = path + "/" + action + ".";
+		Collection<String> resources = findWebResources(path);
+		for(String resource : resources){
+			if(resource.equals(prefix + "jsp")){
+				return resource;
+			}else if(resource.equals(prefix + "htm") || resource.equals(prefix + "html")){
+				return resource;
+			}else if(resource.startsWith(prefix)){
+				return resource;
+			}
+		}		
+		return null;
+	}
+	
+	protected Collection<String> findWebResources(String path){
+		//XXX: implement findWebResources
+		log.warn("[module:'{}'] -> not implemented method : findWebResources",getName());
+		return new ArrayList<String>();
 	}
 	
 	/**

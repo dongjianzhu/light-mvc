@@ -79,7 +79,7 @@ public class Framework {
 	 * is this request ignored by current module
 	 */
 	protected static boolean ignore(Request request){
-		// TODO : Framework.ignore
+		// TODO : implement Framework.ignore
 		return false;
 	}
 
@@ -127,7 +127,7 @@ public class Framework {
 							request.action = action;
 							managed = invokeAction(request,response,action);
 						}else{
-							//TODO : handle action not resolved.
+							//TODO : handle not resolved action.
 							return false;
 						}
 					}else{

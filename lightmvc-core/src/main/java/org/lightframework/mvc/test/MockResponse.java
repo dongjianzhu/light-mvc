@@ -30,7 +30,9 @@ import org.lightframework.mvc.HTTP.Response;
  */
 public class MockResponse extends Response {
 	
-	private ByteArrayOutputStream bytesOut;
+	protected String forwardPath;
+	protected String redirectUrl;
+	protected ByteArrayOutputStream bytesOut;
 
 	public String getContent() {
 		if(null == bytesOut){
@@ -50,5 +52,23 @@ public class MockResponse extends Response {
 			out = bytesOut;
 		}
 		return out;
+    }
+
+	@Override
+    protected void forwardTo(String path) {
+		this.forwardPath = path;
+    }
+
+	@Override
+    protected void redirectTo(String url) {
+		this.redirectUrl = url;
+    }
+
+	public String getForwardPath() {
+    	return forwardPath;
+    }
+
+	public String getRedirectUrl() {
+    	return redirectUrl;
     }
 }

@@ -26,6 +26,8 @@ import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.Result.Return;
 import org.lightframework.mvc.utils.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * core plugin to resolve and execute an {@link Action}
@@ -34,6 +36,7 @@ import org.lightframework.mvc.utils.ClassUtils;
  * @since 1.0.0
  */
 public class ExecutePlugin extends Plugin {
+	private static final Logger log = LoggerFactory.getLogger(ExecutePlugin.class);
 	
 	private static final Object[] EMPTY_EXECUTE_ARGS = new Object[]{};
 	
@@ -46,10 +49,18 @@ public class ExecutePlugin extends Plugin {
 			Object value  = null;
 			Object[] args = getExecuteArgs(action.getArguments());
 			
+			if(log.isTraceEnabled()){
+				log.trace("[action:'{}'] -> executing...",action.getName());
+			}
+			
 			if(ClassUtils.isStatic(action.getMethod())){
 				value = method.invoke(null, args); //static invoke
 			}else{
 				value = method.invoke(action.getControllerObject(), args);
+			}
+			
+			if(log.isTraceEnabled()){
+				log.trace("[action:'{}'] -> executed!",action.getName());
 			}
 			
 			if(value instanceof Result){
@@ -60,6 +71,9 @@ public class ExecutePlugin extends Plugin {
 				return new Result.Empty();
 			}
 		} catch(Return returned){
+			if(log.isTraceEnabled()){
+				log.trace("[action:'{}'] -> returned!",action.getName());
+			}
 			return returned.result();
 		} catch(InvocationTargetException e){
 			if(e.getTargetException() instanceof Return){

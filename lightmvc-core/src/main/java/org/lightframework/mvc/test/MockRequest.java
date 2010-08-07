@@ -98,7 +98,7 @@ public class MockRequest extends Request {
 	}
 
 	public void setHeader(String name,String value){
-		getHeaders().put(name, new HTTP.Header(name, value));
+		getHeaders().put(name, value);
 	}
 	
 	public void setCookie(String name,String value){

@@ -25,9 +25,28 @@ import org.lightframework.mvc.HTTP.Response;
  *
  * @since 1.0.0
  */
-public abstract class View implements IRender {
+public interface View extends IRender {
 
+	/**
+	 * TODO : DOCUMENT ME 
+	 * @since 1.0.0
+	 */
+	public static class WebResource implements View{
+		protected String name;
+		
+		public WebResource(String name){
+			this.name = name;
+		}
+		
+		public void render(Request request, Response response) throws Exception {
+			response.forward(name);
+        }
+	}
 	
+	/**
+	 * TODO : DOCUMENT ME
+	 * @since 1.0.0
+	 */
 	public static class ViewResult extends Result implements IRender {
 		private View view;
 		

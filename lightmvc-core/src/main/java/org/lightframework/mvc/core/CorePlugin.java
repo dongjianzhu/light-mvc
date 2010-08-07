@@ -29,7 +29,7 @@ import org.lightframework.mvc.HTTP.Response;
  */
 public class CorePlugin extends Plugin{
 
-	protected RoutePlugin   router   = new RoutePlugin();
+	protected RoutingPlugin   router   = new RoutingPlugin();
 	protected BindingPlugin binder   = new BindingPlugin();
 	protected ExecutePlugin executor = new ExecutePlugin();
 	protected ResolvePlugin resolver = new ResolvePlugin();

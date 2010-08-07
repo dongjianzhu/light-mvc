@@ -17,6 +17,7 @@ package org.lightframework.mvc;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -29,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.lightframework.mvc.HTTP.Cookie;
-import org.lightframework.mvc.HTTP.Header;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.HTTP.Url;
@@ -57,7 +57,7 @@ public class MvcFilter implements javax.servlet.Filter {
 	}
 
 	public void doFilter(final ServletRequest servletRequest,final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
-		//XXX : setCharacterEncoding ?
+		//XXX : setCharacterEncoding here ?
 		servletRequest.setCharacterEncoding(module.getEncoding());
 		
 		//create mvc framework http request and response
@@ -107,20 +107,34 @@ public class MvcFilter implements javax.servlet.Filter {
         }
 		
 		@Override
-        public Map<String, Header> getHeaders() {
-	        // TODO implement RequestImpl.getHeaders
-	        return super.getHeaders();
+		@SuppressWarnings("unchecked")
+        public Map<String, String> getHeaders() {
+			if(null == headers){
+				super.getHeaders(); //create headers
+				Enumeration<String> names = request.getHeaderNames();
+				while(names.hasMoreElements()){
+					String name = names.nextElement();
+					headers.put(name, request.getHeader(name));
+				}
+			}
+			return headers;
         }
 		
 		@Override
-        public Cookie getCookie(String name) {
-	        // TODO implement RequestImpl.getCookie
-	        return super.getCookie(name);
-        }
-
-		@Override
         public Map<String, Cookie> getCookies() {
-	        // TODO implement RequestImpl.getCookies
+			if(null == cookies){
+				super.getCookies(); //create cookies
+				javax.servlet.http.Cookie[] servletCookies = request.getCookies();
+				for(javax.servlet.http.Cookie servletCookie : servletCookies){
+					Cookie cookie = new Cookie(servletCookie.getName(),servletCookie.getValue());
+					cookie.domain = servletCookie.getDomain();
+					cookie.maxAge = servletCookie.getMaxAge();
+					cookie.path   = servletCookie.getPath();
+					cookie.secure = servletCookie.getSecure();
+					
+					cookies.put(cookie.name, cookie);
+				}
+			}
 	        return super.getCookies();
         }
 
@@ -194,20 +208,20 @@ public class MvcFilter implements javax.servlet.Filter {
         public void setStatus(int status) {
 			response.setStatus(status);
         }
-
+		
 		@Override
-        public void forward(String path) {
+        protected void forwardTo(String forwardPath) {
 			try {
-	            request.getRequestDispatcher(path).forward(request, response);
+	            request.getRequestDispatcher(forwardPath).forward(request, response);
             } catch (Exception e) {
             	throw new MvcException(e);
             }
         }
 
 		@Override
-        public void redirect(String url) {
+        protected void redirectTo(String redirectUrl) {
 			try {
-	            response.sendRedirect(url);
+	            response.sendRedirect(redirectUrl);
             } catch (Exception e) {
             	throw new MvcException(e);
             }
