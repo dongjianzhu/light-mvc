@@ -18,9 +18,7 @@ package org.lightframework.mvc;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -158,40 +156,6 @@ public final class HTTP {
 	}
 	
 	/**
-	 * a http header
-	 * @since 1.0.0
-	 */
-	public static class Header {
-		protected String name;
-		protected List<String> values;
-		
-		public Header(){
-			
-		}
-		
-		public Header(String name,String value){
-			this.name = name;
-			this.values = new ArrayList<String>();
-			this.values.add(value);
-		}
-		
-		public String getName(){
-			return name;
-		}
-		
-		public List<String> getValues(){
-			return values;
-		}
-
-		/**
-		 * @return first value
-		 */
-		public String value(){
-			return getValues() == null ? "" : getValues().get(0);
-		}
-	}	
-	
-	/**
 	 * a http request
 	 * @since 1.0.0
 	 */
@@ -211,7 +175,7 @@ public final class HTTP {
 	    protected Result   result;
 
 	    protected UserAgent             userAgent;
-	    protected Map<String, Header>   headers;
+	    protected Map<String, String>   headers;
 	    protected Map<String, Cookie>   cookies;
 	    protected Map<String, String[]> parameters;
 	    protected Map<String, Object>   attributes;
@@ -319,13 +283,12 @@ public final class HTTP {
 	    }
 		
 		public String getHeader(String name){
-			Header header = getHeaders().get(name);
-			return null == header ? null : header.value();
+			return getHeaders().get(name);
 		}
 
-		public Map<String, Header> getHeaders() {
+		public Map<String, String> getHeaders() {
 			if(null == headers){
-				headers = new HashMap<String, Header>();
+				headers = new HashMap<String, String>();
 			}
 	    	return headers;
 	    }
@@ -381,7 +344,7 @@ public final class HTTP {
 	    protected String       contentType;
 	    protected OutputStream out;
 	    
-	    protected Map<String, Header> headers;
+	    protected Map<String, String> headers;
 	    protected Map<String, Cookie> cookies;
 	    
 	    protected Response(){
@@ -404,17 +367,17 @@ public final class HTTP {
 	    	this.contentType = contentType;
 	    }
 
-		public Header getHeader(String name){
+		public String getHeader(String name){
 			return getHeaders().get(name);
 		}
 		
 		public void setHeader(String name,String value){
-			getHeaders().put(name, new Header(name,value));
+			getHeaders().put(name, value);
 		}
 
-		public Map<String, Header> getHeaders() {
+		public Map<String, String> getHeaders() {
 			if(null == headers){
-				headers = new HashMap<String, Header>();
+				headers = new HashMap<String, String>();
 			}
 	    	return headers;
 	    }
@@ -455,12 +418,13 @@ public final class HTTP {
 	    	return cookies;
 	    }
 		
-		public void redirect(String url){
-			
+		public final void redirect(String url){
+			//TODO : parse url
+			redirectTo(url);
 		}
 		
-		public void forward(String path){
-			
+		public final void forward(String path){
+			forwardTo(path);
 		}
 		
 		public void write(String content) throws IOException{
@@ -480,6 +444,14 @@ public final class HTTP {
 				out = new ByteArrayOutputStream();
 			}
 			return out;
+		}
+		
+		protected void forwardTo(String forwardPath){
+			
+		}
+		
+		protected void redirectTo(String redirectUrl){
+			
 		}
 	}	
 }

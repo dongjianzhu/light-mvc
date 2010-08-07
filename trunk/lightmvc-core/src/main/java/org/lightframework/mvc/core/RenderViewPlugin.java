@@ -55,40 +55,7 @@ public class RenderViewPlugin extends Plugin {
     }
 	
 	protected View findView(Request request, Response response, Result result) throws Exception {
-		
-		//return request.getModule().findView(request.getAction());
-		
-		// TODO : RenderViewPlugin.findView
-		/*
-		Module module     = request.getModule();
-		String controller = request.getAction().getControllerName();
-		String action     = request.getAction().getSimpleName();
-		
-		View view = module.findView("/" + controller, name)
-		
-		/*
-		excludes *.js *.css *.gif *.png *.jpg *.jpeg ...
-		
-		example : /list
-		 1. {module-view-path}/home/list.jsp
-		 2. {module-view-path}/home/list.htm*
-		 3. {module-view-path}/home/list.*
-		 4. {module-root-path}/list.jsp
-		 5. {module-root-path}/list.htm*
-		 6. {module-root-path}/list.*
-		  
-        example : /user/list
-		 1. {module-view-path}/user/list.jsp
-		 2. {module-view-path}/user/list.htm*
-		 3. {module-view-path}/user/list.*
-		 
-		 example : /product/category/list}
-		 1. {module-view-path}/product/category/list.jsp
-		 2. {module-view-path}/product/category/list.htm*
-		 3. {module-view-path}/product/category/list.*
-		 */
-		
-		return null;
+		return request.getModule().findView(request.getAction());
 	}
 
 	public void setViewNotFoundRender(IViewNotFoundRender renderViewNotFound) {

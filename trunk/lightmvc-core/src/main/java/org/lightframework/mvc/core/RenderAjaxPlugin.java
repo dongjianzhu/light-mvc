@@ -80,7 +80,7 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
     }
 	
 	protected boolean renderAjax(Request request,Response response,Result result) throws Exception{
-		//XXX : add xml format support
+		//XXX : xml format support
 		
 		renderJson(request, response, result);
 		

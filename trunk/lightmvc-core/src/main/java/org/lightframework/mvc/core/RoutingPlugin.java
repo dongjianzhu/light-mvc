@@ -37,8 +37,8 @@ import org.slf4j.LoggerFactory;
  * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0.0
  */
-public class RoutePlugin extends Plugin {
-	private static final Logger log = LoggerFactory.getLogger(RoutePlugin.class);
+public class RoutingPlugin extends Plugin {
+	private static final Logger log = LoggerFactory.getLogger(RoutingPlugin.class);
 	
 	private static final String INTERNAL_ROUTE_PARAMETER_CONTROLLER           = "controller";
 	private static final String INTERNAL_ROUTE_PARAMETER_ACTION               = "action";
