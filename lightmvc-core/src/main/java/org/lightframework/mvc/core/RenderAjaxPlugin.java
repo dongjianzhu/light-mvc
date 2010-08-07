@@ -27,6 +27,8 @@ import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.config.Ajax;
 import org.lightframework.mvc.core.RenderViewPlugin.IViewNotFoundRender;
 import org.lightframework.mvc.json.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * core {@link Plugin} to render {@link Result} to json or xml format if current request is ajax request.
@@ -36,6 +38,7 @@ import org.lightframework.mvc.json.JSON;
  * @since 1.0.0
  */
 public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
+	private static final Logger log = LoggerFactory.getLogger(RenderAjaxPlugin.class);
 	
 	public static final String RETURN_CODE  = "returnCode";
 	public static final String RETURN_DESC  = "returnDesc";
@@ -88,6 +91,10 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 	}
 
 	protected void renderJson(Request request,Response response,Result result) throws Exception{
+		if(log.isTraceEnabled()){
+			log.trace("[ajax:'{}'] -> render json result",request.getPath());
+		}
+		
 		String content = encodeJson(result);
 		response.write(content);
 		if(request.getUserAgent().isMozilla()){

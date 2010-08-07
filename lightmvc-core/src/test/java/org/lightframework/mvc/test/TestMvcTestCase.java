@@ -27,9 +27,13 @@ import org.lightframework.mvc.Result;
  */
 public class TestMvcTestCase extends MvcTestCase {
 	
+	protected String packages;
+	
 	@Override
     protected void setUpEveryTest() throws Exception {
-		module.setPackages(Home.class.getPackage().getName());
+		packages = TestMvcTestCase.class.getPackage().getName();
+		module.setPackages(packages);
+		createSubClass(Home.class, packages + ".Home");
     }
 
 	public void testSetUp() throws Exception{
@@ -66,5 +70,11 @@ public class TestMvcTestCase extends MvcTestCase {
 		assertEquals(Result.STATUS_OK, result.getStatus());
 		assertNull(result.getDescription());
 		assertNull(result.getValue());
+	}
+	
+	public static class Home {
+		public void index(){
+			Result.setAttribute("just_for_test", "executed");
+		}
 	}
 }

@@ -20,6 +20,8 @@ import org.lightframework.mvc.Result;
 import org.lightframework.mvc.View;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * render {@link Result} to {@link View}
@@ -29,6 +31,8 @@ import org.lightframework.mvc.HTTP.Response;
  * @since 1.0.0
  */
 public class RenderViewPlugin extends Plugin {
+	private static final Logger log = LoggerFactory.getLogger(RenderViewPlugin.class);
+	
 	protected IViewNotFoundRender viewNotFoundRender;
 	
 	public RenderViewPlugin(){
@@ -41,13 +45,37 @@ public class RenderViewPlugin extends Plugin {
 	
 	@Override
     public boolean render(Request request, Response response, Result result) throws Exception {
+		String action = request.getAction().getName();
 		
 		View view = findView(request, response, result);
 		
+		if(log.isTraceEnabled()){
+			if(null == view){
+				log.trace("[action:'{}'] -> view not found",action);
+			}else{
+				log.trace("[action:'{}'] -> found view '{}'",action,view.getName());
+			}
+		}
+		
 		if(null == view){
-			
 			if(null != viewNotFoundRender){
+				if(log.isTraceEnabled()){
+					log.trace("[action:'{}'] -> no view found,render by '{}'",action,viewNotFoundRender.getClass().getName());
+				}
 				return viewNotFoundRender.renderViewNotFound(request, response, result);
+			}
+			if(log.isTraceEnabled()){
+				log.trace("[action:'{}'] -> not render any view",action);
+			}
+		}else {
+			if(log.isTraceEnabled()){
+				log.trace("[action:'{}'] -> view '{}' rendering... ",action,view.getName());
+			}
+			
+			view.render(request, response);
+			
+			if(log.isTraceEnabled()){
+				log.trace("[action:'{}'] -> view '{}' rendered!",action,view.getName());
 			}
 		}
 		
@@ -62,65 +90,9 @@ public class RenderViewPlugin extends Plugin {
     	this.viewNotFoundRender = renderViewNotFound;
     }
 	
-	/*
-	private String findViewPath(Request request,Render render) {
-		Action action = request.getAction();
-		if(null != action){
-			String _packpage  = request.getModule().getPackage();
-			String controller = null;
-			String actionName = null;
-			
-			if(action.isResolved()){
-				controller = action.getClazz().getName().toLowerCase();
-				actionName = action.getMethod().getName().toLowerCase();
-			}else{
-				int lastDotIndex = action.getName().lastIndexOf(".");
-				controller = action.getName().substring(0,lastDotIndex).toLowerCase();
-				actionName = action.getName().substring(lastDotIndex + 1).toLowerCase();
-			}
-			
-			if(null != _packpage && !"".equals(_packpage) && controller.startsWith(_packpage)){
-				//'app.controllers.Product' -> 'controllers.Product' 
-				controller = controller.substring(_packpage.length() + 1);
-			}
-			
-			if(controller.startsWith("controllers.")){
-				//'controllers.Product' -> 'Product'
-				controller = controller.substring("controllers.".length());
-			}
-			
-			return findDefaultViewPath(request,render,controller,actionName);
-		}
-		return null;
-	}
-	
-	private String findDefaultViewPath(Request request,Render render, String controller,String action){
-		String path = null;
-		String name = action;
-		if("home".equalsIgnoreCase(controller)){
-			path = "/";
-		}else{
-			path = "/modules/" + controller.replace("\\.", "/") + "/";
-		}
-		
-		if(!Render.OK_STATUS.equals(render.getStatus())){
-			name = "_" + render.getStatus();
-		}
-		
-		Collection<String> files = request.getModule().getViews(path);
-		
-		if(null != files){
-			for(String file : files){
-				if(file.toLowerCase().startsWith(path + name + ".")){
-					return file;
-				}
-			}
-		}
-		
-		return null;
-	}
-	*/
-
+	/**
+	 * @since 1.0.0
+	 */
 	public static interface IViewNotFoundRender {
 		
 		boolean renderViewNotFound(Request request, Response response, Result result) throws Exception;

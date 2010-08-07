@@ -56,7 +56,7 @@ SOFTWARE.
  * @author JSON.org
  * @version 2010-03-11
  */
-public class JSONWriter {
+class JSONWriter {
     private static final int maxdepth = 20;
 
     /**

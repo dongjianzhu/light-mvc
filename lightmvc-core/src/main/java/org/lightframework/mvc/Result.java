@@ -104,6 +104,30 @@ public abstract class Result {
 		return context.attributes;
 	}
 	
+	public static void redirect(String url) {
+		throw new Return(new Redirect(url));
+	}
+	
+	public static void forward(String path){
+		throw new Return(new Forward(path));
+	}
+	
+	public static void content(String text) {
+		throw new Return(new Content(text));
+	}
+	
+	public static void content(String text,String contentType){
+		throw new Return(new Content(text,contentType));
+	}
+	
+	public static void error(String message) {
+		throw new Return(new Error(message));
+	}
+	
+	public static void error(String message,Throwable e){
+		throw new Return(new Error(message,e));
+	}
+	
 	//--------built in interface and classes used by Result class----------
 	
 	/**
@@ -163,10 +187,19 @@ public abstract class Result {
 		
 		protected Throwable exception;
 		
-		public Error(Throwable e){
+		public Error(String message){
 			this.status      = STATUS_SERVER_ERROR;
-			this.description = e.getMessage();
+			this.description = message;
+		}
+		
+		public Error(Throwable e){
+			this(e.getMessage());
 			this.exception   = e;
+		}
+		
+		public Error(String message,Throwable e){
+			this(message);
+			this.exception = e;
 		}
 		
 		public Throwable getException(){

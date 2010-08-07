@@ -20,55 +20,70 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 import org.lightframework.mvc.HTTP.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * mock object of {@link Response} for testing
- *
+ * 
  * @author fenghm (live.fenghm@gmail.com)
- *
+ * 
  * @since 1.0.0
  */
 public class MockResponse extends Response {
-	
+	private static final Logger log = LoggerFactory.getLogger(MockResponse.class);
+
 	protected String forwardPath;
 	protected String redirectUrl;
 	protected ByteArrayOutputStream bytesOut;
 
 	public String getContent() {
-		if(null == bytesOut){
+		if (null == bytesOut) {
 			return null;
 		}
 		try {
-	        return bytesOut.toString(encoding);
-        } catch (UnsupportedEncodingException e) {
-        	throw new RuntimeException(e);
-        }
+			return bytesOut.toString(encoding);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public JSONResult getJSONResult() {
+		String content = getContent();
+		if (null != content) {
+			try {
+				return JSONResult.parse(content);
+			} catch (Exception e) {
+				log.info("content is not json format : {}", e.getMessage());
+			}
+		}
+		return null;
 	}
 
 	@Override
-    public OutputStream getOut() {
-		if(null == out){
+	public OutputStream getOut() {
+		if (null == out) {
 			bytesOut = new ByteArrayOutputStream();
 			out = bytesOut;
 		}
 		return out;
-    }
+	}
 
 	@Override
-    protected void forwardTo(String path) {
+	protected void forwardTo(String path) {
 		this.forwardPath = path;
-    }
+	}
 
 	@Override
-    protected void redirectTo(String url) {
+	protected void redirectTo(String url) {
 		this.redirectUrl = url;
-    }
+	}
 
 	public String getForwardPath() {
-    	return forwardPath;
-    }
+		return forwardPath;
+	}
 
 	public String getRedirectUrl() {
-    	return redirectUrl;
-    }
+		return redirectUrl;
+	}
 }

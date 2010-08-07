@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.lightframework.mvc.HTTP.Cookie;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
-import org.lightframework.mvc.HTTP.Url;
+
 
 /**
  * mvc web module http filter,configed in web.xml
@@ -92,7 +92,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		public RequestImpl(HttpServletRequest request,Module module){
 			this.request         = request;
 			this.module  		 = module;
-			this.url             = new Url();
+			this.url             = new HTTP.Url();
 			this.url.port        = request.getServerPort(); //TODO : is server port right ?
 			this.url.protocol    = request.getProtocol();
 			this.url.urlString   = request.getRequestURL().toString();

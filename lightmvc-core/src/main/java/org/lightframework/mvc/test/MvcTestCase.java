@@ -15,10 +15,9 @@
  */
 package org.lightframework.mvc.test;
 
-import javassist.ClassPool;
-import javassist.CtClass;
 import junit.framework.TestCase;
 
+import org.lightframework.mvc.utils.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +31,7 @@ import org.slf4j.LoggerFactory;
 public abstract class MvcTestCase extends TestCase {
 	private static final Logger log = LoggerFactory.getLogger(MvcTestCase.class);
 	
+	private static boolean javassisted;
 	private static boolean setUpOnce;
 
 	protected MockModule    module;
@@ -39,11 +39,14 @@ public abstract class MvcTestCase extends TestCase {
 	protected MockResponse  response;
 	protected boolean       ignored;
 	protected boolean       managed;
+	protected String        packagee;
 	
 	@Override
     protected final void setUp() throws Exception {
 		
-		log.info("===========================BEGIN==============================");
+		log.info("===========================BEGIN:{}==============================",getName());
+		
+		this.packagee = this.getClass().getPackage().getName();
 		
 		module = new MockModule();
 		
@@ -63,7 +66,7 @@ public abstract class MvcTestCase extends TestCase {
     protected final void tearDown() throws Exception {
 		MockFramework.mockStop(module);
 		
-		log.info("============================END===============================");
+		log.info("============================END:{}===============================",getName());
 		log.info("EOT");//add blank line for viewing log better. (EOT : END OF TEST)
     }
 	
@@ -110,29 +113,26 @@ public abstract class MvcTestCase extends TestCase {
         }
 	}
 	
-	protected final Class<?> newCopiedClass(Class<?> originalClass,String newClassName) throws Exception{
-		Class<?> clazz = module.loadClassForName(newClassName);
+	protected final Class<?> createSubClass(Class<?> superClass,String subClassName) throws Exception{
+		checkJavassist();
+		
+		log.debug("[mvc-test-case] -> create sub class '{}' of '{}'",subClassName,superClass.getName());
+		Class<?> clazz = null;//module.loadClassForName(newClassName);
 		
 		if(null == clazz){
-			CtClass ctclass = ClassPool.getDefault().getAndRename(originalClass.getName(), newClassName);
+			javassist.ClassPool classPool  = javassist.ClassPool.getDefault();
+			Thread.currentThread().setContextClassLoader(new Loader(classPool));
+			
+			javassist.CtClass ctSuperClass = classPool.get(superClass.getName());
+			javassist.CtClass ctclass      = classPool.makeClass(subClassName,ctSuperClass);
 			clazz  = ctclass.toClass();
+			ctclass.detach();
+			log.debug("[mvc-test-case] -> create sub class '{}'",subClassName);
 		}
 		
-		module.addClassName(newClassName);
+		module.addClassName(subClassName);
 		
-		return clazz;
-	}
-	
-	protected final Class<?> newChildClass(Class<?> superClass,String childClassName) throws Exception{
-		Class<?> clazz = module.loadClassForName(childClassName);
-		
-		if(null == clazz){
-			CtClass ctSuperClass = ClassPool.getDefault().get(superClass.getName());
-			CtClass newClass = ClassPool.getDefault().makeClass(childClassName,ctSuperClass);
-			clazz = newClass.toClass();
-		}
-
-		module.addClassName(childClassName);
+		log.debug("[mvc-test-case] -> sub class created");
 		
 		return clazz;
 	}
@@ -143,5 +143,38 @@ public abstract class MvcTestCase extends TestCase {
 	
 	protected final void removeClass(String className){
 		module.removeClassName(className);
+	}
+	
+	protected final String getCurrentPackage(){
+		return packagee;
+	}
+	
+	private static void checkJavassist() throws ClassNotFoundException{
+		if(!javassisted && null == ClassUtils.forName("javassist.ClassPool")){
+			throw new ClassNotFoundException("javassist library required");
+		}
+	}
+	
+	public static final class Loader extends ClassLoader {
+		
+		private javassist.ClassPool pool;
+		
+		private Loader(javassist.ClassPool pool){
+			this.pool = pool;
+		}
+
+		@Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+			javassist.CtClass ctClass = pool.getOrNull(name);
+			if(null != ctClass){
+	            try {
+	                byte[] b = ctClass.toBytecode();
+	                return defineClass(name, b, 0, b.length);
+                } catch (Exception e) {
+                	throw new RuntimeException(e.getMessage(),e);
+                }
+			}
+	        return super.findClass(name);
+        }
 	}
 }

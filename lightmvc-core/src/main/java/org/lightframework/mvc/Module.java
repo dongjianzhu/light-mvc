@@ -162,30 +162,56 @@ public class Module {
 			if(null == view && action.isHome() && !root.equals(getRootPath())){
 				//guess the path of home controller : {module-root-path}
 				root = getRootPath();
-				path = root;
+				path = root.endsWith("/") ? root.substring(0,root.length() - 1) : root;
 				view = findView(path, controller, actionName);
 			}
 		}
 
 		if(null != view){
-			return new View.WebResource(view);
+			return new View(view);
 		}
 		
 		return null;
 	}
 	
 	protected String findView(String path,String controller,String action){
-		String prefix = path + "/" + action + ".";
 		Collection<String> resources = findWebResources(path);
-		for(String resource : resources){
-			if(resource.equals(prefix + "jsp")){
-				return resource;
-			}else if(resource.equals(prefix + "htm") || resource.equals(prefix + "html")){
-				return resource;
-			}else if(resource.startsWith(prefix)){
-				return resource;
+		if(!resources.isEmpty()){
+			String prefix = path + "/" + action + ".";
+			String view   = prefix + "jsp";
+			String found  = findMatchedView(resources, view, false);
+			
+			if(null == found){
+				view  = prefix + "html";
+				found = findMatchedView(resources, view, false);
 			}
-		}		
+			
+			if(null == found){
+				view  = prefix + "htm";
+				found = findMatchedView(resources, view, false);
+			}
+
+			if(null == found){
+				found = findMatchedView(resources, prefix, true);
+			}
+		
+			return found;
+		}
+		return null;
+	}
+	
+	protected String findMatchedView(Collection<String> resources,String tofind,boolean startsWith) {
+		for(String resource : resources){
+			if(startsWith){
+				if(resource.startsWith(tofind)){
+					return resource;
+				}
+			}else{
+				if(resource.equals(tofind)){
+					return resource;
+				}
+			}
+		}
 		return null;
 	}
 	
