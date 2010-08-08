@@ -71,7 +71,7 @@ public class Framework {
 		log.debug("[module:'{}'] -> stopped!",module.getName());
 		
 		//release all context data
-		Result.Context.release();
+		Result.reset();
 		Request.reset();
 	}
 	
@@ -84,7 +84,10 @@ public class Framework {
 	}
 
 	/**
-	 * handle a http request in mvc framework
+	 * handle a http request in mvc framework <p>
+	 * 
+	 * after you call this method , you must call {@link #handleFinally(Request, Response)} manual to clear context data.
+	 * 
 	 * @param request      mvc http request
 	 * @param response     mvc http response
 	 * @return true if mvc framework has handled this request
@@ -136,17 +139,15 @@ public class Framework {
 						}
 					}
 				}
-				return managed;
 			}catch(Return e){
-				return PluginInvoker.render(request, response, e.result());
+				request.result = e.result();
+				managed = PluginInvoker.render(request, response, e.result());
 			}
 		}catch(Exception e){
 			//handle exception
-			if(!PluginInvoker.exception(request, response, e)){
+			if(!PluginInvoker.error(request, response, e)){
 				throw e;
 			}
-		}finally {
-			Request.current.set(null);
 		}
 		
 		if(log.isTraceEnabled()){
@@ -154,6 +155,11 @@ public class Framework {
 		}
 		
 		return managed;
+	}
+	
+	protected static void handleFinally(Request request,Response response) {
+		Result.reset();
+		Request.reset();
 	}
 	
 	private static void init(){
@@ -193,8 +199,14 @@ public class Framework {
 		action.onBinded();
 		
 		//executing action method
-		Result result = PluginInvoker.execute(request, response, action);
+		Result result = null;
+		try{
+			result = PluginInvoker.execute(request, response, action);
+		}catch(Return e){
+			result = e.result();
+		}
 		action.onExecuted();
+		request.result = result;
 		
 		//render action result
 		boolean rendered = PluginInvoker.render(request, response, result);
@@ -219,107 +231,194 @@ public class Framework {
 	 */
 	private static final class PluginInvoker{
 		static boolean request(Request request,Response response) throws Exception{
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:requet] -> request handling...");
+			}
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.request(request, response)){
-					log.trace("request managed by plugin '{}'",plugin.getName());
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:request] -> request managed by '{}'",plugin.getName());
+					}
 					return true;
 				}
 			}
 			for(Plugin plugin : plugins){
 				if(plugin.request(request, response)){
-					log.trace("request managed by plugin '{}'",plugin.getName());
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:request] -> request managed by '{}'",plugin.getName());
+					}
 					return true;
 				}
+			}
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:request] -> request not managed by any plugins");
 			}
 			return false;
 		}
 		
 		static Action[] route(Request request,Response response) throws Exception{
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:route] -> routing action...");
+			}
 			for(Plugin plugin : request.getModule().getPlugins()){
 				Action[] actions = plugin.route(request, response);
 				if(null != actions && actions.length > 0){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:route] -> routed {} actions",actions.length);
+					}
 					return actions;
 				}
 			}			
 			for(Plugin plugin : plugins){
 				Action[] actions = plugin.route(request, response);
 				if(null != actions && actions.length > 0){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:route] -> routed {} actions",actions.length);
+					}					
 					return actions;
 				}
+			}
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:route] -> routed 0 actions");
 			}
 			return Plugin.EMPTY_ACTIONS;
 		}
 		
 		static boolean resolve(Request request,Response response,Action action) throws Exception{
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:resolve] -> resolving action...");
+			}
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.resolve(request, response, action)){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:resolve] -> resolved by '{}'",plugin.getName());
+					}					
 					return true;
 				}
 			}
 			for(Plugin plugin : plugins){
 				if(plugin.resolve(request, response, action)){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:resolve] -> resolved by '{}'",plugin.getName());
+					}
 					return true;
 				}
 			}
+			
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:resolve] -> resolving not done by any plugins");
+			}
+			
 			return false;
 		}
 		
 		static boolean binding(Request request,Response response,Action action) throws Exception{
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:binding] -> binding arguments...");
+			}			
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.binding(request, response, action)){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:binding] -> binded by '{}'",plugin.getName());
+					}					
 					return true;
 				}
 			}			
 			for(Plugin plugin : plugins){
 				if(plugin.binding(request, response, action)){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:binding] -> binded by '{}'",plugin.getName());
+					}					
 					return true;
 				}
 			}
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:binding] -> binding not done by any plugins");
+			}			
 			return false;
 		}
 		
 		static Result execute(Request request,Response response,Action action) throws Exception{
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:execute] -> executing action...");
+			}			
 			for(Plugin plugin : request.getModule().getPlugins()){
 				Result result = plugin.execute(request, response, action);
 				if(null != result){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:execute] -> executed by '{}'",plugin.getName());
+					}
 					return result;
 				}
 			}				
 			for(Plugin plugin : plugins){
 				Result result = plugin.execute(request, response, action);
 				if(null != result){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:execute] -> executed by '{}'",plugin.getName());
+					}					
 					return result;
 				}
+			}
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:execute] -> executing not done by any plugins");
 			}				
 			return null;
 		}
 		
 		static boolean render(Request request,Response response,Result result) throws Exception {
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:render] -> rendering result...");
+			}
+			
 			request.result = result;
 			
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.render(request, response, result)){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:render] -> rendered by '{}'",plugin.getName());
+					}					
 					return true;
 				}
 			}			
 			for(Plugin plugin : plugins){
 				if(plugin.render(request, response, result)){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:render] -> rendered by '{}'",plugin.getName());
+					}					
 					return true;
 				}
 			}
+			
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:render] -> rendering not done by any plugins");
+			}			
+			
 			return false;
 		}
 		
-		static boolean exception(Request request,Response response,Throwable e) throws Exception{
+		static boolean error(Request request,Response response,Throwable e) throws Exception{
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:error] -> handling error...");
+			}			
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.error(request, response, e)){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:error] -> handled by '{}'",plugin.getName());					
+					}
 					return true;
 				}
 			}			
 			for(Plugin plugin : plugins){
 				if(plugin.error(request, response, e)){
+					if(log.isTraceEnabled()){
+						log.trace("[plugin-invoker:error] -> handled by '{}'",plugin.getName());					
+					}					
 					return true;
 				}
+			}	
+			if(log.isTraceEnabled()){
+				log.trace("[plugin-invoker:error] -> handling not done by any plugins");
 			}			
 			return false;
 		}

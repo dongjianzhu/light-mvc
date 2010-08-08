@@ -13,20 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.config;
+package org.lightframework.mvc.core;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import org.lightframework.mvc.test.MvcTestCase;
 
 /**
- * 
- * represents a default value of an {@link Object} 
+ * Test Case of {@link ErrorPlugin}
  *
  * @author fenghm (live.fenghm@gmail.com)
- * 
+ *
  * @since 1.0.0
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Default {
-	String value();
+public class TestErrorPlugin extends MvcTestCase {
+
+	@Override
+    protected void setUpEveryTest() throws Exception {
+		module.setPackages(packagee);
+		createSubClass(Home.class, packagee + ".Home");
+    }
+
+	public void testError() {
+		try {
+	        execute();
+        } catch (Exception e) {
+        	assertNotNull(e.getCause());
+        	assertEquals("error test", e.getCause().getMessage());
+        }
+	}
+	
+	
+	public static class Home{
+		public void index() {
+			throw new RuntimeException("error test");
+		}
+	}
 }

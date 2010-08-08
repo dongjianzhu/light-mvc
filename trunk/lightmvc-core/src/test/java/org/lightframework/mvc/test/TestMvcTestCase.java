@@ -15,8 +15,13 @@
  */
 package org.lightframework.mvc.test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.lightframework.mvc.Action;
+import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Result;
+import org.lightframework.mvc.HTTP.Request;
+import org.lightframework.mvc.HTTP.Response;
 
 /**
  * Test Case of {@link MvcTestCase}
@@ -70,6 +75,49 @@ public class TestMvcTestCase extends MvcTestCase {
 		assertEquals(Result.STATUS_OK, result.getStatus());
 		assertNull(result.getDescription());
 		assertNull(result.getValue());
+	}
+	
+	public void testModulePlugin() throws Exception {
+
+		final AtomicInteger counter = new AtomicInteger();
+		
+		Plugin plugin = new Plugin() {
+			@Override
+            public boolean request(Request request, Response response) throws Exception {
+				counter.incrementAndGet();
+				return false;
+            }
+
+			@Override
+            public Action[] route(Request request, Response response) throws Exception {
+				counter.incrementAndGet();
+	            return super.route(request, response);
+            }
+
+			@Override
+            public boolean resolve(Request request, Response response, Action action) throws Exception {
+				counter.incrementAndGet();
+	            return super.resolve(request, response, action);
+            }
+
+			@Override
+            public boolean binding(Request request, Response response, Action action) throws Exception {
+				counter.incrementAndGet();
+	            return super.binding(request, response, action);
+            }
+
+			@Override
+            public Result execute(Request request, Response response, Action action) throws Exception {
+				counter.incrementAndGet();
+	            return super.execute(request, response, action);
+            }
+		};
+		
+		module.addPlugin(plugin);
+		
+		execute();
+		
+		assertEquals(5, counter.intValue());
 	}
 	
 	public static class Home {

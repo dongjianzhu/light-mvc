@@ -18,6 +18,8 @@ package org.lightframework.mvc.core;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * core plugin to handle exceptions
@@ -26,9 +28,14 @@ import org.lightframework.mvc.HTTP.Response;
  * @since 1.0.0
  */
 public class ErrorPlugin extends Plugin {
+	private static final Logger log = LoggerFactory.getLogger(ErrorPlugin.class);
 
 	@Override
     public boolean error(Request request, Response response, Throwable exception)  {
+		if(log.isInfoEnabled()){
+			log.error("[mvc:error] -> {}",exception.getMessage(),exception);
+		}
+		
 	    // TODO : implement ErrorPlugin.error
 		//route by exception 
 		/**

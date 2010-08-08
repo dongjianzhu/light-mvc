@@ -98,7 +98,7 @@ public class MockRequest extends Request {
 	}
 
 	public void setHeader(String name,String value){
-		getHeaders().put(name, value);
+		getHeaders().put(name, new String[]{value});
 	}
 	
 	public void setCookie(String name,String value){
@@ -107,5 +107,9 @@ public class MockRequest extends Request {
 	
 	public void setParameter(String name,String value){
 		getParameters().put(name, new String[]{value});
+	}
+	
+	public void setParameter(String name,String[] value){
+		getParameters().put(name, value);
 	}
 }

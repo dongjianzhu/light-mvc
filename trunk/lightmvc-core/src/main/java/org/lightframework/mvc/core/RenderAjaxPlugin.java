@@ -92,7 +92,7 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 
 	protected void renderJson(Request request,Response response,Result result) throws Exception{
 		if(log.isTraceEnabled()){
-			log.trace("[ajax:'{}'] -> render json result",request.getPath());
+			log.trace("[ajax:'{}'] -> render json : ",request.getPath());
 		}
 		
 		String content = encodeJson(result);
@@ -101,6 +101,12 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 			response.setContentType(HTTP.CONTENT_TYPE_JSON_TEXT);
 		}else{
 			response.setContentType(HTTP.CONTENT_TYPE_JSON_RFC);	
+		}
+		
+		if(log.isTraceEnabled()){
+			log.trace("[ajax:'{}'] -> {}",
+					  request.getPath(),
+					  content.length() < 255 ? content : (content.substring(0,255) + "..."));
 		}
 	}
 	

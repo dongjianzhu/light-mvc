@@ -19,11 +19,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Date;
 
 /**
- * TODO : document me
+ * represents a format string of {@link Object} such {@link Date}.
  *
- * @author light wind(lightworld.me@gmail.com)
+ * @author fenghm (live.fenghm@gmail.com)
  * 
  * @since 1.0.0
  */
@@ -34,6 +35,7 @@ public @interface Format {
 	public static final String DEFAULT_TIME      = "HH:mm:ss";
 	public static final String DEFAULT_DATETIME  = "yyyy-MM-dd HH:mm:ss";
 	public static final String DEFAULT_TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSS";
+	public static final String DEFAULT_RFC_DATE  = "yyyy-MM-dd'T'HH:mm:ssZ";
 	
 	String value();
 }

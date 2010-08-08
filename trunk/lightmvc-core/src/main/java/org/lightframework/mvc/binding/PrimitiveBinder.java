@@ -52,6 +52,7 @@ public class PrimitiveBinder implements ITypeBinder {
 		types.add(Double.class);
 		types.add(String.class);
 		types.add(BigDecimal.class);
+		types.add(BigInteger.class);
 	}
 	
 	public Set<Class<?>> getSupportedTypes() {
@@ -86,7 +87,11 @@ public class PrimitiveBinder implements ITypeBinder {
 	        } else if ((clazz == Character.class || clazz == Character.TYPE ) && string.length() == 1) {
 	            value = string.charAt(0);
 	        } else if (clazz == Byte.class || clazz == Byte.TYPE) {
-	            value = Byte.parseByte(string);
+	        	if(string.startsWith("0x") || string.startsWith("0X")){//HEX STRING
+	        		value = Byte.parseByte(string.substring(2),16);
+	        	}else{
+	        		value = Byte.parseByte(string);	
+	        	}
 	        } else if (BigDecimal.class == clazz){
 	        	value = new BigDecimal(string);
 	        } else if (BigInteger.class == clazz){

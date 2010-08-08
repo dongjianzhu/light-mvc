@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.config;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+package org.lightframework.mvc;
 
 /**
- * 
- * represents a default value of an {@link Object} 
+ * Home Controller used by Test Case {@link TestMvcFilter}
  *
  * @author fenghm (live.fenghm@gmail.com)
- * 
+ *
  * @since 1.0.0
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Default {
-	String value();
+public class Home {
+
+	public void index(){
+		
+	}
+	
 }

@@ -17,6 +17,7 @@ package org.lightframework.mvc.test;
 
 import junit.framework.TestCase;
 
+import org.lightframework.mvc.Result;
 import org.lightframework.mvc.utils.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,7 @@ public abstract class MvcTestCase extends TestCase {
 	
 	@Override
     protected final void tearDown() throws Exception {
+		MockFramework.mockHandleFinally(request, response);
 		MockFramework.mockStop(module);
 		
 		log.info("============================END:{}===============================",getName());
@@ -82,11 +84,13 @@ public abstract class MvcTestCase extends TestCase {
 		
 	}
 	
-	protected final void execute() throws Exception {
+	protected final Result execute() throws Exception {
 		if(MockFramework.mockIgnore(request)){
 			ignored = true;
+			return null;
 		}else{
-			managed = MockFramework.mockHandle(request, response);	
+			managed = MockFramework.mockHandle(request, response);
+			return request.getResult();
 		}
 	}
 	

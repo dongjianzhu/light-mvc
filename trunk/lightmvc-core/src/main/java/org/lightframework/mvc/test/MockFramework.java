@@ -45,4 +45,8 @@ public class MockFramework extends Framework {
 	public static boolean mockHandle(Request request, Response response) throws Exception {
 		return Framework.handle(request, response);
 	}
+	
+	public static void mockHandleFinally(Request request,Response response) {
+		Framework.handleFinally(request, response);
+	}
 }
