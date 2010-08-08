@@ -46,6 +46,7 @@ import org.lightframework.mvc.HTTP.Response;
 public class MvcFilter implements javax.servlet.Filter {
 
 	public static final String INIT_PARAM_PACKAGE        = "package";
+	public static final String INIT_PARAM_MODULE         = "module";
 	public static final String ATTRIBUTE_MVC_REQUEST     = Request.class.getName();
 	public static final String ATTRIBUTE_SERLVET_REQUEST = HttpServletRequest.class.getName();
 	
@@ -111,8 +112,7 @@ public class MvcFilter implements javax.servlet.Filter {
 	}
 	
 	protected void doInit(ServletContext context, Map<String,String> params){
-		module      = new ModuleImpl(context);
-		module.name = getModule();
+		module = new ModuleImpl(context);
 		
 		doConfig(params);
 		
@@ -130,17 +130,19 @@ public class MvcFilter implements javax.servlet.Filter {
 			module.packages = list.toArray(new String[]{});
 		}
 		
+		//config module name
+		String moduleName = params.get(INIT_PARAM_MODULE);
+		if(null != moduleName && !"".equals(moduleName = moduleName.trim())){
+			module.name = moduleName;
+		}
+		
 		Framework.start(module);
 	}
 	
 	protected void doConfig(Map<String, String> params){
 		
 	}
-	
-	protected String getModule(){
-		return Module.DEFAULT_NAME;
-	}
-	
+
 	protected void doNotHandled(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
 		((FilterChain)context).doFilter(servletRequest, servletResponse);
 	}
