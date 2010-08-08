@@ -287,7 +287,7 @@ public final class HTTP {
 	    }
 		
 		public String getHeader(String name){
-			String[] header = getHeaders().get(name);
+			String[] header = getHeaderValues(name);
 			if(null != header){
 				return header.length == 1 ? header[0] : Utils.arrayToString(header);
 			}
