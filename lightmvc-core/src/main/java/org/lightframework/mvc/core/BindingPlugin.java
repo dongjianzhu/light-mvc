@@ -106,6 +106,11 @@ public class BindingPlugin extends Plugin {
 			return arrayBinding(request,action,arg,value);
 		}
 		
+		//map bind
+		if(type.equals(Map.class)){
+			return mapBinding(request, action, arg, value);
+		}
+		
 		//bean bind
 		if(!ClassUtils.isJdkClass(type)){
 			return beanBinding(request,action,arg);
@@ -133,6 +138,14 @@ public class BindingPlugin extends Plugin {
 			}
 			return array;
 		}
+	}
+	
+	private static Map<String, Object> mapBinding(Request request,Action action,Type arg,Object value) throws Exception {
+		//XXX : REVIEW MAP BINDING
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.putAll(request.getParameters());
+		params.putAll(action.getParameters());
+		return params;
 	}
 	
 	@SuppressWarnings("unchecked")
