@@ -127,6 +127,9 @@ public class MvcFilter implements javax.servlet.Filter {
 		@Override
 		@SuppressWarnings("unchecked")
         protected Collection<String> findWebResources(String path) {
+			if(!path.endsWith("/")){
+				path = path + "/";
+			}
 			return context.getResourcePaths(path);
         }
 		

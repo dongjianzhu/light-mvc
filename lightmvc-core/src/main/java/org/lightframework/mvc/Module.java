@@ -157,8 +157,7 @@ public class Module {
 	}
 	
 	public View findView(Action action){
-		//XXX : is support controller fromat such as product.category ? 
-		String controller = action.getControllerName();
+		String controller = action.getControllerName().replaceAll("\\.", "/");
 		String actionName = action.getSimpleName();
 		
 		//guess the path : {module-view-path}/{controller}
@@ -188,8 +187,18 @@ public class Module {
 	}
 	
 	protected String findView(String path,String controller,String action){
+		//TODO : improve performance in production mode
+		if(log.isTraceEnabled()){
+			log.trace("[module:'{}'] -> try to find view in path '{}'",getName(),path);
+		}
+		
 		Collection<String> resources = findWebResources(path);
 		if(null != resources && !resources.isEmpty()){
+			
+			if(log.isTraceEnabled()){
+				log.trace("[module:'{}'] -> find {} resources",getName(),resources.size());
+			}
+			
 			String prefix = path + "/" + action + ".";
 			String view   = prefix + "jsp";
 			String found  = findMatchedView(resources, view, false);
@@ -207,13 +216,29 @@ public class Module {
 			if(null == found){
 				found = findMatchedView(resources, prefix, true);
 			}
+			
+			if(log.isTraceEnabled()){
+				if(null == found){
+					log.trace("[module:'{}'] -> no matched view of action '{}' found",getName(),action);
+				}else{
+					log.trace("[module:'{}'] -> found matched view '{}'",getName(),found);
+				}
+			}
 		
 			return found;
 		}
+		
+		if(log.isTraceEnabled()){
+			log.trace("[module:'{}'] -> no resources found",getName());
+		}
+		
 		return null;
 	}
 	
 	protected String findMatchedView(Collection<String> resources,String tofind,boolean startsWith) {
+		if(log.isTraceEnabled()){
+			log.trace("[module:'{}'] -> to find matched view '{}'",getName(),tofind);
+		}
 		for(String resource : resources){
 			if(startsWith){
 				if(resource.startsWith(tofind)){
