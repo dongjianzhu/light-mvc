@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -50,31 +51,27 @@ public class MvcFilter implements javax.servlet.Filter {
 	
 	protected ModuleImpl module; //current web module
 	
+	@SuppressWarnings("unchecked")
 	public void init(FilterConfig config) throws ServletException {
-		module = new ModuleImpl(config.getServletContext());
-
-		//config packages
-		String packages = config.getInitParameter(INIT_PARAM_PACKAGE);
-		if(null != packages && !"".equals(packages = packages.trim())){
-			ArrayList<String> list = new ArrayList<String>();
-			String[] values = packages.split(",");
-			for(int i=0;i<values.length;i++){
-				String value = values[i].trim();
-				if(!"".equals(value)){
-					list.add(value);
-				}
-			}
-			module.packages = list.toArray(new String[]{});
+		Map<String, String> params = new HashMap<String, String>();
+		Enumeration<String> names  = config.getInitParameterNames();
+		while(names.hasMoreElements()){
+			String name = names.nextElement();
+			params.put(name, config.getInitParameter(name));
 		}
 		
-		Framework.start(module);
+		doInit(config.getServletContext(), params);
 	}
 	
 	public void destroy() {
-		Framework.stop(module);
+		doDestroy();
 	}
 
 	public void doFilter(final ServletRequest servletRequest,final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
+		doHandle((HttpServletRequest)servletRequest, (HttpServletResponse)servletResponse, filterChain);
+	}
+	
+	protected void doHandle(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
 		//XXX : setCharacterEncoding here ?
 		servletRequest.setCharacterEncoding(module.getEncoding());
 		
@@ -98,7 +95,7 @@ public class MvcFilter implements javax.servlet.Filter {
 			}
 			
 			if(!managed){
-				filterChain.doFilter(servletRequest, servletResponse);
+				doNotHandled(servletRequest, servletResponse,context);
 			}
 		}catch(Throwable e){
 			if(e instanceof ServletException){
@@ -111,6 +108,45 @@ public class MvcFilter implements javax.servlet.Filter {
 		}finally{
 			servletRequest.removeAttribute(ATTRIBUTE_SERLVET_REQUEST);
 		}
+	}
+	
+	protected void doInit(ServletContext context, Map<String,String> params){
+		module      = new ModuleImpl(context);
+		module.name = getModule();
+		
+		doConfig(params);
+		
+		//config packages
+		String packages = params.get(INIT_PARAM_PACKAGE);
+		if(null != packages && !"".equals(packages = packages.trim())){
+			ArrayList<String> list = new ArrayList<String>();
+			String[] values = packages.split(",");
+			for(int i=0;i<values.length;i++){
+				String value = values[i].trim();
+				if(!"".equals(value)){
+					list.add(value);
+				}
+			}
+			module.packages = list.toArray(new String[]{});
+		}
+		
+		Framework.start(module);
+	}
+	
+	protected void doConfig(Map<String, String> params){
+		
+	}
+	
+	protected String getModule(){
+		return Module.DEFAULT_NAME;
+	}
+	
+	protected void doNotHandled(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
+		((FilterChain)context).doFilter(servletRequest, servletResponse);
+	}
+	
+	protected void doDestroy(){
+		Framework.stop(module);
 	}
 	
 	/**
