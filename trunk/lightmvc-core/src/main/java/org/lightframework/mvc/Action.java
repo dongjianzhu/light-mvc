@@ -232,7 +232,7 @@ public class Action {
 		public Object getValue() {
         	return value;
         }
-
+		
 		public void binding(Object value){
 			this.value  = value;
 			this.binded = true;

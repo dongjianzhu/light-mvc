@@ -43,6 +43,8 @@ public final class Lang {
 		
 		protected String       name;
 		protected Class<?>     type;
+		protected String       format;
+		protected String       defaultValue;		
 		protected Annotation[] configs = EMPTY_CONFIGS;
 		
 		public Type(){
@@ -66,6 +68,23 @@ public final class Lang {
 		public Class<?> getType() {
         	return type;
         }
+		
+		public String getFormat() {
+        	return format;
+        }
+
+		public void setFormat(String format) {
+        	this.format = format;
+        }
+
+		public String getDefaultValue() {
+        	return defaultValue;
+        }
+
+		public void setDefaultValue(String defaultValue) {
+        	this.defaultValue = defaultValue;
+        }
+
 		public Annotation[] getConfigs() {
 			if(null == configs){
 				return EMPTY_CONFIGS;

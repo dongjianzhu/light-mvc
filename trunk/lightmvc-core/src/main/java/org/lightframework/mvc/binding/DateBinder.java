@@ -15,7 +15,6 @@
  */
 package org.lightframework.mvc.binding;
 
-import java.lang.annotation.Annotation;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParsePosition;
@@ -61,10 +60,8 @@ public class DateBinder implements ITypeBinder {
 		} else if (Timestamp.class == clazz) {
 			return toDate(Timestamp.class, string, Format.DEFAULT_TIMESTAMP);
 		} else if (Date.class == clazz) {
-			for (Annotation annotation : type.getConfigs()) {
-				if (annotation.annotationType() == Format.class) {
-					return toDate(Date.class, string, ((Format) annotation).value());
-				}
+			if(null != type.getFormat()){
+				return toDate(Date.class, string, type.getFormat());
 			}
 			
 			Date date = toDate(Date.class, string, Format.DEFAULT_DATE);

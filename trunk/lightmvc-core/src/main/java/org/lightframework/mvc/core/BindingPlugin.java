@@ -15,7 +15,6 @@
  */
 package org.lightframework.mvc.core;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -33,7 +32,6 @@ import org.lightframework.mvc.Lang.Type;
 import org.lightframework.mvc.binding.DateBinder;
 import org.lightframework.mvc.binding.ITypeBinder;
 import org.lightframework.mvc.binding.PrimitiveBinder;
-import org.lightframework.mvc.config.Default;
 import org.lightframework.mvc.utils.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -193,11 +191,7 @@ public class BindingPlugin extends Plugin {
 		if(null == value){
 			value = request.getParameter(arg.getName());
 			if(null == value){
-				for(Annotation annotation : arg.getConfigs()){
-					if(Default.class.equals(annotation.annotationType())){
-						value = ((Default)annotation).value();
-					}
-				}
+				value = arg.getDefaultValue();
 			}
 		}
 		return value;
