@@ -15,9 +15,6 @@
  */
 package org.lightframework.mvc;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 
@@ -29,6 +26,8 @@ import org.lightframework.mvc.HTTP.Response;
  * @since 1.0.0
  */
 public abstract class Result {
+	private static final ThreadLocal<Result> context = new ThreadLocal<Result>();
+	
 	//------public static constatns--------
 	public static final String STATUS_OK                = "200";
 	public static final String STATUS_MOVED_TEMPORARILY = "302"; //redirect
@@ -73,35 +72,31 @@ public abstract class Result {
 	public void setValue(Object value) {
     	this.value = value;
     }
-	
+
 	//--------static methods of Result classs-----------
+	static void reset(){
+		context.set(null);
+	}	
 	
 	public static void set(Result result){
-		Context.get().result = result;
+		context.set(result);
 	}
 	
 	public static Result get(){
-		return Context.get().result;
+		return context.get();
 	}	
 
-	public static void setAttribute(String key,Object value){
-		getAttributes().put(key, value);
+	public static void setAttribute(String name,Object value){
+		//XXX : warning if Request.current() return null;
+		Request.current().setAttribute(name, value);
 	}
 	
-	public static void removeAttribute(String key){
-		getAttributes().remove(key);
+	public static Object getAttribute(String name){
+		return Request.current().getAttribute(name);
 	}
 	
-	public static Object getAttribute(String key){
-		return getAttributes().get(key);
-	}
-	
-	public static Map<String, Object> getAttributes(){
-		Context context = Context.get();
-		if(null == context.attributes){
-			context.attributes = new HashMap<String, Object>();
-		}
-		return context.attributes;
+	public static void removeAttribute(String name){
+		Request.current().removeAttribte(name);
 	}
 	
 	public static void redirect(String url) {
@@ -130,34 +125,43 @@ public abstract class Result {
 	
 	//--------built in interface and classes used by Result class----------
 	
-	/**
-	 * @since 1.0.0
-	 */
-	static final class Context {
-		private static ThreadLocal<Context> ctx = new ThreadLocal<Context>();
-		
-		private Result              result;
-		private Map<String, Object> attributes;
-		
-		static Context get(){
-			Context context = ctx.get();
-			if(null == context){
-				context = new Context();
-				ctx.set(context);
-			}
-			return context;
-		}
-		
-		static void release(){
-			Context context = ctx.get();
-			if(null != context){
-				if(null != context.attributes){
-					context.attributes.clear();
-				}
-				ctx.set(null);	
-			}
-		}
-	}
+//	static final class Context {
+//		private static ThreadLocal<Context> ctx = new ThreadLocal<Context>();
+//		
+//		private Result              result;
+//		private Map<String, Object> attributes;
+//		
+//		public static Object getAttribute(String key){
+//			return getAttributes().get(key);
+//		}
+//		
+//		public static Map<String, Object> getAttributes(){
+//			Context context = Context.get();
+//			if(null == context.attributes){
+//				context.attributes = new HashMap<String, Object>();
+//			}
+//			return context.attributes;
+//		}
+//		
+//		static Context get(){
+//			Context context = ctx.get();
+//			if(null == context){
+//				context = new Context();
+//				ctx.set(context);
+//			}
+//			return context;
+//		}
+//		
+//		static void release(){
+//			Context context = ctx.get();
+//			if(null != context){
+//				if(null != context.attributes){
+//					context.attributes.clear();
+//				}
+//				ctx.set(null);	
+//			}
+//		}
+//	}
 
 	/**
 	 * @since 1.0.0

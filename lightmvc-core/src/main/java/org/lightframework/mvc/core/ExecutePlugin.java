@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.lightframework.mvc.Action;
+import org.lightframework.mvc.MvcException;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.Action.Argument;
@@ -95,10 +96,18 @@ public class ExecutePlugin extends Plugin {
 				}
 				return ((Return)e.getTargetException()).result();
 			}else{
-				throw e;
+				throw new MvcException("error invoke " + 
+						               action.getControllerClass().getName() + "$" + 
+						               action.getMethod().getName(), e.getTargetException());
 			}
 		}catch(Exception e){
-			throw e;
+			if(e instanceof MvcException){
+				throw e;
+			}else{
+				throw new MvcException("error invoke " + 
+			               action.getControllerClass().getName() + "$" + 
+			               action.getMethod().getName(), e);				
+			}
 		}
     }
 	

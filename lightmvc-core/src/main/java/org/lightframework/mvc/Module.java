@@ -43,6 +43,7 @@ public class Module {
     public static final String DEFAULT_ROOTPATH = "/";
     public static final String DEFAULT_VIEWPATH = "/modules";
     
+    private   boolean  started  = false;
     protected String   name     = DEFAULT_NAME;
     protected String   encoding = DEFAULT_ENCODING;
     protected String[] packages = new String[]{DEFAULT_PACKAGE};
@@ -55,20 +56,32 @@ public class Module {
     private long lastFindClassesTime;
     private Collection<String> classNames;
     
-    void start(){
-    	//TODO : load module plugins
-    	
+    final void start(){
+    	if(!started){
+    		//TODO : load module plugins
+    		started = true;
+    	}else{
+    		throw new MvcException("module '" + getName() + "' aleady started");
+    	}
     }
 
-    void stop(){
-    	//unload plugins
-    	for(Plugin plugin : plugins){
-    		try{
-    			plugin.unload();
-    		}catch(Exception e){
-    			log.error("module '{}' -> unload plugin '{}' error", plugin.getName(),e);
-    		}
+    final void stop(){
+    	if(started){
+	    	//unload plugins
+	    	for(Plugin plugin : plugins){
+	    		try{
+	    			plugin.unload();
+	    		}catch(Exception e){
+	    			log.error("module '{}' -> unload plugin '{}' error", plugin.getName(),e);
+	    		}
+	    	}
+    	}else{
+    		throw new MvcException("module '" + getName() + "' not started");
     	}
+    }
+    
+    public boolean isStarted(){
+    	return started;
     }
     
     public String getName(){
@@ -176,7 +189,7 @@ public class Module {
 	
 	protected String findView(String path,String controller,String action){
 		Collection<String> resources = findWebResources(path);
-		if(!resources.isEmpty()){
+		if(null != resources && !resources.isEmpty()){
 			String prefix = path + "/" + action + ".";
 			String view   = prefix + "jsp";
 			String found  = findMatchedView(resources, view, false);

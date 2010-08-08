@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.lightframework.mvc.Module;
+import org.lightframework.mvc.Plugin;
 
 /**
  * mock object of {@link Module} for testing.
@@ -94,6 +95,10 @@ public class MockModule extends Module {
 	
 	public void setClassLoader(ClassLoader classLoader){
 		this.classLoader = classLoader;
+	}
+	
+	public void addPlugin(Plugin plugin){
+		plugins.add(plugin);
 	}
 	
 	@Override

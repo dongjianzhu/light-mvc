@@ -175,8 +175,8 @@ public final class HTTP {
 	    protected Result   result;
 
 	    protected UserAgent             userAgent;
-	    protected Map<String, String>   headers;
 	    protected Map<String, Cookie>   cookies;
+	    protected Map<String, String[]> headers;	    
 	    protected Map<String, String[]> parameters;
 	    protected Map<String, Object>   attributes;
 
@@ -249,6 +249,10 @@ public final class HTTP {
 			getAttributes().put(name, value);
 		}
 		
+		public void removeAttribte(String name){
+			getAttributes().remove(name);
+		}
+		
 		public Map<String,Object> getAttributes(){
 			if(null == attributes){
 				attributes = new HashMap<String, Object>();
@@ -283,12 +287,26 @@ public final class HTTP {
 	    }
 		
 		public String getHeader(String name){
-			return getHeaders().get(name);
+			String[] header = getHeaders().get(name);
+			if(null != header){
+				return header.length == 1 ? header[0] : Utils.arrayToString(header);
+			}
+			return null;
+		}
+		
+		public String[] getHeaderValues(String name){
+			Map<String, String[]> headers = getHeaders();
+			for(String key : headers.keySet()){
+				if(key.equalsIgnoreCase(name)){
+					return headers.get(key);
+				}
+			}
+			return null;
 		}
 
-		public Map<String, String> getHeaders() {
+		public Map<String, String[]> getHeaders() {
 			if(null == headers){
-				headers = new HashMap<String, String>();
+				headers = new HashMap<String, String[]>();
 			}
 	    	return headers;
 	    }
@@ -366,7 +384,7 @@ public final class HTTP {
 		public void setContentType(String contentType) {
 	    	this.contentType = contentType;
 	    }
-
+		
 		public String getHeader(String name){
 			return getHeaders().get(name);
 		}

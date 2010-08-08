@@ -25,6 +25,9 @@ import java.lang.annotation.Annotation;
  */
 public final class Lang {
 
+	/**
+	 * @since 1.0.0
+	 */
 	public final static class Ref<E> {
 		public E value;
 		public Ref(E value){
@@ -32,8 +35,15 @@ public final class Lang {
 		}
 	}
 	
+	/**
+	 * @since 1.0.0
+	 */
 	public static class Type {
 		public static final Annotation[] EMPTY_CONFIGS = new Annotation[0];
+		
+		protected String       name;
+		protected Class<?>     type;
+		protected Annotation[] configs = EMPTY_CONFIGS;
 		
 		public Type(){
 			
@@ -49,10 +59,7 @@ public final class Lang {
 			this.type    = type;
 			this.configs = configs;
 		}
-		
-		protected String       name;
-		protected Class<?>     type;
-		protected Annotation[] configs = EMPTY_CONFIGS;
+
 		public String getName(){
 			return name;
 		}

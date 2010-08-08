@@ -35,6 +35,8 @@ import org.lightframework.mvc.binding.ITypeBinder;
 import org.lightframework.mvc.binding.PrimitiveBinder;
 import org.lightframework.mvc.config.Default;
 import org.lightframework.mvc.utils.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * the core plugin to binding parameters in request of action method.
@@ -43,6 +45,7 @@ import org.lightframework.mvc.utils.ClassUtils;
  * @since 1.0.0
  */
 public class BindingPlugin extends Plugin {
+	private static final Logger log = LoggerFactory.getLogger(BindingPlugin.class);
 	
 	private static final Map<Class<?>, ITypeBinder> binders = new HashMap<Class<?>, ITypeBinder>();
 	static {
@@ -54,7 +57,23 @@ public class BindingPlugin extends Plugin {
     public boolean binding(Request request, Response response, Action action) throws Exception{
 		for(Argument arg : action.getArguments()){
 			if(!arg.isBinded()){
-				arg.binding(binding(request,action,arg,getParamValue(request, action, arg)));
+				Object value = getParamValue(request, action, arg);
+				if(log.isTraceEnabled()){
+					String type = value == null ? "null" : value.getClass().getName();
+					log.trace("[arg:'{}'] -> tryto binding : '{}'-'{}'",
+							   new Object[]{arg.getName(),type,value});
+				}
+				arg.binding(binding(request,action,arg,value));
+				if(log.isTraceEnabled()){
+					if(arg.isBinded()){
+						Object binded = arg.getValue();
+						String type   = null != binded ? binded.getClass().getName() : "null";
+						log.trace("[arg:'{}'] -> binding value : '{}'-'{}'",
+								  new Object[]{arg.getName(),type,binded});
+					}else{
+						log.trace("[arg:'{}'] -> not binded",arg.getName());
+					}
+				}
 			}
 		}
 		return true;
@@ -142,12 +161,22 @@ public class BindingPlugin extends Plugin {
         	if(null != value){
         		Method setterMethod = getSetterMethod(arg.getType(),field.getName(),field.getType());
 	        	if(null != setterMethod){
-	        		setterMethod.invoke(bean, value);
-	        	}else{
+	        		try{
+	        			setterMethod.invoke(bean, value);
+	        		}catch(Exception e){
+	        			log.error("[field:'{}'] -> set by method error : '{}'",field.getName(),e.getMessage());
+	        			throw e;
+	        		}
+	        	}else if(!field.isSynthetic()){
 	        		if(!field.isAccessible()){
 	        			field.setAccessible(true);
 	        		}
-	        		field.set(bean, value);
+	        		try {
+	        			field.set(bean, value);
+	        		}catch(Exception e){
+	        			log.error("[field:'{}'] -> set by value error : '{}'",field.getName(),e.getMessage());
+	        			throw e;
+	        		}
 	        	}
         	}
         }		

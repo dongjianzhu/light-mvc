@@ -30,73 +30,101 @@ import org.lightframework.mvc.exceptions.BindingException;
 
 /**
  * class to bind date value
- *
+ * 
  * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0.0
  */
 public class DateBinder implements ITypeBinder {
-	
+
 	private static final Set<Class<?>> types = new HashSet<Class<?>>();
-	
+
 	static {
 		types.add(Date.class);
 		types.add(java.sql.Date.class);
 		types.add(Time.class);
 		types.add(Timestamp.class);
 	}
-	
+
 	public Set<Class<?>> getSupportedTypes() {
 		return types;
 	}
 
 	public Object bind(Type type, String string) throws BindingException, Exception {
+
+//		long time = parseTime(string);
+
 		Class<?> clazz = type.getType();
-		if(Time.class == clazz){
-			return toDate(Time.class,string, Format.DEFAULT_TIME);
-		}else if(java.sql.Date.class == clazz){
-			return toDate(java.sql.Date.class,string,Format.DEFAULT_DATE);
-		}else if(Timestamp.class == clazz){
-			return toDate(Timestamp.class,string,Format.DEFAULT_TIMESTAMP);
-		}else if(Date.class == clazz){
-			for(Annotation annotation : type.getConfigs()){
-				if(annotation.annotationType().isAnnotationPresent(Format.class)){
-					return toDate(Date.class,string,((Format)annotation).value());
+		if (Time.class == clazz) {
+			return toDate(Time.class, string, Format.DEFAULT_TIME);
+		} else if (java.sql.Date.class == clazz) {
+			return toDate(java.sql.Date.class, string, Format.DEFAULT_DATE);
+		} else if (Timestamp.class == clazz) {
+			return toDate(Timestamp.class, string, Format.DEFAULT_TIMESTAMP);
+		} else if (Date.class == clazz) {
+			for (Annotation annotation : type.getConfigs()) {
+				if (annotation.annotationType() == Format.class) {
+					return toDate(Date.class, string, ((Format) annotation).value());
 				}
 			}
-			Date date = toDate(Date.class,string,Format.DEFAULT_DATETIME);
-			if(null == date){
-				date = toDate(Date.class,string,Format.DEFAULT_DATE);
-				if(null == date){
-					date = toDate(Date.class,string,Format.DEFAULT_TIME);
+			
+			Date date = toDate(Date.class, string, Format.DEFAULT_DATE);
+			if (null == date) {
+				date = toDate(Date.class, string, Format.DEFAULT_DATETIME);
+				if (null == date) {
+					date = toDateByRfcFromat(string);
 					if(null == date){
-						date = toDate(Date.class,string,Format.DEFAULT_TIMESTAMP);
+						date = toDate(Date.class, string, Format.DEFAULT_TIME);
+						if (null == date) {
+							date = toDate(Date.class, string, Format.DEFAULT_TIMESTAMP);
+						}
 					}
 				}
 			}
 			return date;
-		}else{
-			throw new BindingException("@InvalidDateType",type.getType().getName());
+		} else {
+			throw new BindingException("@InvalidDateType", type.getType().getName());
 		}
 	}
+
+	private static Date toDate(Class<? extends Date> type, String string, String format) {
+		Date date = null;
+		SimpleDateFormat formater = new SimpleDateFormat(format);
+		ParsePosition pos = new ParsePosition(0);
+		formater.setLenient(false);
+		date = formater.parse(string, pos);
+		if (null != date && pos.getIndex() != string.length()) {
+			date = null;
+		}
+		if (null != date) {
+			if (type.equals(Time.class)) {
+				return new Time(date.getTime());
+			} else if (type.equals(java.sql.Date.class)) {
+				return new java.sql.Date(date.getTime());
+			} else if (type.equals(Timestamp.class)) {
+				return new Timestamp(date.getTime());
+			}
+		}
+		return date;
+	}
 	
-   private static Date toDate(Class<? extends Date> type, String string, String format) {
-        Date date = null;
-        SimpleDateFormat formater = new SimpleDateFormat(format);
-    	ParsePosition pos = new ParsePosition(0);
-        formater.setLenient(false);
-        date = formater.parse(string, pos);
-        if(null != date && pos.getIndex() != string.length()){
-            date = null;
+	private static Date toDateByRfcFromat(String string){
+        final StringBuffer sb = new StringBuffer(string);
+        if (string.lastIndexOf(":") == string.length()-3) {
+            sb.deleteCharAt(string.length()-3);
         }
-        if(null != date){
-        	if(type.equals(Time.class)){
-        		return new Time(date.getTime());
-        	}else if(type.equals(java.sql.Date.class)){
-        		return new Date(date.getTime());
-        	}else if(type.equals(Timestamp.class)){
-        		return new Timestamp(date.getTime());
-        	}
-        }
-        return date;
-   }
+        return toDate(Date.class,string,Format.DEFAULT_RFC_DATE);		
+	}
+
+	/*
+	private static long parseTime(String string) {
+		if(null != string){
+			try {
+				return Long.parseLong(string);
+			} catch (NumberFormatException e) {
+				;
+			}
+		}
+		return 0;
+	}
+	*/
 }
