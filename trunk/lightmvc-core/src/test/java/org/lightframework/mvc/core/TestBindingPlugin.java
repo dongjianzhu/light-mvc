@@ -21,6 +21,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.config.Format;
@@ -131,6 +132,15 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());		
 	}
 	
+	public void testMapBinding() throws Exception {
+		request.setPath("/binding/map");
+		request.setParameter("hello", "you are welcome");
+		
+		Result result = execute();
+		assertNotNull(result);
+		assertEquals(true, result.getValue());	
+	}
+	
 	public void testBeanBinding() throws Exception {
 		request.setPath("/binding/bean");
 		request.setParameter("name", "xiaoming");
@@ -204,6 +214,10 @@ public class TestBindingPlugin extends MvcTestCase {
 				return true;
 			}
 			return false;
+		}
+		
+		public static boolean map(Map<String,Object> params){
+			return null != params && params.size() == 1 && ((String[])params.get("hello"))[0].equals("you are welcome");
 		}
 		
 		public static boolean bean(User user){
