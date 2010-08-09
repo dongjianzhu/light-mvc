@@ -72,7 +72,7 @@ public class Module {
 	    		try{
 	    			plugin.unload();
 	    		}catch(Exception e){
-	    			log.error("module '{}' -> unload plugin '{}' error", plugin.getName(),e);
+	    			log.error("[module '{}'] -> unload plugin '{}' error", plugin.getName(),e);
 	    		}
 	    	}
     	}else{
