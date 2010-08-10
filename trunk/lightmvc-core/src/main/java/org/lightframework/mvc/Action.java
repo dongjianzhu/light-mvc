@@ -15,12 +15,11 @@
  */
 package org.lightframework.mvc;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lightframework.mvc.Lang.Type;
+import org.lightframework.mvc.binding.Argument;
 import org.lightframework.mvc.utils.ClassUtils;
 
 /**
@@ -104,7 +103,7 @@ public class Action {
 	
 	public Argument getArgument(String name){
 		for(Argument arg : getArguments()){
-			if(name.equals(arg.name)){
+			if(name.equals(arg.getName())){
 				return arg;
 			}
 		}
@@ -211,40 +210,6 @@ public class Action {
 		public static void setIndex(Action action,boolean index){
 			action.index = index;
 		}
-	}
-	
-	/**
-	 * represents an action execution argument
-	 * @since 1.0.0 
-	 */
-	public static class Argument extends Type{
-		protected Object       value;
-		protected boolean      binded;
-		
-		public void setName(String name) {
-        	this.name = name;
-        }
-		
-		public void setType(Class<?> type) {
-        	this.type = type;
-        }
-		
-		public Object getValue() {
-        	return value;
-        }
-		
-		public void binding(Object value){
-			this.value  = value;
-			this.binded = true;
-		}
-		
-		public boolean isBinded(){
-			return binded;
-		}
-
-		public void setConfigs(Annotation[] annotations) {
-        	this.configs = annotations;
-        }
 	}
 }
 

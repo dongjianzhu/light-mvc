@@ -46,7 +46,7 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.lightframework.mvc.Action.Argument;
+import org.lightframework.mvc.binding.Argument;
 
 /**
  * class utility,used by mvc framework only

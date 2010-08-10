@@ -15,18 +15,14 @@
  */
 package org.lightframework.mvc.core;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Utils;
-import org.lightframework.mvc.Action.Argument;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
-import org.lightframework.mvc.config.Default;
-import org.lightframework.mvc.config.Format;
-import org.lightframework.mvc.config.Name;
+import org.lightframework.mvc.binding.Binder;
 import org.lightframework.mvc.utils.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +69,7 @@ public class ResolvePlugin extends Plugin {
 					Action.Setter.setControllerObject(action,controllerObject);
 				}
 				Action.Setter.setMethod(action,method);
-				action.setArguments(resolveArguments(ClassUtils.getMethodParameters(method)));
+				action.setArguments(Binder.resolveArguments(method));
 				
 				return true;
 			}else{
@@ -129,25 +125,6 @@ public class ResolvePlugin extends Plugin {
 		}
 
 		return false;
-	}
-	
-	protected Argument[] resolveArguments(Argument[] args){
-		for(Argument arg : args){
-			resolveArgument(arg);
-		}
-		return args;
-	}
-	
-	protected void resolveArgument(Argument arg){
-		for(Annotation config : arg.getConfigs()){
-			if(Format.class.equals(config.annotationType())){
-				arg.setFormat(((Format)config).value());
-			}else if(Default.class.equals(config.annotationType())){
-				arg.setDefaultValue(((Default)config).value());
-			}else if(Name.class.equals(config.annotationType())){
-				arg.setName(((Name)config).value());
-			}
-		}
 	}
 	
 	private static String upperClassName(String string){

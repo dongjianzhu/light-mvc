@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lightframework.mvc.Utils;
-import org.lightframework.mvc.Lang.Ref;
 
 /**
  * represents a routing rule of url to action mapping
@@ -148,4 +147,11 @@ public class Route {
 		String[] pathParams;
 		String[] actionParams;
 	}
+	
+	private final static class Ref<E> {
+		private E value;
+		private Ref(E value){
+			this.value = value;
+		}
+	}	
 }
