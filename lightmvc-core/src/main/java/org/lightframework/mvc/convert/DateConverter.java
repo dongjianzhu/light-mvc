@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.binding;
+package org.lightframework.mvc.convert;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -23,9 +23,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.lightframework.mvc.Lang.Type;
+import org.lightframework.mvc.binding.Argument;
+import org.lightframework.mvc.binding.BindingException;
 import org.lightframework.mvc.config.Format;
-import org.lightframework.mvc.exceptions.BindingException;
 
 /**
  * class to bind date value
@@ -33,7 +33,7 @@ import org.lightframework.mvc.exceptions.BindingException;
  * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0.0
  */
-public class DateBinder implements ITypeBinder {
+public class DateConverter implements IConverter {
 
 	private static final Set<Class<?>> types = new HashSet<Class<?>>();
 
@@ -48,7 +48,7 @@ public class DateBinder implements ITypeBinder {
 		return types;
 	}
 
-	public Object bind(Type type, String string) throws BindingException, Exception {
+	public Object convertToObject(Argument type, String string) throws BindingException, Exception {
 
 //		long time = parseTime(string);
 

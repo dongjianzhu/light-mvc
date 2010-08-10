@@ -15,24 +15,18 @@
  */
 package org.lightframework.mvc.core;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
-import org.lightframework.mvc.Action.Argument;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
-import org.lightframework.mvc.Lang.Type;
-import org.lightframework.mvc.binding.DateBinder;
-import org.lightframework.mvc.binding.ITypeBinder;
-import org.lightframework.mvc.binding.PrimitiveBinder;
-import org.lightframework.mvc.utils.ClassUtils;
+import org.lightframework.mvc.binding.Argument;
+import org.lightframework.mvc.binding.Binder;
+import org.lightframework.mvc.binding.IBindingContext;
+import org.lightframework.mvc.convert.IConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,23 +39,18 @@ import org.slf4j.LoggerFactory;
 public class BindingPlugin extends Plugin {
 	private static final Logger log = LoggerFactory.getLogger(BindingPlugin.class);
 	
-	private static final Map<Class<?>, ITypeBinder> binders = new HashMap<Class<?>, ITypeBinder>();
-	static {
-		register(new PrimitiveBinder(),binders);
-		register(new DateBinder(),binders);
-	}
-	
 	@Override
     public boolean binding(Request request, Response response, Action action) throws Exception{
+		BindingContext context = new BindingContext(request, action);
 		for(Argument arg : action.getArguments()){
 			if(!arg.isBinded()){
-				Object value = getParamValue(request, action, arg);
+				Object value = context.getParameter(arg.getName());
 				if(log.isTraceEnabled()){
 					String type = value == null ? "null" : value.getClass().getName();
 					log.trace("[arg:'{}'] -> tryto binding : '{}'-'{}'",
 							   new Object[]{arg.getName(),type,value});
 				}
-				arg.binding(binding(request,action,arg,value));
+				arg.binding(Binder.binding(arg,value,context));
 				if(log.isTraceEnabled()){
 					if(arg.isBinded()){
 						Object binded = arg.getValue();
@@ -77,145 +66,34 @@ public class BindingPlugin extends Plugin {
 		return true;
     }
 	
-	private static Object binding(Request request,Action action,Type arg,Object value) throws Exception{
-		Class<?> type = arg.getType();
-		
-		//binging default value for primitive type
-		if(null == value && arg.getType().isPrimitive()){
-			return ClassUtils.getDefaultValue(arg.getType());
-		}
-		
-		//direct bind
-		if(null != value && type.isAssignableFrom(value.getClass())){
-			return value;
-		}
-		
-		//type bind
-		ITypeBinder binder = binders.get(type);
-		if(null != binder){
-			return null == value ? null : binder.bind(arg, value.toString());
-		}
-		
-		//enum bind
-		if(Enum.class.isAssignableFrom(type)){
-			return enumBinding(arg,value);
-		}
-		
-		//array bind
-		if(type.isArray()){
-			return arrayBinding(request,action,arg,value);
-		}
-		
-		//map bind
-		if(type.equals(Map.class)){
-			return mapBinding(request, action, arg, value);
-		}
-		
-		//bean bind
-		if(!ClassUtils.isJdkClass(type)){
-			return beanBinding(request,action,arg);
-		}
+	private static final class BindingContext implements IBindingContext{
 
-		return null;
-	}
-	
-	private static Object arrayBinding(Request request,Action action,Type arg,Object value) throws Exception{
-		Class<?> clazz = arg.getType().getComponentType();
-		if(null == value){
-			return Array.newInstance(arg.getType().getComponentType(), 0);
-		}else{
-			Object[] values = null;
-			if(String.class == value.getClass()){
-				values = value.toString().split(",");
-			}else{
-				values = new Object[]{value.toString()};
-			}
-			
-			Type type = new Type(arg.getName(),clazz);
-			Object array = Array.newInstance(arg.getType().getComponentType(), values.length);
-			for(int i=0;i<values.length;i++){
-				Array.set(array, i, binding(request,action,type,values[i]));
-			}
-			return array;
-		}
-	}
-	
-	private static Map<String, Object> mapBinding(Request request,Action action,Type arg,Object value) throws Exception {
-		//XXX : REVIEW MAP BINDING
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.putAll(request.getParameters());
-		params.putAll(action.getParameters());
-		return params;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private static Object enumBinding(Type arg,Object value){
-		if(null != value){
-			if(value.getClass().equals(arg.getType())){
-				return value;
-			}else{
-				return Enum.valueOf(arg.getType().asSubclass(Enum.class), value.toString());
-			}
-		}
-		return null;
-	}
-	
-	private static Object beanBinding(Request request,Action action,Type arg) throws Exception{
-		Object      bean   = ClassUtils.newInstance(arg.getType());
-		List<Field> fileds = ClassUtils.getDeclaredFields(arg.getType(), null);
+		private final Request request;
+		private final Action  action;
 		
-        for(Field field : fileds){
-        	Type   type  = new Type(field.getName(),field.getType(),field.getAnnotations());
-        	Object param = getParamValue(request, action, type);
-        	Object value = binding(request,action,type,param);
-        	
-        	if(null != value){
-        		Method setterMethod = getSetterMethod(arg.getType(),field.getName(),field.getType());
-	        	if(null != setterMethod){
-	        		try{
-	        			setterMethod.invoke(bean, value);
-	        		}catch(Exception e){
-	        			log.error("[field:'{}'] -> set by method error : '{}'",field.getName(),e.getMessage());
-	        			throw e;
-	        		}
-	        	}else if(!field.isSynthetic()){
-	        		if(!field.isAccessible()){
-	        			field.setAccessible(true);
-	        		}
-	        		try {
-	        			field.set(bean, value);
-	        		}catch(Exception e){
-	        			log.error("[field:'{}'] -> set by value error : '{}'",field.getName(),e.getMessage());
-	        			throw e;
-	        		}
-	        	}
-        	}
-        }		
-		return bean;
-	}
-	
-    private static Method getSetterMethod(Class<?> beanClass,String fieldName,Class<?> fieldType) {
-    	return ClassUtils.findMethod(beanClass, "set" + Character.toUpperCase(fieldName.charAt(0)) + (fieldName.length() > 1 ? fieldName.substring(1) : ""), new Class[]{fieldType});
-    }
-	
-	private static Object getParamValue(Request request,Action action,Type arg) throws Exception{
-		//get arg's raw value
-		Object value = action.getParameter(arg.getName());
-		if(null == value){
-			value = request.getParameter(arg.getName());
+		private BindingContext(Request request,Action action){
+			this.request = request;
+			this.action  = action;
+		}
+		
+		public Object getParameter(String name) {
+			//get arg's raw value
+			Object value = action.getParameter(name);
 			if(null == value){
-				value = arg.getDefaultValue();
+				value = request.getParameter(name);
 			}
-		}
-		return value;
-	}
-	
-	private static void register(ITypeBinder binder,Map<Class<?>, ITypeBinder> map){
-		Set<Class<?>> types = binder.getSupportedTypes();
-		if(null != types){
-			for(Class<?> type : types){
-				map.put(type, binder);
-			}
-		}
+			return value;
+        }
+
+		public Map<String, Object> getParameters() {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.putAll(request.getParameters());
+			params.putAll(action.getParameters());
+			return params;
+        }
+		
+		public List<IConverter> getConverters() {
+	        return null;
+        }		
 	}
 }

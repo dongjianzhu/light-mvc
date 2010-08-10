@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.binding;
+package org.lightframework.mvc.convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.lightframework.mvc.Lang.Type;
-import org.lightframework.mvc.exceptions.BindingException;
+import org.lightframework.mvc.binding.Argument;
+import org.lightframework.mvc.binding.BindingException;
 
 /**
- * class to bind primitive type itself and primitive type's wrapper type. 
+ * class to convert primitive type itself and primitive type's wrapper type. 
  *
  * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0.0
  */
-public class PrimitiveBinder implements ITypeBinder {
+public class PrimitiveConverter implements IConverter {
 
 	private static final Set<Class<?>> types = new HashSet<Class<?>>();
 	
@@ -59,7 +59,7 @@ public class PrimitiveBinder implements ITypeBinder {
 		return types;
 	}
 
-	public Object bind(Type type, String string) throws BindingException, Exception {
+	public Object convertToObject(Argument type, String string) throws BindingException, Exception {
 		Object   value = null;
 		Class<?> clazz = type.getType();
 		

@@ -15,30 +15,31 @@
  */
 package org.lightframework.mvc.binding;
 
-import java.util.Set;
-
-import org.lightframework.mvc.Lang.Type;
-import org.lightframework.mvc.exceptions.BindingException;
+import org.lightframework.mvc.MvcException;
 
 /**
- * the interface to convert string to object of the given {@link Type}
+ * represents the error at binding value to action's argument
  *
  * @author fenghm(live.fenghm@gmail.com)
  * @since 1.0.0
  */
-public interface ITypeBinder {
-	
-	/**
-	 * @return all the supported types by this binder,at least return one
-	 */
-	Set<Class<?>> getSupportedTypes();
+public class BindingException extends MvcException {
 
-	/**
-	 * convert string to object of the given type
-	 * @param type {@link Type}
-	 * @param string string value
-	 * @return translated value of the given {@link Type}
-	 */
-	Object bind(Type type,String string) throws BindingException,Exception;
+    private static final long serialVersionUID = -8713208104815817L;
 
+	public BindingException() {
+		
+	}
+
+	public BindingException(Throwable cause) {
+		super(cause);
+	}
+
+	public BindingException(String message, Object... args) {
+		super(message, args);
+	}
+
+	public BindingException(String message, Throwable cause, Object... args) {
+		super(message, cause, args);
+	}
 }
