@@ -68,7 +68,7 @@ public class ExecutePlugin extends Plugin {
 				if(log.isTraceEnabled()){
 					Result result = (Result)value;
 					log.trace("[action:'{}'] -> return result - status : '{}' , desc : '{}' , value : '{}'",
-							  new Object[]{action.getName(),result.getStatus(),result.getDescription(),result.getValue()});
+							  new Object[]{action.getName(),result.getCode(),result.getDescription(),result.getValue()});
 				}
 				return (Result)value;
 			}else if(null != value){

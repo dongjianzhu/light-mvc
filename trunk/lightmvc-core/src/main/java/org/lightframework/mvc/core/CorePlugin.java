@@ -29,16 +29,17 @@ import org.lightframework.mvc.HTTP.Response;
  */
 public class CorePlugin extends Plugin{
 
-	protected RoutingPlugin   router   = new RoutingPlugin();
-	protected BindingPlugin binder   = new BindingPlugin();
-	protected ExecutePlugin executor = new ExecutePlugin();
-	protected ResolvePlugin resolver = new ResolvePlugin();
-	protected RenderPlugin  renderer = new RenderPlugin();
-	protected ErrorPlugin   error    = new ErrorPlugin();
+	protected RequestPlugin requestor = new RequestPlugin();
+	protected RoutingPlugin router    = new RoutingPlugin();
+	protected BindingPlugin binder    = new BindingPlugin();
+	protected ExecutePlugin executor  = new ExecutePlugin();
+	protected ResolvePlugin resolver  = new ResolvePlugin();
+	protected RenderPlugin  renderer  = new RenderPlugin();
+	protected ErrorPlugin   errorer   = new ErrorPlugin(renderer.getRenderAjaxPlugin());
 	
 	@Override
     public boolean request(Request request, Response response) throws Exception {
-	    return super.request(request, response);
+	    return requestor.request(request, response);
     }
 
 	@Override
@@ -67,7 +68,7 @@ public class CorePlugin extends Plugin{
     }
 
 	@Override
-    public boolean error(Request request, Response response, Throwable exception) {
-	    return error.error(request, response, exception);
+    public boolean error(Request request, Response response, Result.Error error) throws Exception{
+	    return errorer.error(request, response, error);
     }
 }

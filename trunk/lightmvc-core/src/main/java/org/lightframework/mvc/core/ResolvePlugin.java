@@ -69,7 +69,8 @@ public class ResolvePlugin extends Plugin {
 			
 			if(null != method){
 				if(!ClassUtils.isStatic(method)){
-					Action.Setter.setControllerObject(action,ClassUtils.newInstance(action.getControllerClass()));
+					Object controllerObject = request.getModule().getControllerObject(controller, action.getControllerClass());
+					Action.Setter.setControllerObject(action,controllerObject);
 				}
 				Action.Setter.setMethod(action,method);
 				action.setArguments(resolveArguments(ClassUtils.getMethodParameters(method)));

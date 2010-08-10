@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.lightframework.mvc.utils.ClassUtils;
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ public class Module {
     protected String   viewPath = DEFAULT_VIEWPATH;
 
     protected LinkedList<Plugin> plugins = new LinkedList<Plugin>();
+    protected ConcurrentHashMap<String, Object> controllers = new ConcurrentHashMap<String, Object>();
     
     //used to cache classes names
     private long lastFindClassesTime;
@@ -112,8 +114,8 @@ public class Module {
 		//XXX : improve performance in production mode 
 		Collection<String> classes = findAllClassNames();
 		
-		for(String clazz : classes){
-			for(String name : names){
+		for(String name : names){
+			for(String clazz : classes){
 				if(clazz.equalsIgnoreCase(name)){
 					if(log.isTraceEnabled()){
 						log.trace("[module:'{}'] -> found class name '{}'",getName(),clazz);
@@ -128,6 +130,29 @@ public class Module {
 		}
 		
 		return null;
+	}
+	
+	public Object getControllerObject(String controllerName,Class<?> controllerClass){
+		String key = controllerClass.getName() + "!" + controllerName;
+		Object obj = controllers.get(key);
+		
+		if(null != obj && !obj.getClass().equals(controllerClass)){
+			obj = null; //may be class reloaded
+		}
+		
+		if(null == obj){
+			try {
+				if(log.isTraceEnabled()){
+					log.trace("[module:'{}] -> create controller '{}' instance of '{}'",
+							  new Object[]{getName(),controllerName,controllerClass.getName()});
+				}
+	            obj = controllerClass.newInstance();
+            } catch (Exception e) {
+            	throw new MvcException("[module:'" + getName() + "'] -> new controller instance error : " + e.getMessage(),e);
+            }
+			controllers.put(key, obj);
+		}
+		return obj;
 	}
 	
 	/**

@@ -145,7 +145,9 @@ public class Framework {
 			}
 		}catch(Exception e){
 			//handle exception
-			if(!PluginInvoker.error(request, response, e)){
+			Result.Error error = new Result.Error(e.getMessage(),e);
+			request.result     = error;
+			if(!PluginInvoker.error(request, response, error)){
 				throw e;
 			}
 		}
@@ -397,7 +399,7 @@ public class Framework {
 			return false;
 		}
 		
-		static boolean error(Request request,Response response,Throwable e) throws Exception{
+		static boolean error(Request request,Response response,Result.Error e) throws Exception{
 			if(log.isTraceEnabled()){
 				log.trace("[plugin-invoker:error] -> handling error...");
 			}			

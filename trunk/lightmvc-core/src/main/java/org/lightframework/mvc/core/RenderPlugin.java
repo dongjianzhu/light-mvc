@@ -48,7 +48,7 @@ public class RenderPlugin extends Plugin {
 
 	protected void setAttributes(Request request,Result result){
 		request.setAttribute("result", result);
-		request.setAttribute("result.status", result.getStatus());
+		request.setAttribute("result.status", result.getCode());
 		request.setAttribute("result.description",result.getDescription());
 		request.setAttribute("result.value", result.getValue());
 	}
@@ -58,5 +58,9 @@ public class RenderPlugin extends Plugin {
 			return renderView.render(request, response, result);
 		}
 		return true;
+	}
+	
+	protected RenderAjaxPlugin getRenderAjaxPlugin(){
+		return renderAjax;
 	}
 }

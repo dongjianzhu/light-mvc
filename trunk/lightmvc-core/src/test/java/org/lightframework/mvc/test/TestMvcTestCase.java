@@ -72,7 +72,7 @@ public class TestMvcTestCase extends MvcTestCase {
 		
 		Result result = request.getResult();
 		assertNotNull(result);
-		assertEquals(Result.STATUS_OK, result.getStatus());
+		assertEquals(Result.CODE_OK, result.getCode());
 		assertNull(result.getDescription());
 		assertNull(result.getValue());
 	}

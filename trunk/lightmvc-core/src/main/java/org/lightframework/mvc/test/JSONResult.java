@@ -26,10 +26,11 @@ import org.lightframework.mvc.json.JSONObject;
  * @since 1.0.0
  */
 public final class JSONResult {
+	private int    code;
 	private String status;
-	private String description;
 	private String error;
 	private String value;
+	private String description;
 	
 	private JSONResult() {
 
@@ -40,7 +41,11 @@ public final class JSONResult {
 		JSONResult result  = new JSONResult();
 		
 		if(!json.isNull(RenderAjaxPlugin.RETURN_CODE)){
-			result.status = json.getString(RenderAjaxPlugin.RETURN_CODE);
+			result.code = json.getInt(RenderAjaxPlugin.RETURN_CODE);
+		}
+		
+		if(!json.isNull(RenderAjaxPlugin.RETURN_STATUS)){
+			result.status = json.getString(RenderAjaxPlugin.RETURN_STATUS);
 		}
 		
 		if(!json.isNull(RenderAjaxPlugin.RETURN_DESC)){
@@ -58,7 +63,11 @@ public final class JSONResult {
 		return result;
 	}
 
-	public String getStatus() {
+	public int getCode() {
+		return code;
+	}
+	
+	public String getStatus(){
 		return status;
 	}
 

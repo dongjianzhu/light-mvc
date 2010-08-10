@@ -65,6 +65,8 @@ public abstract class MvcTestCase extends TestCase {
 	
 	@Override
     protected final void tearDown() throws Exception {
+		tearDownEveryTest();
+		
 		MockFramework.mockHandleFinally(request, response);
 		MockFramework.mockStop(module);
 		
