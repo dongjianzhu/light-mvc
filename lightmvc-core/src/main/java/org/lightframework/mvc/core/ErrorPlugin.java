@@ -16,6 +16,7 @@
 package org.lightframework.mvc.core;
 
 import org.lightframework.mvc.Plugin;
+import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.slf4j.Logger;
@@ -30,22 +31,29 @@ import org.slf4j.LoggerFactory;
 public class ErrorPlugin extends Plugin {
 	private static final Logger log = LoggerFactory.getLogger(ErrorPlugin.class);
 
+	private RenderAjaxPlugin renderAjaxPlugin;
+	
+	public ErrorPlugin(){
+		
+	}
+	
+	public ErrorPlugin(RenderAjaxPlugin renderAjaxPlugin){
+		this.renderAjaxPlugin = renderAjaxPlugin;
+	}
+	
+	
 	@Override
-    public boolean error(Request request, Response response, Throwable exception)  {
+    public boolean error(Request request, Response response, Result.Error error) throws Exception {
 		if(log.isInfoEnabled()){
-			log.error("[mvc:error] -> {}",exception.getMessage(),exception);
+			log.error("[mvc:error] -> {}",error.getDescription(),error.getException());
 		}
 		
 	    // TODO : implement ErrorPlugin.error
-		//route by exception 
-		/**
-		 * 1.route excepton (no action found)
-		 * 2.exception while param binding()  detail excepton for debug
-		 * 2.forward exception(no render page found)
-		 * 
-		 * 4.Action invokation exception (app exception )
-		 */
-	    return super.error(request, response, exception);
+		
+		return renderAjaxPlugin.render(request, response, error);
     }
-	
+
+	public void setRenderAjaxPlugin(RenderAjaxPlugin renderAjaxPlugin) {
+    	this.renderAjaxPlugin = renderAjaxPlugin;
+    }
 }

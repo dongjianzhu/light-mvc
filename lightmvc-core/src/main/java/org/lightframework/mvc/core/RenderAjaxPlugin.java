@@ -40,10 +40,11 @@ import org.slf4j.LoggerFactory;
 public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 	private static final Logger log = LoggerFactory.getLogger(RenderAjaxPlugin.class);
 	
-	public static final String RETURN_CODE  = "returnCode";
-	public static final String RETURN_DESC  = "returnDesc";
-	public static final String RETURN_VALUE = "returnValue";
-	public static final String RETURN_ERROR = "error";
+	public static final String RETURN_CODE   = "returnCode";
+	public static final String RETURN_STATUS = "returnStatus";
+	public static final String RETURN_DESC   = "returnDesc";
+	public static final String RETURN_VALUE  = "returnValue";
+	public static final String RETURN_ERROR  = "error";
 	
 	public static final String PARAM_AJAX_REQUEST = "x-ajax";
 	
@@ -114,7 +115,8 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 		JSON.Writer writer = new JSON.Writer();
 		
 		writer.startObject();
-		writer.add(RETURN_CODE,json.encode(result.getStatus()))
+		writer.add(RETURN_CODE,String.valueOf(result.getCode()))
+		      .add(RETURN_STATUS,json.encode(result.getStatus()))
 		      .add(RETURN_DESC,json.encode(result.getDescription()));
 		
 		if(result instanceof Result.Error){
@@ -129,11 +131,13 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 	}
 	
 	protected String generateErrorContent(Result.Error error){
-		StringWriter writer = new StringWriter();
-		PrintWriter printer = new PrintWriter(writer);
-		
-		error.getException().printStackTrace(printer);
-		
-		return writer.toString();
+		if(null != error.getException()){
+			StringWriter writer = new StringWriter();
+			PrintWriter printer = new PrintWriter(writer);
+			error.getException().printStackTrace(printer);
+			return writer.toString();
+		}else{
+			return null;
+		}
 	}
 }

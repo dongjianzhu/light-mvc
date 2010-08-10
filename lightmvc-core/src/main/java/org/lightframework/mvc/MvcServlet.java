@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.servlet.Filter;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -40,11 +41,13 @@ public class MvcServlet extends MvcFilter implements Servlet {
 
     private static final long serialVersionUID = -5501605125611318665L;
     
-    private ServletConfig config;
+    private ServletConfig  config;
+    private ServletContext context;
 
     @SuppressWarnings("unchecked")
 	public void init(ServletConfig config) throws ServletException {
-		this.config = config;
+		this.config  = config;
+		this.context = config.getServletContext();
 		
 		Map<String, String> params = new HashMap<String, String>();
 		Enumeration<String> names  = config.getInitParameterNames();
@@ -72,6 +75,10 @@ public class MvcServlet extends MvcFilter implements Servlet {
 	public ServletConfig getServletConfig() {
 	    return config;
     }
+	
+	public ServletContext getServletContext(){
+		return context;
+	}
 
 	public String getServletInfo() {
 	    return config.getServletContext().getServerInfo();

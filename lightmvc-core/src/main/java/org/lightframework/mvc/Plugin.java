@@ -138,10 +138,10 @@ public abstract class Plugin {
 	 * called at error occurs while handling a http request
 	 * @param request   http request
 	 * @param response  http response
-	 * @param exception exception object
+	 * @param error {@link org.lightframework.mvc.Result.Error} object
 	 * @return true if this plugin handled this exception
 	 */	
-	public boolean error(Request request, Response response, Throwable exception){
+	public boolean error(Request request, Response response, Result.Error error) throws Exception{
 		return false;
 	}
 }

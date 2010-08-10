@@ -29,33 +29,37 @@ public abstract class Result {
 	private static final ThreadLocal<Result> context = new ThreadLocal<Result>();
 	
 	//------public static constatns--------
-	public static final String STATUS_OK                = "200";
-	public static final String STATUS_MOVED_TEMPORARILY = "302"; //redirect
-	public static final String STATUS_NOT_MODIFIED      = "304";
-	public static final String STATUS_BAD_REQUEST       = "400";
-	public static final String STATUS_UNAUTHORIZED      = "401"; 
-	public static final String STATUS_FORBIDDEN         = "403";
-	public static final String STATUS_NOT_FOUND         = "404";
-	public static final String STATUS_SERVER_ERROR      = "500";
+	public static final int CODE_OK                = 200;
+	public static final int CODE_MOVED_TEMPORARILY = 302; //redirect
+	public static final int CODE_BAD_REQUEST       = 400;
+	public static final int CODE_UNAUTHORIZED      = 401; 
+	public static final int CODE_FORBIDDEN         = 403;
+	public static final int CODE_NOT_FOUND         = 404;
+	public static final int CODE_SERVER_ERROR      = 500;
 	
-	protected String status = STATUS_OK;
-	protected String description;
+	protected int    code = CODE_OK;
+	protected String status;
 	protected Object value;
+	protected String description;
 
 	public boolean isOk(){
-		return STATUS_OK.equals(getStatus());
+		return CODE_OK == getCode();
+	}
+	
+	public int getCode() {
+		if(0 == code){
+			code = CODE_OK;
+		}
+		return code;
 	}
 	
 	public String getStatus() {
-		if(null == status){
-			status = STATUS_OK;
-		}
-		return status;
-	}
+    	return status;
+    }
 
 	public void setStatus(String status) {
-		this.status = status;
-	}
+    	this.status = status;
+    }
 
 	public String getDescription() {
 		return description;
@@ -115,12 +119,36 @@ public abstract class Result {
 		throw new Return(new Content(text,contentType));
 	}
 	
-	public static void error(String message) {
+	public static void error(String message){
 		throw new Return(new Error(message));
 	}
 	
 	public static void error(String message,Throwable e){
 		throw new Return(new Error(message,e));
+	}
+	
+	public static void error(String status,String message){
+		throw new Return(new Error(status,message));
+	}
+	
+	public static void error(String status,String message,Throwable e){
+		throw new Return(new Error(status,message,e));
+	}
+	
+	public static void error(int code,String message){
+		throw new Return(new Error(code,message));
+	}
+	
+	public static void error(int code,String message,Throwable e){
+		throw new Return(new Error(code,message,e));
+	}
+	
+	public static void error(int code,String status,String message){
+		throw new Return(new Error(code,message));
+	}
+	
+	public static void error(int code,String status,String message,Throwable e){
+		throw new Return(new Error(code,status,message,e));
 	}
 	
 	//--------built in interface and classes used by Result class----------
@@ -192,17 +220,41 @@ public abstract class Result {
 		protected Throwable exception;
 		
 		public Error(String message){
-			this.status      = STATUS_SERVER_ERROR;
+			this.code        = CODE_SERVER_ERROR;
 			this.description = message;
 		}
 		
-		public Error(Throwable e){
-			this(e.getMessage());
-			this.exception   = e;
+		public Error(String message,Throwable e){
+			this(CODE_SERVER_ERROR,message,e);
 		}
 		
-		public Error(String message,Throwable e){
+		public Error(String status,String message){
 			this(message);
+			this.status = status;
+		}
+		
+		public Error(String status,String message,Throwable e){
+			this(message,e);
+			this.status = status;
+		}
+		
+		public Error(int code,String message){
+			this.code        = code;
+			this.description = message;
+		}
+		
+		public Error(int code,String message,Throwable e){
+			this(code,message);
+			this.exception = e;
+		}
+		
+		public Error(int code,String status,String message){
+			this(code,message);
+			this.status = status;
+		}
+		
+		public Error(int code,String status,String message,Throwable e){
+			this(code,status,message);
 			this.exception = e;
 		}
 		

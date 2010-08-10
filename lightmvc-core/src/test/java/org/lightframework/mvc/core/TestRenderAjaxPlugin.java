@@ -55,7 +55,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		
 		JSONResult result = JSONResult.parse(json);
 		assertNotNull(result);
-		assertEquals("200", result.getStatus());
+		assertEquals(200, result.getCode());
 		assertEquals(null, result.getDescription());
 		assertEquals("text", result.getValue());
 	}
@@ -95,7 +95,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		
 		JSONResult result = response.getJSONResult();
 		assertNotNull(result);
-		assertEquals("500", result.getStatus());
+		assertEquals(500, result.getCode());
 		assertEquals("hello", result.getDescription());
 		assertNotNull(result.getError());
 	}
@@ -107,7 +107,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		
 		JSONResult result = response.getJSONResult();
 		assertNotNull(result);
-		assertEquals("200", result.getStatus());
+		assertEquals(200, result.getCode());
 		assertEquals(null, result.getDescription());
 		assertEquals("hello", result.getValue());
 		
@@ -125,9 +125,9 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 			return "hello";
 		}
 		
-		public Result.Error error() {
+		public void error() {
 			log.info("execute error");
-			return new Result.Error(new MvcException("hello"));
+			Result.error("hello",new MvcException("hello"));
 		}
 	}
 }
