@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc;
-
-import org.lightframework.mvc.HTTP.Request;
-import org.lightframework.mvc.HTTP.Response;
+package org.lightframework.mvc.render;
 
 /**
- * <coee>interface</code> used to render output content to {@link Response} 
- * 
- * this interface called at {@link Plugin#render(Request, Response, Result)}
- * 
+ * interface to render {@link Object} value to {@link String} value.
+ *
  * @author fenghm (live.fenghm@gmail.com)
- * 
- * @since 1.0.0 
+ *
+ * @since 1.0.0
  */
-public interface IRender {
-	
+public interface IRenderable {
+
 	/**
-	 * render output content to {@link Response}
-	 * 
-	 * <p>
-	 * 
-	 * you can get context data from {@link Request}, such as {@link Request#getAction()}
-	 *  
+	 * render {@link Object} value to {@link String} value
+	 * @param value {@link Object} value , may be null
+	 * @return {@link String} value, may be null.
 	 */
-	void render(Request request,Response response) throws Exception;
+	String encode(Object value,IRenderContext context);
 	
 }

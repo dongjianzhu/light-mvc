@@ -17,6 +17,8 @@ package org.lightframework.mvc;
 
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.config.Ignore;
+import org.lightframework.mvc.config.Name;
 
 
 /**
@@ -37,9 +39,16 @@ public abstract class Result {
 	public static final int CODE_NOT_FOUND         = 404;
 	public static final int CODE_SERVER_ERROR      = 500;
 	
-	protected int    code = CODE_OK;
+	@Name("returnCode")
+	protected int code = CODE_OK;
+	
+	@Name("returnStatus")
 	protected String status;
+	
+	@Name("returnValue")
 	protected Object value;
+	
+	@Name("returnDesc")
 	protected String description;
 
 	public boolean isOk(){
@@ -217,6 +226,7 @@ public abstract class Result {
 	 */
 	public static final class Error extends Result{
 		
+		@Ignore
 		protected Throwable exception;
 		
 		public Error(String message){

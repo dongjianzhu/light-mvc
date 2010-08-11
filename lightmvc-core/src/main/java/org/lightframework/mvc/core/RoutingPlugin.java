@@ -48,8 +48,9 @@ public class RoutingPlugin extends Plugin {
 	
 	static{
 		DEFAULT_ROUTES.add(Route.compile("*", "/",                       "home.index"));
+		DEFAULT_ROUTES.add(Route.compile("*", "/index",                  "home.index"));
 		DEFAULT_ROUTES.add(Route.compile("*", "/{controller*}/",         "{controller}.index"));
-		DEFAULT_ROUTES.add(Route.compile("*", "/{ActionOrController}",   "home.{ActionOrController},{ActionOrController}.index"));
+		DEFAULT_ROUTES.add(Route.compile("*", "/{ActionOrController}",   "{ActionOrController}.index,home.{ActionOrController}"));
 		DEFAULT_ROUTES.add(Route.compile("*", "/{controller*}/{action}", "{controller}.{action}"));
 	}
 	
