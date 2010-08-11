@@ -16,7 +16,6 @@
 package org.lightframework.mvc.render.json;
 
 import org.lightframework.mvc.render.IRenderContext;
-import org.lightframework.mvc.render.IRenderable;
 import org.lightframework.mvc.render.Renderable;
 
 /**
@@ -26,16 +25,20 @@ import org.lightframework.mvc.render.Renderable;
  *
  * @since 1.0.0
  */
-public class JSON extends Renderable implements IRenderable{
+public class JSON {
 	
-	private static final JSON        instance = new JSON();
-	private static final JSONContext context  = new JSONContext();
+	private static final JSONRender  render  = new JSONRender();
+	private static final JSONContext context = new JSONContext();
 	
 	public static String encode(Object value){
-		return instance.encode(value, (IRenderContext)context);
+		return render.encode(value, (IRenderContext)context);
 	}
 	
 	public static String encode(Object value,JSONContext context){
-		return instance.encode(value, (IRenderContext)context);
+		return render.encode(value, (IRenderContext)context);
+	}
+	
+	private static final class JSONRender extends Renderable{
+		
 	}
 }
