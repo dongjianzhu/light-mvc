@@ -34,9 +34,6 @@ import org.slf4j.LoggerFactory;
 public class Framework {
 	private static final Logger log = LoggerFactory.getLogger(Framework.class);
 	
-	//mvc framework version
-	public static final String VERSION = getVersion();
-	
 	/** represents was framework initialized ?*/
 	private static boolean initialized = false;
 	
@@ -48,14 +45,15 @@ public class Framework {
 	 */
 	protected static void start(Module module){
 		if(!initialized){
-			log.info("[mvc:version'{}'] -> initializing... ",VERSION);
+			log.info("[mvc] -> current version : '{}'",Version.version_string);
+			log.info("[mvc:'{}'] -> initializing... ",Version.version_name);
 			synchronized (Framework.class) {
 	            if(!initialized){
 	            	init();
 	            	initialized = true;
 	            }
             }
-			log.info("[mvc:version'{}'] -> initialized!",VERSION);
+			log.info("[mvc:'{}'] -> initialized!",Version.version_name);
 		}
 		log.debug("[module:'{}'] -> starting...",module.getName());
 		module.start();

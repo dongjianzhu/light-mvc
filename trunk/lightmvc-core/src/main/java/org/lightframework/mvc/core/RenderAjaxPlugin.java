@@ -26,7 +26,8 @@ import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.config.Ajax;
 import org.lightframework.mvc.core.RenderViewPlugin.IViewNotFoundRender;
-import org.lightframework.mvc.json.JSON;
+import org.lightframework.mvc.render.json.JSON;
+import org.lightframework.mvc.render.json.JSONContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,7 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 	
 	public static final String PARAM_AJAX_REQUEST = "x-ajax";
 	
-	protected JSON json = new JSON();
+	protected AjaxJsonContext jsonContext = new AjaxJsonContext();
 	
 	public RenderAjaxPlugin(){
 
@@ -112,22 +113,7 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 	}
 	
 	protected String encodeJson(Result result) throws Exception{
-		JSON.Writer writer = new JSON.Writer();
-		
-		writer.startObject();
-		writer.add(RETURN_CODE,String.valueOf(result.getCode()))
-		      .add(RETURN_STATUS,json.encode(result.getStatus()))
-		      .add(RETURN_DESC,json.encode(result.getDescription()));
-		
-		if(result instanceof Result.Error){
-			writer.add(RETURN_ERROR,json.encode(generateErrorContent((Result.Error)result)));
-		}
-		
-		writer.add(RETURN_VALUE, json.encode(result.getValue()));
-		
-		writer.endObject();
-		
-		return writer.toString();
+		return JSON.encode(result,jsonContext);
 	}
 	
 	protected String generateErrorContent(Result.Error error){
@@ -139,5 +125,21 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 		}else{
 			return null;
 		}
+	}
+	
+	protected class AjaxJsonContext extends JSONContext {
+		@Override
+        public void beforeEncodeEnd(String name, Object value, StringBuilder out) {
+			if(value instanceof Result.Error && null != value){
+				//append error
+				String error = generateErrorContent((Result.Error)value);
+				if(null != error){
+					out.append(",");
+					writer.writeName("error", out);
+					out.append(":");
+					writer.writeString(error, out);
+				}
+			}
+        }
 	}
 }

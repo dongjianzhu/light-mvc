@@ -13,25 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc;
+package org.lightframework.mvc.render.json;
 
-import junit.framework.TestCase;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.lightframework.mvc.render.IRenderContext;
+import org.lightframework.mvc.render.IRenderWriter;
 
 /**
- * Test Case of {@link Framework}
- * 
+ * json formatt of {@link IRenderContext}
+ *
  * @author fenghm (live.fenghm@gmail.com)
+ *
+ * @since 1.0.0
  */
-public class TestFramework extends TestCase {
-
-	private static final Logger log = LoggerFactory.getLogger(TestFramework.class);
+public class JSONContext implements IRenderContext {
 	
-	public void testGetVersion(){
-		log.info("mvc version:{}",Version.version_name);
-		assertNotNull(Version.version_name);
+	private static final JSONWriter JSON_WRITER = new JSONWriter();
+	
+	protected JSONWriter writer = JSON_WRITER;
+
+	public IRenderWriter getWriter() {
+		return writer;
 	}
 	
+	public void beforeEncodeBegin(String name,Object value, StringBuilder out) {
+
+	}
+
+	public void beforeEncodeEnd(String name,Object value, StringBuilder out) {
+
+	}
+
+	public boolean ignore(String name, Object value) {
+	    return false;
+    }
 }

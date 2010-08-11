@@ -13,30 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc;
+package org.lightframework.mvc.config;
 
-import org.lightframework.mvc.HTTP.Request;
-import org.lightframework.mvc.HTTP.Response;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
- * <coee>interface</code> used to render output content to {@link Response} 
- * 
- * this interface called at {@link Plugin#render(Request, Response, Result)}
- * 
+ * represents ignore operation on the element.
+ *
  * @author fenghm (live.fenghm@gmail.com)
- * 
- * @since 1.0.0 
+ *
+ * @since 1.0.0
  */
-public interface IRender {
-	
-	/**
-	 * render output content to {@link Response}
-	 * 
-	 * <p>
-	 * 
-	 * you can get context data from {@link Request}, such as {@link Request#getAction()}
-	 *  
-	 */
-	void render(Request request,Response response) throws Exception;
-	
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Ignore {
+
 }

@@ -13,30 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc;
+package org.lightframework.mvc.render.json;
 
-import org.lightframework.mvc.HTTP.Request;
-import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.render.IRenderContext;
+import org.lightframework.mvc.render.IRenderable;
+import org.lightframework.mvc.render.Renderable;
 
 /**
- * <coee>interface</code> used to render output content to {@link Response} 
- * 
- * this interface called at {@link Plugin#render(Request, Response, Result)}
- * 
+ * json encoder
+ *
  * @author fenghm (live.fenghm@gmail.com)
- * 
- * @since 1.0.0 
+ *
+ * @since 1.0.0
  */
-public interface IRender {
+public class JSON extends Renderable implements IRenderable{
 	
-	/**
-	 * render output content to {@link Response}
-	 * 
-	 * <p>
-	 * 
-	 * you can get context data from {@link Request}, such as {@link Request#getAction()}
-	 *  
-	 */
-	void render(Request request,Response response) throws Exception;
+	private static final JSON        instance = new JSON();
+	private static final JSONContext context  = new JSONContext();
 	
+	public static String encode(Object value){
+		return instance.encode(value, (IRenderContext)context);
+	}
+	
+	public static String encode(Object value,JSONContext context){
+		return instance.encode(value, (IRenderContext)context);
+	}
 }
