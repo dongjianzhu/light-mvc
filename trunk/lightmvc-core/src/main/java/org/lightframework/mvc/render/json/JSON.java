@@ -31,11 +31,11 @@ public class JSON {
 	private static final JSONContext context = new JSONContext();
 	
 	public static String encode(Object value){
-		return render.encode(value, (IRenderContext)context);
+		return render.encode(value, context);
 	}
 	
-	public static String encode(Object value,JSONContext context){
-		return render.encode(value, (IRenderContext)context);
+	public static String encode(Object value,IRenderContext context){
+		return render.encode(value, context);
 	}
 	
 	private static final class JSONRender extends Renderable{
