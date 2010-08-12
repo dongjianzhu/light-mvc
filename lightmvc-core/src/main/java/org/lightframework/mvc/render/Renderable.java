@@ -28,6 +28,7 @@ import java.util.Map;
 import org.lightframework.mvc.config.Default;
 import org.lightframework.mvc.config.Ignore;
 import org.lightframework.mvc.config.Name;
+import org.lightframework.mvc.config.UpperCase;
 import org.lightframework.mvc.utils.ClassUtils;
 
 /**
@@ -187,8 +188,11 @@ public abstract class Renderable implements IRenderable {
 				if (null != getter) {
 					String propName = field.getName();
 					
-					boolean ignore = false;
+					boolean ignore      = false;
+					boolean upperAll    = false;
+					boolean upperFirst  = false;
 					String defaultValue = null;
+					
 					for(Annotation annotation : field.getAnnotations()){
 						if (Default.class.equals(annotation.annotationType())) {
 							defaultValue = (((Default) annotation).value());
@@ -197,11 +201,23 @@ public abstract class Renderable implements IRenderable {
 						} else if (Ignore.class.equals(annotation.annotationType())){
 							ignore = true;
 							break;
+						} else if (UpperCase.class.equals(annotation.annotationType())){
+							if(((UpperCase)annotation).firstCharOnly()){
+								upperFirst = true;
+							}else{
+								upperAll = true; 
+							}
 						}
 					}
 					
 					if(ignore){
 						continue;
+					}
+					
+					if(upperFirst){
+						propName = propName.length() > 0 ? propName.substring(0,1).toUpperCase() + propName.substring(1) : "";
+					}else if(upperAll){
+						propName = propName.toUpperCase();
 					}
 					
 					if (index == 0) {
