@@ -42,8 +42,8 @@ public class JSON {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static Map<String,Object> decodeToMap(String source){
-		return decoder.decode(source, Map.class);
+	public static JSONObject decode(String source){
+		return new JSONObject(decoder.decode(source, Map.class));
 	}
 	
 	private static final class JSONRender extends Renderable{
