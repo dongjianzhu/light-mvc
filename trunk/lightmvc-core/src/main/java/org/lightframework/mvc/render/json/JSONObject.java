@@ -55,6 +55,11 @@ public class JSONObject {
 		return null == value ? null : value.toString();
 	}
 	
+	public int getInt(String name){
+		Object value = get(name);
+		return null == value ? 0 : Integer.parseInt(value.toString());
+	}
+	
 	public Integer getInteger(String name){
 		Object value = get(name);
 		return null == value ? null : Integer.parseInt(value.toString());
