@@ -13,24 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.config;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+package org.lightframework.mvc.render.json;
 
 /**
- * translate the element's name to upper case
+ * json encode or decode operation exception class
  *
  * @author fenghm (live.fenghm@gmail.com)
  *
  * @since 1.0.0
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface UpperCase {
+public class JSONException extends RuntimeException {
 
-	/**
-	 * if set to true , just translate the first char only.
-	 */
-	boolean firstCharOnly();
-	
+    private static final long serialVersionUID = 6604866089585580442L;
+
+	public JSONException() {
+		
+	}
+
+	public JSONException(String message) {
+		super(message);
+	}
+
+	public JSONException(Throwable cause) {
+		super(cause);
+	}
+
+	public JSONException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

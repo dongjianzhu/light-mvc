@@ -37,7 +37,7 @@ import junit.framework.TestCase;
  *
  * @since 1.0.0
  */
-public class TestJSON extends TestCase {
+public class TestJSONEncode extends TestCase {
 	
 	public void testSimpleValue() throws Exception{
 		//null
