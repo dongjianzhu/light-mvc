@@ -309,6 +309,10 @@ class JSONTokenizer {
 					}
 				}
 			}
+			
+			if(ivalue <= Integer.MAX_VALUE){
+				return nag ? -(int)ivalue : (int)ivalue;
+			}
 			return nag ? -ivalue : ivalue;
 		}
 	}
