@@ -13,24 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.config;
+package org.lightframework.mvc.render;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.util.Map;
+
+import org.lightframework.mvc.render.json.JSON;
+
+import junit.framework.TestCase;
 
 /**
- * translate the element's name to upper case
+ * Test Case to test the decoder of {@link JSON} 
  *
  * @author fenghm (live.fenghm@gmail.com)
  *
  * @since 1.0.0
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface UpperCase {
+public class TestJSONDecode extends TestCase {
 
-	/**
-	 * if set to true , just translate the first char only.
-	 */
-	boolean firstCharOnly();
+	public void testMap() {
+		
+		String source = "{\"name\":'xiaoming','age':100};";
+		Map<String, Object> map = JSON.decodeToMap(source);
+		
+		assertNotNull(map);
+		assertEquals("xiaoming", map.get("name"));
+		assertEquals(100l, map.get("age"));
+	}
 	
 }
