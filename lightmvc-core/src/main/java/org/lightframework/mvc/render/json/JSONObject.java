@@ -15,7 +15,6 @@
  */
 package org.lightframework.mvc.render.json;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +46,7 @@ public class JSONObject {
 	
 	public Object[] getArray(String name){
 		Object value = get(name);
-		return null == value ? null : ((List<?>)value).toArray();
+		return null == value ? null : (Object[])value;
 	}
 	
 	public String getString(String name){
