@@ -15,11 +15,10 @@
  */
 package org.lightframework.mvc.render;
 
-import java.util.Map;
+import junit.framework.TestCase;
 
 import org.lightframework.mvc.render.json.JSON;
-
-import junit.framework.TestCase;
+import org.lightframework.mvc.render.json.JSONObject;
 
 /**
  * Test Case to test the decoder of {@link JSON} 
@@ -33,11 +32,14 @@ public class TestJSONDecode extends TestCase {
 	public void testMap() {
 		
 		String source = "{\"name\":'xiaoming','age':100};";
-		Map<String, Object> map = JSON.decodeToMap(source);
+		JSONObject json = JSON.decode(source);
 		
-		assertNotNull(map);
-		assertEquals("xiaoming", map.get("name"));
-		assertEquals(100l, map.get("age"));
+		assertNotNull(json);
+		assertNotNull(json.map());
+		assertEquals("xiaoming", json.get("name"));
+		assertEquals("xiaoming", json.getString("name"));
+		assertEquals(100, json.get("age"));
+		assertEquals(new Integer(100), json.getInteger("age"));
 	}
 	
 }
