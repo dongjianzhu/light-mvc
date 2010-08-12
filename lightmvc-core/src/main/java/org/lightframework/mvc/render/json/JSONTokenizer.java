@@ -271,7 +271,7 @@ class JSONTokenizer {
 			return Double.parseDouble(ns);
 		} else {
 			long l = Long.parseLong(ns);
-			if(l < Integer.MAX_VALUE){
+			if(l <= Integer.MAX_VALUE){
 				return (int)l;
 			}
 			return l;
