@@ -17,7 +17,6 @@ package org.lightframework.mvc.render.json;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -119,14 +118,14 @@ class JSONTokenizer {
 		}
 	}
 
-	protected List<Object> findList() {
+	protected Object[] findList() {
 		ArrayList<Object> result = new ArrayList<Object>();
 		// start--;
 		start++;
 		skipComment();
 		if (value.charAt(start) == ']') {
 			start++;
-			return result;
+			return result.toArray();
 		} else {
 			result.add(parse());
 		}
@@ -134,7 +133,7 @@ class JSONTokenizer {
 			skipComment();
 			char c = value.charAt(start++);
 			if (c == ']') {
-				return result;
+				return result.toArray();
 			} else if (c == ',') {
 				skipComment();
 				result.add(parse());
@@ -246,7 +245,11 @@ class JSONTokenizer {
 			if (start == p) {// 复位
 				start--;
 				String ns = value.substring(begin, start);
-				return Long.parseLong(ns);
+				long l = Long.parseLong(ns);
+				if(l <= Integer.MAX_VALUE){
+					return (int)l;
+				}
+				return l;
 			} else {
 				isFloatingPoint = true;
 				if (start < end) {
@@ -267,7 +270,11 @@ class JSONTokenizer {
 		if (isFloatingPoint) {
 			return Double.parseDouble(ns);
 		} else {
-			return Long.parseLong(ns);
+			long l = Long.parseLong(ns);
+			if(l < Integer.MAX_VALUE){
+				return (int)l;
+			}
+			return l;
 		}
 	}
 
