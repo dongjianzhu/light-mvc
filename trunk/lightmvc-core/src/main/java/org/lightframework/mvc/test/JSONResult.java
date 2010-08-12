@@ -15,10 +15,9 @@
  */
 package org.lightframework.mvc.test;
 
-import java.util.Map;
-
 import org.lightframework.mvc.core.RenderAjaxPlugin;
 import org.lightframework.mvc.render.json.JSON;
+import org.lightframework.mvc.render.json.JSONObject;
 
 /**
  * represents the ajax response result of json format
@@ -39,28 +38,28 @@ public final class JSONResult {
 	}
 	
 	public static JSONResult parse(String content) throws Exception{
-		JSONResult result        = new JSONResult();
-		Map<String, Object> json = JSON.decodeToMap(content);
+		JSONResult result = new JSONResult();
+		JSONObject json   = JSON.decode(content);
 
 		
-		if(json.containsKey(RenderAjaxPlugin.RETURN_CODE)){
-			result.code = Integer.parseInt(String.valueOf(json.get(RenderAjaxPlugin.RETURN_CODE)));
+		if(json.exists(RenderAjaxPlugin.RETURN_CODE)){
+			result.code = json.getInteger(RenderAjaxPlugin.RETURN_CODE);
 		}
 		
-		if(json.containsKey(RenderAjaxPlugin.RETURN_STATUS)){
-			result.status = (String)json.get(RenderAjaxPlugin.RETURN_STATUS);
+		if(json.exists(RenderAjaxPlugin.RETURN_STATUS)){
+			result.status = json.getString(RenderAjaxPlugin.RETURN_STATUS);
 		}
 		
-		if(json.containsKey(RenderAjaxPlugin.RETURN_DESC)){
-			result.description = (String)json.get(RenderAjaxPlugin.RETURN_DESC);
+		if(json.exists(RenderAjaxPlugin.RETURN_DESC)){
+			result.description = json.getString(RenderAjaxPlugin.RETURN_DESC);
 		}
 		
-		if(json.containsKey(RenderAjaxPlugin.RETURN_VALUE)){
-			result.value = (String)json.get(RenderAjaxPlugin.RETURN_VALUE);
+		if(json.exists(RenderAjaxPlugin.RETURN_VALUE)){
+			result.value = json.getString(RenderAjaxPlugin.RETURN_VALUE);
 		}
 		
-		if(json.containsKey(RenderAjaxPlugin.RETURN_ERROR)){
-			result.error = (String)json.get(RenderAjaxPlugin.RETURN_ERROR);
+		if(json.exists(RenderAjaxPlugin.RETURN_ERROR)){
+			result.error = json.getString(RenderAjaxPlugin.RETURN_ERROR);
 		}
 
 		return result;
