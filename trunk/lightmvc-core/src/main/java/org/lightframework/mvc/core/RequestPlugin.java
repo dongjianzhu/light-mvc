@@ -44,7 +44,7 @@ public class RequestPlugin extends Plugin {
     }
 	
 	protected void parseJson(Request request, Response response) throws Exception {
-		if(request.isPost() && (request.isAjax() ||  HTTP.CONTENT_TYPE_JSON.equalsIgnoreCase(request.getContentType()))){
+		if(request.isPost() && HTTP.CONTENT_TYPE_JSON.equalsIgnoreCase(request.getContentType())){
 			String body = request.getContent();
 			if(null != body && !"".equals((body = body.trim()))){
 				if(log.isTraceEnabled()){
