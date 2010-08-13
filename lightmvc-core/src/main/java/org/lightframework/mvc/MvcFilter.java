@@ -235,22 +235,15 @@ public class MvcFilter implements javax.servlet.Filter {
 	        return request.getContentType();
         }
 		
-        @Override
-        public String getParameter(String name) {
-			return request.getParameter(name);
-        }
-
 		@Override
 		@SuppressWarnings("unchecked")
         public Map<String, String[]> getParameters() {
-	        return request.getParameterMap();
+        	if(null == parameters){
+        		parameters = request.getParameterMap();
+        	}
+	        return parameters;
         }
 		
-        @Override
-        public String[] getParameterValues(String name) {
-			return request.getParameterValues(name);
-        }
-
 		@Override
         public String getMethod() {
 	        return request.getMethod();

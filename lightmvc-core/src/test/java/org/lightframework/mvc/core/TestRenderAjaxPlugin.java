@@ -72,7 +72,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 	}
 	
 	public void testAjaxRequestByQueryString() throws Exception {
-		request.setParameter(RenderAjaxPlugin.PARAM_AJAX_REQUEST, "true");
+		request.setParameter(HTTP.X_PARAM_AJAX, "true");
 		
 		executeAjaxRequest();
 	}

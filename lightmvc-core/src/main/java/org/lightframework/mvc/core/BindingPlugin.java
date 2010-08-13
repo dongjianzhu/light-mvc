@@ -87,13 +87,13 @@ public class BindingPlugin extends Plugin {
 
 		public Map<String, Object> getParameters() {
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.putAll(request.getParameters());
+			params.putAll(request.getObjectParameters());
 			params.putAll(action.getParameters());
 			return params;
         }
 		
 		public List<IConverter> getConverters() {
 	        return null;
-        }		
+        }
 	}
 }
