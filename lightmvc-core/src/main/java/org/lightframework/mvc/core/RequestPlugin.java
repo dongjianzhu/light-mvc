@@ -17,8 +17,14 @@ package org.lightframework.mvc.core;
 
 import org.lightframework.mvc.HTTP;
 import org.lightframework.mvc.Plugin;
+import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.render.json.JSON;
+import org.lightframework.mvc.render.json.JSONObject;
+import org.lightframework.mvc.render.json.JSONWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * built-in {@link Plugin} to prepare {@link Request}.
@@ -28,6 +34,7 @@ import org.lightframework.mvc.HTTP.Response;
  * @since 1.0.0
  */
 public class RequestPlugin extends Plugin {
+	private static final Logger log = LoggerFactory.getLogger(RequestPlugin.class);
 
 	@Override
     public boolean request(Request request, Response response) throws Exception {
@@ -37,8 +44,28 @@ public class RequestPlugin extends Plugin {
     }
 	
 	protected void parseJson(Request request, Response response) throws Exception {
-		if(HTTP.CONTENT_TYPE_JSON_RFC.equalsIgnoreCase(request.getContentType())){
-			// TODO : RequestPlugin.parseJson
+		if(request.isPost() && (request.isAjax() ||  HTTP.CONTENT_TYPE_JSON.equalsIgnoreCase(request.getContentType()))){
+			String body = request.getContent();
+			if(null != body && !"".equals((body = body.trim()))){
+				if(log.isTraceEnabled()){
+					log.trace("[mvc:request] -> found json body : '{}'",body);
+				}
+				
+				if(body.charAt(0) == JSONWriter.OPEN_OBJECT){
+					try {
+		                JSONObject json = JSON.decode(request.getContent());
+		                for(String name : json.keys()){
+		                	request.setParameter(name, json.getString(name));
+		                }
+	                } catch (Exception e) {
+	                	Result.error(Result.CODE_BAD_REQUEST,"invalid json params");
+	                }	
+				}else{
+					if(log.isTraceEnabled()){
+						log.trace("[mvc:request] -> json is not a map params(starts with '{'),ignore it");
+					}
+				}
+			}
 		}
 	}
 }

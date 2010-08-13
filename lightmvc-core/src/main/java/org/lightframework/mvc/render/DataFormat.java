@@ -16,20 +16,32 @@
 package org.lightframework.mvc.render;
 
 /**
- * a class implement this interface is renderable by itselft.
+ * defines data format
  * 
- * @author fenghm (live.fenghm@gmail.com)
- *
+ * @author fenghm (fenghm@bingosoft.net)
  * @since 1.0.0
  */
-public interface IRenderable {
+public final class DataFormat {
 
-	/**
-	 * encode <code>this</code> to string
-	 * 
-	 * @param context {@link IRenderContext}
-	 * @return encoded result
-	 */
-	void encode(IRenderContext context,IRenderWriter writer,StringBuilder out);
+	public static final String JSON_FORMAT = "json";
+	public static final String XML_FORMAT  = "xml";
+
+	private static final String SUPPORTED_FORMATS = JSON_FORMAT + "," + XML_FORMAT;
+	
+	public static boolean isSupport(String format){
+		return JSON_FORMAT.equals(format) || XML_FORMAT.equals(format);
+	}
+	
+	public static String getSupportedFormats(){
+		return SUPPORTED_FORMATS;
+	}
+	
+	public static boolean isJson(String format){
+		return JSON_FORMAT.equals(format);
+	}
+	
+	public static boolean isXml(String format){
+		return XML_FORMAT.equals(format);
+	}
 	
 }

@@ -100,9 +100,9 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 		String content = encodeJson(result);
 		response.write(content);
 		if(request.getUserAgent().isMozilla()){
-			response.setContentType(HTTP.CONTENT_TYPE_JSON_TEXT);
+			response.setContentType(HTTP.CONTENT_TYPE_TEXT);
 		}else{
-			response.setContentType(HTTP.CONTENT_TYPE_JSON_RFC);	
+			response.setContentType(HTTP.CONTENT_TYPE_JSON);	
 		}
 		
 		if(log.isTraceEnabled()){

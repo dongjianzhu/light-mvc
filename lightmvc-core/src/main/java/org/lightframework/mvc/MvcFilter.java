@@ -15,7 +15,9 @@
  */
 package org.lightframework.mvc;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -258,6 +260,33 @@ public class MvcFilter implements javax.servlet.Filter {
         public boolean isSecure() {
 	        return request.isSecure();
         }
+		
+		@Override
+        public String getContent() {
+			if(null == content){
+				try {
+	                BufferedReader reader = request.getReader();
+	                StringBuilder  buffer = new StringBuilder();
+	                String line = null;
+	                while((line = reader.readLine()) != null){
+	                	buffer.append(line).append("\n");
+	                }
+	                content = buffer.toString();
+                } catch (IOException e) {
+                	throw new MvcException(e.getMessage(),e);
+                }
+			}
+	        return super.getContent();
+        }
+
+		@Override
+        public InputStream getInputStream() {
+	        try {
+	            return request.getInputStream();
+            } catch (IOException e) {
+            	throw new MvcException(e.getMessage(),e);
+            }
+        }
 
 		@Override
         public String getRemoteAddress() {
@@ -300,6 +329,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		@Override
         public void setStatus(int status) {
 			response.setStatus(status);
+			super.setStatus(status);
         }
 		
 		@Override
@@ -338,8 +368,22 @@ public class MvcFilter implements javax.servlet.Filter {
         public String getContentType() {
 			return response.getContentType();
 		}
-		
-		//TODO : implement Response
+
+		@Override
+        public void setHeader(String name, String value) {
+			response.setHeader(name, value);
+			super.setHeader(name, value);
+        }
+
+		@Override
+        public void setCookie(String name, String value, String domain, String path, Integer maxAge) {
+			javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie(name, value);
+			cookie.setDomain(domain);
+			cookie.setMaxAge(maxAge);
+			cookie.setPath(path);
+			response.addCookie(cookie);
+	        super.setCookie(name, value, domain, path, maxAge);
+        }
 	}
 	
 	private static String getContextPath(HttpServletRequest request){

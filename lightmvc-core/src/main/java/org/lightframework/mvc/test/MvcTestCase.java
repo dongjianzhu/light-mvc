@@ -86,6 +86,11 @@ public abstract class MvcTestCase extends TestCase {
 		
 	}
 	
+	protected final Result request(String path) throws Exception {
+		request.setPath(path);
+		return execute();
+	}
+	
 	protected final Result execute() throws Exception {
 		if(MockFramework.mockIgnore(request)){
 			ignored = true;

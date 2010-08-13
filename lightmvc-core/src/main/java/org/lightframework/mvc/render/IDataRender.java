@@ -16,20 +16,19 @@
 package org.lightframework.mvc.render;
 
 /**
- * a class implement this interface is renderable by itselft.
- * 
+ * interface to render {@link Object} value to {@link String} value.
+ *
  * @author fenghm (live.fenghm@gmail.com)
  *
  * @since 1.0.0
  */
-public interface IRenderable {
+public interface IDataRender {
 
 	/**
-	 * encode <code>this</code> to string
-	 * 
-	 * @param context {@link IRenderContext}
-	 * @return encoded result
+	 * render {@link Object} value to {@link String} value
+	 * @param value {@link Object} value , may be null
+	 * @return {@link String} value, may be null.
 	 */
-	void encode(IRenderContext context,IRenderWriter writer,StringBuilder out);
+	String encode(Object value,IRenderContext context);
 	
 }

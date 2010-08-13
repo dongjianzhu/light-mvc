@@ -13,23 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.render;
+package org.lightframework.mvc.core;
+
+import org.lightframework.mvc.HTTP;
+import org.lightframework.mvc.test.MvcTestCase;
 
 /**
- * a class implement this interface is renderable by itselft.
- * 
+ * Test Case of {@link RequestPlugin}
+ *
  * @author fenghm (live.fenghm@gmail.com)
  *
  * @since 1.0.0
  */
-public interface IRenderable {
+public class TestRequestPlugin extends MvcTestCase {
 
-	/**
-	 * encode <code>this</code> to string
-	 * 
-	 * @param context {@link IRenderContext}
-	 * @return encoded result
-	 */
-	void encode(IRenderContext context,IRenderWriter writer,StringBuilder out);
-	
+	public void testJsonBody() throws Exception{
+		request.setMethod(HTTP.METHOD_GET);
+		
+		execute();
+		
+		assertFalse(request.isContainsParameter("name"));
+		
+		request.setMethod(HTTP.METHOD_POST);
+		request.setContentType(HTTP.CONTENT_TYPE_JSON);
+		request.setContent("{name:'xiaoming'}");
+		
+		execute();
+		
+		assertEquals("xiaoming", request.getParameter("name"));
+	}
 }

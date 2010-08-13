@@ -17,6 +17,7 @@ package org.lightframework.mvc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,19 +29,26 @@ import java.util.Map;
  * @since 1.0.0
  */
 public final class HTTP {
-	//---http header constants
+	//---http standard header constants
 	public static final String HEADER_NAME_AJAX_REQUEST  = "x-requested-with";
     public static final String HEADER_VALUE_AJAX_REQUEST = "XMLHttpRequest";
     public static final String HEADER_NAME_USER_AGENT    = "User-Agent";
 
-	//---http content type constatns
+	//---http content type constants
 	public static final String CONTENT_TYPE_TEXT       = "text/plain";
 	public static final String CONTENT_TYPE_HTML       = "text/html";
 	public static final String CONTENT_TYPE_CSS   	   = "text/css";
 	public static final String CONTENT_TYPE_JAVASCRIPT = "text/javascript";
-	public static final String CONTENT_TYPE_JSON_RFC   = "application/json"; //rfc4627
-	public static final String CONTENT_TYPE_JSON_TEXT  = "text/plain";
+	public static final String CONTENT_TYPE_JSON       = "application/json"; //rfc4627
 	public static final String CONTENT_TYPE_XML        = "text/xml";
+	
+	//---http method constants
+	public static final String METHOD_POST = "POST";
+	public static final String METHOD_GET  = "GET";
+	
+	//---extend http headers or parameters
+	public static final String X_PARAM_AJAX   = "x-ajax";
+	public static final String X_PARAM_FORMAT = "x-format";
 
 	/**
 	 * http user agent
@@ -169,11 +177,13 @@ public final class HTTP {
 	    protected String   contentType;
 	    protected String   method;
 	    protected boolean  secure;
+	    protected String   content;
 	    protected Response response;
 	    protected Module   module;
 	    protected Action   action;	    
 	    protected Result   result;
 
+	    protected InputStream           inputStream;
 	    protected UserAgent             userAgent;
 	    protected Map<String, Cookie>   cookies;
 	    protected Map<String, String[]> headers;	    
@@ -236,9 +246,34 @@ public final class HTTP {
 	    	return secure;
 	    }
 		
+		public InputStream getInputStream(){
+			return inputStream;
+		}
+		
+		public String getContent(){
+			return content;
+		}
+		
+		public String getDataFormat(){
+			String format = getParameter(X_PARAM_FORMAT);
+			if(null == format){
+				format = getHeader(X_PARAM_FORMAT);
+			}
+			return format;
+		}
+		
 		public boolean isAjax(){
 			//jQuery.ajax will send a header "X-Requested-With=XMLHttpRequest"
-			return HEADER_VALUE_AJAX_REQUEST.equals(getHeader(HEADER_NAME_AJAX_REQUEST));
+			return HEADER_VALUE_AJAX_REQUEST.equals(getHeader(HEADER_NAME_AJAX_REQUEST)) || 
+			       isContainsParameter(X_PARAM_AJAX);
+		}
+		
+		public boolean isPost(){
+			return METHOD_POST.equals(getMethod());
+		}
+		
+		public boolean isGet(){
+			return METHOD_GET.equals(getMethod());
 		}
 		
 		public Object getAttribute(String name){
@@ -260,6 +295,10 @@ public final class HTTP {
 			return attributes;
 		}
 		
+		public boolean isContainsParameter(String name){
+			return getParameters().containsKey(name);
+		}
+		
 		public String getParameter(String name){
 			String[] values = getParameters().get(name);
 			if(values == null){
@@ -269,6 +308,10 @@ public final class HTTP {
 			}else{
 				return Utils.arrayToString(values);
 			}
+		}
+		
+		public void setParameter(String name,String value){
+			getParameters().put(name, new String[]{value});
 		}
 		
 		public String[] getParameterValues(String name){
