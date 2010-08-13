@@ -48,14 +48,16 @@ public class RequestPlugin extends Plugin {
 			String body = request.getContent();
 			if(null != body && !"".equals((body = body.trim()))){
 				if(log.isTraceEnabled()){
-					log.trace("[mvc:request] -> found json body : '{}'",body);
+					log.trace("[mvc:request] -> found json body : '{}'",
+							  body.length() < 256 ? body : body.substring(0,250) + "..." + body.charAt(body.length()-1));
 				}
 				
 				if(body.charAt(0) == JSONWriter.OPEN_OBJECT){
 					try {
 		                JSONObject json = JSON.decode(request.getContent());
 		                for(String name : json.keys()){
-		                	request.setParameter(name, json.getString(name));
+		                	//TODO : set json paremeter
+//		                	request.setParameter(name, json.getString(name));
 		                }
 	                } catch (Exception e) {
 	                	Result.error(Result.CODE_BAD_REQUEST,"invalid json params");

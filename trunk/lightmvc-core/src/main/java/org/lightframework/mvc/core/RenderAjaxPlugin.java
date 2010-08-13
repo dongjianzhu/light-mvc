@@ -47,8 +47,6 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 	public static final String RETURN_VALUE  = "returnValue";
 	public static final String RETURN_ERROR  = "error";
 	
-	public static final String PARAM_AJAX_REQUEST = "x-ajax";
-	
 	protected AjaxJsonContext jsonContext = new AjaxJsonContext();
 	
 	public RenderAjaxPlugin(){
@@ -66,11 +64,6 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 			if(null != action && action.getMethod().isAnnotationPresent(Ajax.class)){
 				isAjax = true;
 			}
-		}
-		
-		if(!isAjax){
-			//is request send a ajax parameter 'x-ajax' 
-			isAjax = null != request.getParameter(PARAM_AJAX_REQUEST);
 		}
 
 		if(isAjax){
