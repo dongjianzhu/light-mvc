@@ -16,6 +16,7 @@
 package org.lightframework.mvc.render.json;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * represents a json value. 
@@ -30,6 +31,10 @@ public class JSONObject {
 	
     JSONObject(Map<String, Object> map) {
     	this.map = map;
+    }
+    
+    public Set<String> keys(){
+    	return map.keySet();
     }
 	
 	public Map<String, Object> map(){

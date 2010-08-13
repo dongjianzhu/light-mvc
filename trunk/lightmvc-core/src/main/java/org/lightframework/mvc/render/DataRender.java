@@ -32,13 +32,13 @@ import org.lightframework.mvc.config.UpperCase;
 import org.lightframework.mvc.utils.ClassUtils;
 
 /**
- * abstract implementation of {@link IRenderable}
+ * abstract implementation of {@link IDataRender}
  * 
  * @author fenghm (live.fenghm@gmail.com)
  * 
  * @since 1.0.0
  */
-public abstract class Renderable implements IRenderable {
+public abstract class DataRender implements IDataRender {
 	
 	private static final Class<?>[] EMPTY_TYPES = new Class<?>[]{};
 
@@ -89,6 +89,8 @@ public abstract class Renderable implements IRenderable {
 			encode(name,(Enumeration<?>) value, context, writer, out);
 		} else if (value instanceof Enum<?>) {
 			writer.writeString(((Enum<?>) value).name(), out);
+		} else if (value instanceof IRenderable){
+			((IRenderable)value).encode(context, writer, out);
 		} else {
 			encodeBean(name,value, context, writer, out);
 		}

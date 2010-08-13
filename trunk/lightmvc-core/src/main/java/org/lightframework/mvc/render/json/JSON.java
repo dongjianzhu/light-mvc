@@ -20,7 +20,7 @@ import java.io.Reader;
 import java.util.Map;
 
 import org.lightframework.mvc.render.IRenderContext;
-import org.lightframework.mvc.render.Renderable;
+import org.lightframework.mvc.render.DataRender;
 
 /**
  * json encoder
@@ -31,7 +31,7 @@ import org.lightframework.mvc.render.Renderable;
  */
 public class JSON {
 
-	private static final JSONRender render = new JSONRender();
+	private static final JSONRender  render  = new JSONRender();
 	private static final JSONContext context = new JSONContext();
 	private static final JSONDecoder decoder = new JSONDecoder(false);
 
@@ -62,7 +62,7 @@ public class JSON {
 		return new JSONObject(decoder.decode(source, Map.class));
 	}
 
-	private static final class JSONRender extends Renderable {
+	private static final class JSONRender extends DataRender {
 
 	}
 }

@@ -19,6 +19,7 @@ import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.config.Ignore;
 import org.lightframework.mvc.config.Name;
+import org.lightframework.mvc.render.json.JSON;
 
 
 /**
@@ -126,6 +127,10 @@ public abstract class Result {
 	
 	public static void content(String text,String contentType){
 		throw new Return(new Content(text,contentType));
+	}
+	
+	public static void json(Object value){
+		throw new Return(new Content(JSON.encode(value),HTTP.CONTENT_TYPE_JSON));
 	}
 	
 	public static void error(String message){

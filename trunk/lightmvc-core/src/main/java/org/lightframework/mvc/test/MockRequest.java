@@ -15,6 +15,8 @@
  */
 package org.lightframework.mvc.test;
 
+import java.io.InputStream;
+
 import org.lightframework.mvc.HTTP;
 import org.lightframework.mvc.Module;
 import org.lightframework.mvc.HTTP.Request;
@@ -75,6 +77,14 @@ public class MockRequest extends Request {
 		}else{
 			removeHeader(HTTP.HEADER_NAME_AJAX_REQUEST);
 		}
+	}
+	
+	public void setContent(String content){
+		this.content = content;
+	}
+	
+	public void setInputStream(InputStream stream){
+		this.inputStream = stream;
 	}
 	
 	public void setRemoteAddress(String remoteAddress) {
