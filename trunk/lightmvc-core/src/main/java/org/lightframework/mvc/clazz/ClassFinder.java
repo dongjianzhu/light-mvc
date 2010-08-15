@@ -28,6 +28,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * utility class to find classes or resources
  *
@@ -36,6 +39,7 @@ import java.util.jar.JarFile;
  * @since 1.0.0
  */
 public class ClassFinder {
+	private static final Logger log = LoggerFactory.getLogger(ClassFinder.class);
 	
 	public static Set<String> findClassNames(URL url,String packagee) throws IOException{
 		return findClassNames(url, packagee, true);
@@ -49,10 +53,16 @@ public class ClassFinder {
 		
 		String urlProtocol = url.getProtocol();
 		String urlFileName = url.getFile();
-		int jarStringIndex = urlFileName.indexOf("!/"); //such as xxx.jar!/org/apache/....
 		
+		int jarStringIndex = urlFileName.indexOf("!/"); //such as xxx.jar!/org/apache/....
 		if(jarStringIndex > 0){
 			urlFileName = urlFileName.substring(0,jarStringIndex);
+		}
+		
+		if(urlFileName.startsWith(urlProtocol + ":/")){
+			urlFileName = urlFileName.substring(urlProtocol.length() + 2); 
+		}else if(urlFileName.startsWith("file:/")){
+			urlFileName = urlFileName.substring(6);
 		}
 		
 		if(urlProtocol.equalsIgnoreCase("jar") || urlProtocol.equalsIgnoreCase("jar") || 
@@ -64,12 +74,20 @@ public class ClassFinder {
 			if(file.exists()){
 				//some application servers such as weblogic return not exists resource
 				return findClassNames(new JarFile(file),packagee,deep);
+			}else{
+				if(log.isDebugEnabled()){
+					log.debug("[mvc] -> jar '{}' not exists",jarFileName);
+				}
 			}
 		}else{
 			String fileName = URLDecoder.decode(urlFileName,System.getProperty("file.encoding"));
 			File file = new File(fileName);
 			if(file.exists()){
 				return findClassNames(file,packagee,deep);
+			}else{
+				if(log.isDebugEnabled()){
+					log.debug("[mvc] -> classes dir '{}' not exists",fileName);
+				}
 			}
 		}
 	
@@ -80,21 +98,29 @@ public class ClassFinder {
 		String      path  = packagee.replace('.', '/') + "/";
 		Set<String> names = new HashSet<String>();
 		
-		Enumeration<JarEntry> entries = jar.entries();
-		while(entries.hasMoreElements()){
-			JarEntry entry = entries.nextElement();
-			String   name  = entry.getName();
-			
-			if(name.startsWith(path) ){
-				if(!deep && name.indexOf("/",path.length()) > 0){
-					break;
-				}
+		try{
+			Enumeration<JarEntry> entries = jar.entries();
+			while(entries.hasMoreElements()){
+				JarEntry entry = entries.nextElement();
+				String   name  = entry.getName();
 				
-	            int index = name.lastIndexOf(".class");
-	            if(index > 0){
-	            	names.add(name.substring(0,index).replace('/', '.'));
-	            }
+				if(name.startsWith(path) ){
+					if(!deep && name.indexOf("/",path.length()) > 0){
+						break;
+					}
+					
+		            int index = name.lastIndexOf(".class");
+		            if(index > 0){
+		            	names.add(name.substring(0,index).replace('/', '.'));
+		            }
+				}
 			}
+		}finally{
+			try {
+	            jar.close();
+            } catch (IOException e) {
+            	;
+            }
 		}
 		return names;
 	}
