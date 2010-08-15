@@ -25,11 +25,11 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
+import org.lightframework.mvc.clazz.ClassUtils;
 import org.lightframework.mvc.config.Default;
 import org.lightframework.mvc.config.Ignore;
 import org.lightframework.mvc.config.Name;
 import org.lightframework.mvc.config.UpperCase;
-import org.lightframework.mvc.utils.ClassUtils;
 
 /**
  * abstract implementation of {@link IDataRender}
@@ -247,6 +247,12 @@ public abstract class DataRender implements IDataRender {
 	}
 
 	protected void encodeNamedValue(String name, Object value, IRenderContext context, IRenderWriter writer, StringBuilder out) {
+		if(context.isLowerCaseName()){
+			name = name.toLowerCase();
+		}else if(context.isUpperCaseName()){
+			name = name.toUpperCase();
+		}
+		
 		writer.openName(out);
 		writer.writeName(name, out);
 		writer.closeName(out);

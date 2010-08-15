@@ -16,13 +16,18 @@
 package org.lightframework.mvc;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.lightframework.mvc.utils.ClassUtils;
+import org.lightframework.mvc.clazz.ClassFinder;
+import org.lightframework.mvc.clazz.ClazzLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,16 +52,18 @@ public class Module {
     private   boolean  started  = false;
     protected String   name     = DEFAULT_NAME;
     protected String   encoding = DEFAULT_ENCODING;
-    protected String[] packages = new String[]{DEFAULT_PACKAGE};
+    protected String   packagee = DEFAULT_PACKAGE;
     protected String   rootPath = DEFAULT_ROOTPATH;
     protected String   viewPath = DEFAULT_VIEWPATH;
 
+    protected ClassLoader classLoader    = null;
+    protected String resourceForFinding  = null;
     protected LinkedList<Plugin> plugins = new LinkedList<Plugin>();
     protected ConcurrentHashMap<String, Object> controllers = new ConcurrentHashMap<String, Object>();
     
     //used to cache classes names
-    private long lastFindClassesTime;
-    private Collection<String> classNames;
+    private long        lastFindClassesTime;
+    private Set<String> classNames;
     
     final void start(){
     	if(!started){
@@ -90,10 +97,14 @@ public class Module {
     	return name;
     }
     
-    public String[] getPackages(){
-    	return packages;
+	public String getPackagee() {
+    	return packagee;
     }
 	
+	public void setAnyOneClassInModule(Class<?> clazz) {
+    	this.resourceForFinding = clazz.getName().replace('.', '/') + ".class";
+    }
+
 	public String getEncoding(){
 		return encoding;
 	}
@@ -112,7 +123,7 @@ public class Module {
 	
 	public Class<?> findClass(String[] names) {
 		//XXX : improve performance in production mode 
-		Collection<String> classes = findAllClassNames();
+		Collection<String> classes = getModuleClassNames();
 		
 		for(String name : names){
 			for(String clazz : classes){
@@ -137,7 +148,7 @@ public class Module {
 		Object obj = controllers.get(key);
 		
 		if(null != obj && !obj.getClass().equals(controllerClass)){
-			obj = null; //may be class reloaded
+			obj = null; //XXX : may be class reloaded
 		}
 		
 		if(null == obj){
@@ -159,11 +170,12 @@ public class Module {
 	 * @return {@link ClassLoader} in this web module,default is {@link Thread#currentThread()#getClassLoader()};
 	 */
 	public ClassLoader getClassLoader(){
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		if(null == loader){
-			loader = Module.class.getClassLoader();
+		if(null == classLoader){
+			synchronized (this) {
+				classLoader = new ClazzLoader();    
+            }
 		}
-		return loader;
+		return classLoader;
 	}
 	
 	/**
@@ -287,7 +299,7 @@ public class Module {
 	/**
 	 * @return all the class names in this module and the {@link #packages} 
 	 */
-	protected Collection<String> findAllClassNames() {
+	protected Set<String> getModuleClassNames() {
 		long now = System.currentTimeMillis();
 		if(null == classNames || now - lastFindClassesTime > 10000){
 			synchronized (this) {
@@ -297,20 +309,13 @@ public class Module {
 				}
 				
 				try {
-	                for(String pkg : getPackages()){
-	                	Collection<String> foundClassNames = ClassUtils.findAllClassNames(getClassLoader(), pkg);
-	                	if(null == classNames){
-	                		classNames = foundClassNames;
-	                	}else{
-	                		classNames.addAll(foundClassNames);
-	                	}
+            		classNames = findModuleClassNames();
 
-	                	if(log.isTraceEnabled()){
-		                	log.trace("[module:'{}'] -> found {} classes in package '{}'",
-		                			  new Object[]{getName(),foundClassNames.size(),pkg}
-		                	);
-	                	}
-	                }
+                	if(log.isTraceEnabled()){
+	                	log.trace("[module:'{}'] -> found {} classes in package '{}'",
+	                			  new Object[]{getName(),classNames.size(),packagee}
+	                	);
+                	}
                 } catch (IOException e) {
                 	throw new MvcException("error find classes in module '" + getName() + "'",e);
                 }
@@ -323,5 +328,28 @@ public class Module {
 	
 	protected List<Plugin> getPlugins(){
 		return plugins;
+	}
+	
+	protected Set<String> findModuleClassNames() throws IOException{
+		Set<String> names = new HashSet<String>();
+		
+		String path = packagee.replace('.', '/');
+		URL    url1 = null != resourceForFinding ? getClassLoader().getResource(resourceForFinding) : null;
+
+		if(null != url1){
+			names.addAll(ClassFinder.findClassNames(url1, packagee));
+		}
+		
+		Enumeration<URL> urls = getClassLoader().getResources(path);
+		while(urls.hasMoreElements()){
+			URL url = urls.nextElement();
+			//is the same url ?
+			if(null != url1 && url1.getPath().startsWith(url.getPath())){
+				continue;
+			}
+			names.addAll(ClassFinder.findClassNames(url, packagee));
+		}
+		
+		return names;
 	}
 }

@@ -22,5 +22,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/javassist.jar"/>
 	<classpathentry kind="lib" path="lib/mockrunner-servlet.jar"/>
+	<classpathentry kind="lib" path="lib/resources.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

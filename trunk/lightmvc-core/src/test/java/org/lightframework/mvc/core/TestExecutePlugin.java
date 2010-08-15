@@ -29,7 +29,7 @@ public class TestExecutePlugin extends MvcTestCase {
 	
 	@Override
     protected void setUpEveryTest() throws Exception {
-		module.setPackages(packagee);
+		module.setPackagee(packagee);
 		createSubClass(ProductController.class, packagee + ".ProductController");
     }
 

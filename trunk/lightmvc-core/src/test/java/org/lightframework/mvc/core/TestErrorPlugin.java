@@ -28,7 +28,7 @@ public class TestErrorPlugin extends MvcTestCase {
 
 	@Override
     protected void setUpEveryTest() throws Exception {
-		module.setPackages(packagee);
+		module.setPackagee(packagee);
 		createSubClass(Home.class, packagee + ".Home");
     }
 

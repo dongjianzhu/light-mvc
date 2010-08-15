@@ -26,7 +26,7 @@ import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.Result.Return;
 import org.lightframework.mvc.binding.Argument;
-import org.lightframework.mvc.utils.ClassUtils;
+import org.lightframework.mvc.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

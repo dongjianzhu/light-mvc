@@ -40,7 +40,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 	@Override
     protected void setUpEveryTest() throws Exception {
 		packages = TestRenderAjaxPlugin.class.getPackage().getName();
-		module.setPackages(packages);
+		module.setPackagee(packages);
     }
 
 	public void testRenderResult() throws Exception{

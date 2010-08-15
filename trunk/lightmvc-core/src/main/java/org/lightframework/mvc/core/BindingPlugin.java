@@ -70,10 +70,21 @@ public class BindingPlugin extends Plugin {
 
 		private final Request request;
 		private final Action  action;
+		private final Map<String, Object> map = new HashMap<String, Object>();
 		
 		private BindingContext(Request request,Action action){
 			this.request = request;
 			this.action  = action;
+			for(String name : request.getParameterNames()){
+				String[] value = request.getParameterValues(name);
+				if(value.length == 1){
+					map.put(name, value[0]);
+				}else if(value.length == 0){
+					map.put(name, "");
+				}else{
+					map.put(name, value);
+				}
+			}			
 		}
 		
 		public Object getParameter(String name) {
@@ -87,7 +98,7 @@ public class BindingPlugin extends Plugin {
 
 		public Map<String, Object> getParameters() {
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.putAll(request.getObjectParameters());
+			params.putAll(map);
 			params.putAll(action.getParameters());
 			return params;
         }

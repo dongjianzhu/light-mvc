@@ -23,7 +23,7 @@ import org.lightframework.mvc.Utils;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.binding.Binder;
-import org.lightframework.mvc.utils.ClassUtils;
+import org.lightframework.mvc.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,10 +41,8 @@ public class ResolvePlugin extends Plugin {
 		String controller = action.getControllerName();
 		String methodName = action.getSimpleName();
 		
-		for(String pkg : request.getModule().getPackages()){
-			if(resolve(request,response,action,controller,methodName,pkg)){
-				return true;
-			}
+		if(resolve(request,response,action,controller,methodName,request.getModule().getPackagee())){
+			return true;
 		}
 		
 		return false;
