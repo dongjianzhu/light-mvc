@@ -137,9 +137,15 @@ public class MvcFilter implements javax.servlet.Filter {
 		}
 		
 		Framework.start(module);
+		
+		doInited();
 	}
 	
 	protected void doConfig(Map<String, String> params){
+		
+	}
+	
+	protected void doInited() {
 		
 	}
 
