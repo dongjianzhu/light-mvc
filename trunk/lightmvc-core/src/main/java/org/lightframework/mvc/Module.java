@@ -336,18 +336,20 @@ public class Module {
 		String path = packagee.replace('.', '/');
 		URL    url1 = null != resourceForFinding ? getClassLoader().getResource(resourceForFinding) : null;
 
-		if(null != url1){
-			names.addAll(ClassFinder.findClassNames(url1, packagee));
-		}
-		
 		Enumeration<URL> urls = getClassLoader().getResources(path);
 		while(urls.hasMoreElements()){
 			URL url = urls.nextElement();
+			
 			//is the same url ?
 			if(null != url1 && url1.getPath().startsWith(url.getPath())){
+				url1 = null;
 				continue;
 			}
 			names.addAll(ClassFinder.findClassNames(url, packagee));
+		}
+
+		if(null != url1){
+			names.addAll(ClassFinder.findClassNames(url1, packagee));
 		}
 		
 		return names;
