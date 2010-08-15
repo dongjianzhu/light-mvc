@@ -343,13 +343,23 @@ public class Module {
 			//is the same url ?
 			if(null != url1 && url1.getPath().startsWith(url.getPath())){
 				url1 = null;
-				continue;
 			}
-			names.addAll(ClassFinder.findClassNames(url, packagee));
+			
+			Set<String> found = ClassFinder.findClassNames(url, packagee);
+			if(log.isTraceEnabled()){
+				log.trace("[module:{}] -> found {} classes in url : '{}'",
+						  new Object[]{getName(),found.size(),url.getPath()});
+			}
+			names.addAll(found);
 		}
 
 		if(null != url1){
-			names.addAll(ClassFinder.findClassNames(url1, packagee));
+			Set<String> found = ClassFinder.findClassNames(url1, packagee);
+			if(log.isTraceEnabled()){
+				log.trace("[module:{}] -> found {} classes in url : '{}'",
+						  new Object[]{getName(),found.size(),url1.getPath()});
+			}
+			names.addAll(found);
 		}
 		
 		return names;
