@@ -26,6 +26,10 @@ public interface IRenderContext {
 
 	IRenderWriter getWriter();
 	
+	boolean isLowerCaseName();
+	
+	boolean isUpperCaseName();
+	
 	boolean ignore(String name,Object value);
 	
 	void beforeEncodeBegin(String name,Object value,StringBuilder out);

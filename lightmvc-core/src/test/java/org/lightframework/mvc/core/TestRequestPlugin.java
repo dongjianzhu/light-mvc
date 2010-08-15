@@ -24,7 +24,7 @@ import org.lightframework.mvc.test.MvcTestCase;
  *
  * @since 1.0.0
  */
-public class TestRequestPlugin extends MvcTestCase {
+public abstract class TestRequestPlugin extends MvcTestCase {
 
 	//XXX : test json body
 //	public void testJsonBody() throws Exception{

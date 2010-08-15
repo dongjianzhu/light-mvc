@@ -73,8 +73,7 @@ public class TestMvcFilter extends TestCase {
 			Module module = filter.module;
 			assertNotNull(module);
 			assertTrue(module.isStarted());
-			assertEquals(1, module.getPackages().length);
-			assertEquals(Module.DEFAULT_PACKAGE, module.getPackages()[0]);
+			assertEquals(Module.DEFAULT_PACKAGE, module.getPackagee());
 		}finally{
 			filter.destroy();
 		}
@@ -88,28 +87,11 @@ public class TestMvcFilter extends TestCase {
 			Module module = filter.module;
 			assertNotNull(module);
 			assertTrue(module.isStarted());
-			assertEquals(1, module.getPackages().length);
-			assertEquals("demo", module.getPackages()[0]);
+			assertEquals("demo", module.getPackagee());
 		}finally{
 			filter.destroy();
 		}
 	}
-	
-	public void testInit3() throws Exception {
-		config.setInitParameter(MvcFilter.INIT_PARAM_PACKAGE, "demo.app1 , \n demo.app2 ");
-		try{
-			filter.init(config);
-			
-			Module module = filter.module;
-			assertNotNull(module);
-			assertTrue(module.isStarted());
-			assertEquals(2, module.getPackages().length);
-			assertEquals("demo.app1", module.getPackages()[0]);
-			assertEquals("demo.app2", module.getPackages()[1]);
-		}finally{
-			filter.destroy();
-		}
-	}	
 	
 	public void testDoFilter1() throws Exception {
 		try{

@@ -38,7 +38,7 @@ public class TestBindingPlugin extends MvcTestCase {
 
 	@Override
 	protected void setUpEveryTest() throws Exception {
-		module.setPackages(packagee);
+		module.setPackagee(packagee);
 		createSubClass(BindingController.class, packagee + "." + BindingController.class.getSimpleName());
 
 	}
@@ -217,7 +217,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		}
 		
 		public static boolean map(Map<String,Object> params){
-			return null != params && params.size() == 1 && ((String[])params.get("hello"))[0].equals("you are welcome");
+			return null != params && params.size() == 1 && (params.get("hello").equals("you are welcome"));
 		}
 		
 		public static boolean bean(User user){

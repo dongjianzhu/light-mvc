@@ -18,7 +18,7 @@ package org.lightframework.mvc.test;
 import junit.framework.TestCase;
 
 import org.lightframework.mvc.Result;
-import org.lightframework.mvc.utils.ClassUtils;
+import org.lightframework.mvc.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -190,7 +190,6 @@ public final class HTTP {
 	    protected Map<String, String[]> headers;	    
 	    protected Map<String, String[]> parameters;
 	    protected Map<String, Object>   attributes;
-	    protected Map<String, Object>   objectParameters;
 
 	    public static Request current(){
 	    	return current.get();
@@ -326,21 +325,6 @@ public final class HTTP {
 			}
 	    	return parameters;
 	    }
-		
-		public Map<String, Object> getObjectParameters(){
-			if(null == objectParameters){
-				objectParameters = new HashMap<String, Object>();
-				for(String name : getParameters().keySet()){
-					String[] value = getParameterValues(name);
-					if(value.length == 0){
-						objectParameters.put(name, value[0]);
-					}else{
-						objectParameters.put(name, value);
-					}
-				}
-			}
-			return objectParameters;
-		}
 		
 		public String getHeader(String name){
 			String[] header = getHeaderValues(name);

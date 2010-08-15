@@ -20,6 +20,7 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.lightframework.mvc.Module;
 import org.lightframework.mvc.Plugin;
@@ -40,10 +41,10 @@ public class MockModule extends Module {
 	protected List<String> webResources  = new ArrayList<String>();
 	protected ClassLoader  classLoader   = null;
 
-	public void setPackages(String packages){
-		this.packages = packages.split(",");
+	public void setPackagee(String packagee){
+		this.packagee = packagee;
 	}
-	
+
 	public void addClassName(String name){
 		addClasses.add(name);
 		removeClasses.remove(name);
@@ -110,8 +111,8 @@ public class MockModule extends Module {
     }
 
 	@Override
-    protected Collection<String> findAllClassNames() {
-	    Collection<String> classes = super.findAllClassNames();
+    protected Set<String> getModuleClassNames() {
+	    Set<String> classes = super.getModuleClassNames();
 	    classes.addAll(addClasses);
 	    classes.removeAll(removeClasses);
 	    return classes;

@@ -17,6 +17,7 @@ package org.lightframework.mvc.render.json;
 
 import org.lightframework.mvc.render.IRenderContext;
 import org.lightframework.mvc.render.IRenderWriter;
+import org.lightframework.mvc.render.RenderContext;
 
 /**
  * json formatt of {@link IRenderContext}
@@ -25,7 +26,7 @@ import org.lightframework.mvc.render.IRenderWriter;
  *
  * @since 1.0.0
  */
-public class JSONContext implements IRenderContext {
+public class JSONContext extends RenderContext implements IRenderContext {
 	
 	private static final JSONWriter JSON_WRITER = new JSONWriter();
 	

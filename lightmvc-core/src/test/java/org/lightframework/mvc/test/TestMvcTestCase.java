@@ -37,7 +37,7 @@ public class TestMvcTestCase extends MvcTestCase {
 	@Override
     protected void setUpEveryTest() throws Exception {
 		packages = TestMvcTestCase.class.getPackage().getName();
-		module.setPackages(packages);
+		module.setPackagee(packages);
 		createSubClass(Home.class, packages + ".Home");
     }
 

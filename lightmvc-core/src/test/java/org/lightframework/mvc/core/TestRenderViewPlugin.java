@@ -29,7 +29,7 @@ public class TestRenderViewPlugin extends MvcTestCase {
 	
 	@Override
     protected void setUpEveryTest() throws Exception {
-		module.setPackages(packagee);
+		module.setPackagee(packagee);
 		module.setFindWebRoot(false);
 		createSubClass(Home.class, packagee + ".Home");
     }

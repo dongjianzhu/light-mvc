@@ -37,6 +37,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.lightframework.mvc.HTTP.Cookie;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -46,6 +48,8 @@ import org.lightframework.mvc.HTTP.Response;
  * @since 1.0.0
  */
 public class MvcFilter implements javax.servlet.Filter {
+	
+	private static final Logger log = LoggerFactory.getLogger(MvcFilter.class);
 
 	public static final String INIT_PARAM_PACKAGE        = "package";
 	public static final String INIT_PARAM_MODULE         = "module";
@@ -119,22 +123,16 @@ public class MvcFilter implements javax.servlet.Filter {
 		doConfig(params);
 		
 		//config packages
-		String packages = params.get(INIT_PARAM_PACKAGE);
-		if(null != packages && !"".equals(packages = packages.trim())){
-			ArrayList<String> list = new ArrayList<String>();
-			String[] values = packages.split(",");
-			for(int i=0;i<values.length;i++){
-				String value = values[i].trim();
-				if(!"".equals(value)){
-					list.add(value);
-				}
-			}
-			module.packages = list.toArray(new String[]{});
+		String packagee = params.get(INIT_PARAM_PACKAGE);
+		if(null != packagee && !"".equals(packagee = packagee.trim())){
+			log.info("[mvc] -> set module package to '{}'",packagee);
+			module.packagee = packagee;
 		}
 		
 		//config module name
 		String moduleName = params.get(INIT_PARAM_MODULE);
 		if(null != moduleName && !"".equals(moduleName = moduleName.trim())){
+			log.info("[mvc] -> set module name to '{}'",moduleName);
 			module.name = moduleName;
 		}
 		
