@@ -253,6 +253,10 @@ public abstract class DataRender implements IDataRender {
 			name = name.toUpperCase();
 		}
 		
+		if(null != context.getNameTranslator()){
+			name = context.getNameTranslator().translate(name, value);
+		}
+		
 		writer.openName(out);
 		writer.writeName(name, out);
 		writer.closeName(out);
