@@ -24,9 +24,10 @@ package org.lightframework.mvc.render;
  */
 public class RenderContext implements IRenderContext {
 
-	protected IRenderWriter writer;
-	protected boolean       lowerCaseName;
-	protected boolean       upperCaseName;
+	protected IRenderWriter   writer;
+	protected INameTranslator nameTranslator;
+	protected boolean         lowerCaseName;
+	protected boolean         upperCaseName;
 	
 	public RenderContext(){
 		
@@ -42,6 +43,14 @@ public class RenderContext implements IRenderContext {
 
 	public void setWriter(IRenderWriter writer) {
     	this.writer = writer;
+    }
+	
+	public INameTranslator getNameTranslator() {
+    	return nameTranslator;
+    }
+
+	public void setNameTranslator(INameTranslator nameTranslator) {
+    	this.nameTranslator = nameTranslator;
     }
 
 	public void beforeEncodeBegin(String name,Object value, StringBuilder out) {
@@ -66,9 +75,5 @@ public class RenderContext implements IRenderContext {
 
 	public void setUpperCaseName(boolean upperCase) {
     	this.upperCaseName = upperCase;
-    }
-
-	public boolean ignore(String name, Object value) {
-	    return false;
     }
 }

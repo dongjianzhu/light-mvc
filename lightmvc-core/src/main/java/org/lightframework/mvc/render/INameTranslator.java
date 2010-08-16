@@ -16,23 +16,14 @@
 package org.lightframework.mvc.render;
 
 /**
- * a context object for data rendering.
- * 
+ * interface to translate the name value.
+ *
  * @author fenghm (live.fenghm@gmail.com)
  *
  * @since 1.0.0
  */
-public interface IRenderContext {
+public interface INameTranslator {
 
-	IRenderWriter   getWriter();
+	String translate(String name,Object value);
 	
-	INameTranslator getNameTranslator();
-	
-	boolean isLowerCaseName();
-	
-	boolean isUpperCaseName();
-	
-	void beforeEncodeBegin(String name,Object value,StringBuilder out);
-	
-	void beforeEncodeEnd(String name,Object value,StringBuilder out);
 }
