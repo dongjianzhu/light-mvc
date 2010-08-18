@@ -44,9 +44,9 @@ public class TestJSONEncode extends TestCase {
 		assertEquals(JSONWriter.NULL_STRING,encode(null));
 		
 		//simple type
-		assertEquals("'test'", encode("test"));
-		assertEquals("'c'",    encode('c'));
-		assertEquals("'c'",    encode(new Character('c')));
+		assertEquals("\"test\"", encode("test"));
+		assertEquals("\"c\"",    encode('c'));
+		assertEquals("\"c\"",    encode(new Character('c')));
 		assertEquals("true",   encode(true));
 		assertEquals("true",   encode(new Boolean(true)));
 		assertEquals("false",  encode(false));
@@ -62,7 +62,7 @@ public class TestJSONEncode extends TestCase {
 		assertEquals("100.1",  encode(new BigDecimal("100.1")));
 		assertEquals("100000", encode(new BigInteger("100000")));
 		assertEquals("0x01",   encode((byte)1));
-		assertEquals("'RED'",  encode(Color.RED));
+		assertEquals("\"RED\"",  encode(Color.RED));
 		
 		//date type
 		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2010-11-01 10:10:10");
@@ -70,11 +70,11 @@ public class TestJSONEncode extends TestCase {
 	}
 	
 	public void testSimpleArray() throws Exception {
-		assertEquals("['test1','test2']", encode(new String[]{"test1","test2"}));
-		assertEquals("['c','d']",         encode(new char[]{'c','d'}));
+		assertEquals("[\"test1\",\"test2\"]", encode(new String[]{"test1","test2"}));
+		assertEquals("[\"c\",\"d\"]",         encode(new char[]{'c','d'}));
 		assertEquals("[true,false]",      encode(new boolean[]{true,false}));
 		assertEquals("[100,101]",         encode(new int[]{100,101}));
-		assertEquals("['RED','BLUE']",    encode(new Color[]{Color.RED,Color.BLUE}));
+		assertEquals("[\"RED\",\"BLUE\"]",    encode(new Color[]{Color.RED,Color.BLUE}));
 	}
 	
 	public void testSimpleIterable() throws Exception {
@@ -82,7 +82,7 @@ public class TestJSONEncode extends TestCase {
 		list.add("1");
 		list.add("2");
 		
-		assertEquals("['1','2']", encode(list));
+		assertEquals("[\"1\",\"2\"]", encode(list));
 	}
 	
 	public void testSimpleMap() throws Exception {
@@ -91,12 +91,12 @@ public class TestJSONEncode extends TestCase {
 		map.put("2", "2");
 		map.put(3, "3");
 		
-		assertEquals("{'1':1,'2':'2','3':'3'}", encode(map));
+		assertEquals("{\"1\":1,\"2\":\"2\",\"3\":\"3\"}", encode(map));
 	}
 	
 	public void testSimpleBean() throws Exception {
-		assertEquals("{'name':'xiaoming','age':100}", encode(new User("xiaoming",100)));
-		assertEquals("{'key':'key','name':'xiaoming','age':100}", encode(new SuperUser("xiaoming",100,"key")));
+		assertEquals("{\"name\":\"xiaoming\",\"age\":100}", encode(new User("xiaoming",100)));
+		assertEquals("{\"key\":\"key\",\"name\":\"xiaoming\",\"age\":100}", encode(new SuperUser("xiaoming",100,"key")));
 	}
 	
 	protected String encode(Object value){

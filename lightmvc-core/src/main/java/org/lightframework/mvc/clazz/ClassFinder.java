@@ -72,8 +72,17 @@ public class ClassFinder {
 			String jarFileName = URLDecoder.decode(urlFileName,System.getProperty("file.encoding"));
 			File file = new File(jarFileName);
 			if(file.exists()){
-				//some application servers such as weblogic return not exists resource
-				return findClassNames(new JarFile(file),packagee,deep);
+				JarFile jar = new JarFile(file);
+				try{
+					//some application servers such as weblogic return not exists resource
+					return findClassNames(new JarFile(file),packagee,deep);
+				}finally{
+					try {
+	                    jar.close();
+                    } catch (IOException e) {
+                    	;
+                    }
+				}
 			}else{
 				if(log.isDebugEnabled()){
 					log.debug("[mvc] -> jar '{}' not exists",jarFileName);
@@ -98,30 +107,23 @@ public class ClassFinder {
 		String      path  = packagee.replace('.', '/') + "/";
 		Set<String> names = new HashSet<String>();
 		
-		try{
-			Enumeration<JarEntry> entries = jar.entries();
-			while(entries.hasMoreElements()){
-				JarEntry entry = entries.nextElement();
-				String   name  = entry.getName();
-				
-				if(name.startsWith(path) ){
-					if(!deep && name.indexOf("/",path.length()) > 0){
-						break;
-					}
-					
-		            int index = name.lastIndexOf(".class");
-		            if(index > 0){
-		            	names.add(name.substring(0,index).replace('/', '.'));
-		            }
+		Enumeration<JarEntry> entries = jar.entries();
+		while(entries.hasMoreElements()){
+			JarEntry entry = entries.nextElement();
+			String   name  = entry.getName();
+			
+			if(name.startsWith(path) ){
+				if(!deep && name.indexOf("/",path.length()) > 0){
+					break;
 				}
+				
+	            int index = name.lastIndexOf(".class");
+	            if(index > 0){
+	            	names.add(name.substring(0,index).replace('/', '.'));
+	            }
 			}
-		}finally{
-			try {
-	            jar.close();
-            } catch (IOException e) {
-            	;
-            }
 		}
+		
 		return names;
 	}
 	
@@ -141,7 +143,7 @@ public class ClassFinder {
             }
             
             if(deep && file.isDirectory()){
-            	names.addAll(findClassNames(file, packagee + "/" + file.getName(),deep));
+            	names.addAll(findClassNames(file, packagee + "." + file.getName(),deep));
             }
 		}
 		return names;
