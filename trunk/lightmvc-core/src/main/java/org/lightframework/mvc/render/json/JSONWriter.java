@@ -27,13 +27,13 @@ import org.lightframework.mvc.render.RenderWriter;
  */
 public class JSONWriter extends RenderWriter implements IRenderWriter {
 	public static final String NULL_STRING   = "null";
-	public static final String EMPTY_STRING  = "''";
+	public static final String EMPTY_STRING  = "\"\"";
 	public static final char   OPEN_ARRAY    = '[';
 	public static final char   CLOSE_ARRAY   = ']';
 	public static final char   OPEN_OBJECT   = '{';
 	public static final char   CLOSE_OBJECT  = '}';
 	public static final char   CLOSE_NAME    = ':';
-	public static final char   SINGLE_QUOTE  = '\'';
+	public static final char   SINGLE_QUOTE  = '"';
 	public static final char   COMMA_CHAR    = ',';
 	
 	public void openArray(StringBuilder out) {
@@ -91,8 +91,8 @@ public class JSONWriter extends RenderWriter implements IRenderWriter {
                 case '\\':
                     out.append("\\\\");
                     break;
-                case '\'':
-                	out.append("\\'");
+                case '"':
+                	out.append("\\\"");
                     break;
                 case '\b':
                 	out.append("\\b");

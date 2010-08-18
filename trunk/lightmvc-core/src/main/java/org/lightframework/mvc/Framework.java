@@ -15,7 +15,6 @@
  */
 package org.lightframework.mvc;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lightframework.mvc.HTTP.Request;
@@ -215,15 +214,6 @@ public class Framework {
 		}else{
 			return true;
 		}
-	}
-	
-	private static String getVersion(){
-		//read version string from /org/lightframework/mvc/version.txt 
-		try {
-	        return Utils.readFromResource("/" + Framework.class.getPackage().getName().replaceAll("\\.", "/") + "/version").trim();
-        } catch (IOException e) {
-        	throw new MvcException("error reading version",e);
-        }
 	}
 	
 	/**
