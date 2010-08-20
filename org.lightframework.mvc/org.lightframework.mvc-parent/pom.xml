@@ -48,6 +48,7 @@
         	<version>0.9.24</version>
         	<type>jar</type>
         	<scope>runtime</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

@@ -15,11 +15,16 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -31,6 +36,7 @@
             <version>3.13.GA</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/javassist.jar</systemPath>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -39,6 +45,7 @@
             <version>0.4.2</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/mockrunner-servlet.jar</systemPath>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -47,6 +54,7 @@
             <version>1.0.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/resources.jar</systemPath>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>
