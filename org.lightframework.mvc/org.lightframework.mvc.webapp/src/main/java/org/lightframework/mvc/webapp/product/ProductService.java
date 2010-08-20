@@ -31,11 +31,18 @@ public class ProductService {
 	private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 	
 	public void index(){
-		log.info("[ProductServer] -> index executed");
+		log.info("[ProductService] -> index executed");
 	}
 	
 	public List<Product> list(){
-		log.info("[ProductServer] -> list executed");
+		log.info("[ProductService] -> list executed");
 		return new ArrayList<Product>();
+	}
+	
+	public Product query(String name){
+		log.info("[ProductService] -> query by name '{}' executed",name);
+		Product product = new Product();
+		product.setName("中文测试");
+		return product;
 	}
 }

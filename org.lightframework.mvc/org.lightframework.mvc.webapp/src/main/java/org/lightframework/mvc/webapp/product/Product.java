@@ -23,5 +23,14 @@ package org.lightframework.mvc.webapp.product;
  * @since 1.x.x
  */
 public class Product {
+	
+	protected String name;
 
+	public String getName() {
+    	return name;
+    }
+
+	public void setName(String name) {
+    	this.name = name;
+    }
 }
