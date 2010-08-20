@@ -6,9 +6,6 @@
 <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
 <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
 <wb-resource deploy-path="/" source-path="/WebRoot"/>
-<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/org.lightframework.mvc.core/org.lightframework.mvc.core">
-<dependency-type>uses</dependency-type>
-</dependent-module>
 <property name="java-output-path" value="/org.lightframework.mvc.webapp/WebRoot/WEB-INF/classes"/>
 <property name="context-root" value="mvc"/>
 </wb-module>
