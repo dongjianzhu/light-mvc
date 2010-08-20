@@ -146,6 +146,8 @@ public class Framework {
 			request.result     = error;
 			if(!PluginInvoker.error(request, response, error)){
 				throw e;
+			}else{
+				managed = true;
 			}
 		}
 		
