@@ -27,37 +27,6 @@
         <sonar.dynamicAnalysis>true</sonar.dynamicAnalysis>
     </properties>
     
-    <repositories>
-        <repository>
-          <id>bingo-maven-repository-public</id>
-          <name>Bingo Maven Public Repository</name>
-          <url>http://maven.bingosoft.net/content/groups/public/</url>
-        </repository>
-    </repositories>
-    
-    <pluginRepositories>
-        <pluginRepository>
-            <id>bingo-maven-repository-public</id>
-            <name>Bingo Maven Public Repository</name>
-            <url>http://maven.bingosoft.net/content/groups/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
-    
-   <!--Local Distribution
-    <distributionManagement>
-        <repository>
-            <id>localhost-maven-release-repository</id>
-            <name>Local Maven Release Repository</name>
-            <url>http://localhost:9000/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>local-maven-snapshot-repository</id>
-            <name>Local Maven Snapshot Repository</name>
-            <url>http://localhost:9000/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>   
-     --> 
-
     <!-- Remote Distribution -->
     <distributionManagement>
         <repository>
