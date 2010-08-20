@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
-		<artifactId>org.lightframework.mvc</artifactId>
+		<artifactId>org-lightframework-mvc</artifactId>
 		<groupId>org.lightframework</groupId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
     <groupId>org.lightframework</groupId>
-    <artifactId>org.lightframework.mvc-parent</artifactId>
+    <artifactId>org-lightframework-mvc-parent</artifactId>
     <name>org.lightframework.mvc-parent</name>    
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
