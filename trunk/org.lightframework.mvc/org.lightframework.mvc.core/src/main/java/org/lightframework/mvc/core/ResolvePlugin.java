@@ -49,21 +49,33 @@ public class ResolvePlugin extends Plugin {
     }
 	
 	protected boolean resolve(Request request,Response response,Action action,String controller,String methodName,String pkg) throws Exception{
-		//replace all '_' characters to '' characters
-		controller = Utils.replace(controller, "_", "");
-		methodName = Utils.replace(methodName, "_", "");
+		Class<?> controllerClass  = action.getControllerClass();
+		Object   controllerObject = action.getControllerObject();
 		
-		//append "." to the end of _package if not empty 
-		pkg = null == pkg || "".equals(pkg) ? "" : pkg + ".";
+		if(null == controllerClass){
+			//replace all '_' characters to '' characters
+			controller = Utils.replace(controller, "_", "");
+			methodName = Utils.replace(methodName, "_", "");
+			
+			//append "." to the end of _package if not empty 
+			pkg = null == pkg || "".equals(pkg) ? "" : pkg + ".";
+			
+			//search controller class
+			controllerClass = resolveControllerClass(request,pkg,controller,action);
+			Action.Setter.setControllerClass(action, controllerClass);
+		}
 		
-		//search controller class such as
-		if(resolveControllerClass(request,pkg,controller,action)){
+		if(null != controllerClass){
 			//resolve method and arguments
-			Method method = ClassUtils.findMethodIgnoreCase(action.getControllerClass(), methodName);
+			Method method = action.getMethod();
+			
+			if(null == method){
+				method = ClassUtils.findMethodIgnoreCase(controllerClass, methodName);
+			}
 			
 			if(null != method){
-				if(!ClassUtils.isStatic(method)){
-					Object controllerObject = request.getModule().getControllerObject(controller, action.getControllerClass());
+				if(null == controllerObject && !ClassUtils.isStatic(method)){
+					controllerObject = request.getModule().getControllerObject(controller, action.getControllerClass());
 					Action.Setter.setControllerObject(action,controllerObject);
 				}
 				Action.Setter.setMethod(action,method);
@@ -76,13 +88,12 @@ public class ResolvePlugin extends Plugin {
 							  new Object[]{action.getName(),methodName,action.getControllerClass().getName()}
 					);
 				}
-			}
+			}			
 		}
-		
 		return false;
 	}
 	
-	protected boolean resolveControllerClass(Request request,String pkg,String controller,Action action) throws Exception{
+	protected Class<?> resolveControllerClass(Request request,String pkg,String controller,Action action) throws Exception{
 		/*
         example : {user}.{list}
 		 1. {module-package}.UserController        -> {module-package}.{controller}Controller
@@ -117,12 +128,7 @@ public class ResolvePlugin extends Plugin {
 		Class<?> clazz = 
 			request.getModule().findClass(new String[]{guessName1,guessName2,guessName3,guessName4,guessName5});
 		
-		if(null != clazz){
-			Action.Setter.setControllerClass(action, clazz);
-			return true;
-		}
-
-		return false;
+		return clazz;
 	}
 	
 	private static String upperClassName(String string){
