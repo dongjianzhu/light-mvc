@@ -112,6 +112,8 @@ public class MockModule extends Module {
 
 	@Override
     protected Set<String> getModuleClassNames() {
+		//clear cache time
+		lastFindClassesTime = 0;
 	    Set<String> classes = super.getModuleClassNames();
 	    classes.addAll(addClasses);
 	    classes.removeAll(removeClasses);

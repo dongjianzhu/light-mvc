@@ -64,8 +64,8 @@ public class Module {
     protected ConcurrentHashMap<String, Object> controllers = new ConcurrentHashMap<String, Object>();
     
     //used to cache classes names
-    private long        lastFindClassesTime;
-    private Set<String> classNames;
+    protected long        lastFindClassesTime;
+    protected Set<String> classNames;
     
     final void start(){
     	if(!started){
@@ -205,15 +205,16 @@ public class Module {
 		String path = root + (root.endsWith("/") ? ""  : "/") + controller;
 		
 		URL url = findWebResource(path);
-		if(null == path && action.isHome()){
+		if(null == url && action.isHome()){
 			//guess the path of home controller : {module-view-path}
 			path = root;
 			url = findWebResource(path);
 			if(null == url && action.isHome() && !root.equals(getRootPath())){
 				//guess the path of home controller : {module-root-path}
-				root = getRootPath();
-				path = root.endsWith("/") ? root.substring(0,root.length() - 1) : root;
+				path = getRootPath();
 			}			
+		}else{
+			path = null;
 		}
 		return path;
 	}
