@@ -17,6 +17,7 @@ package org.lightframework.mvc;
 
 import junit.framework.TestCase;
 
+import org.lightframework.mvc.test.MockModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,4 +35,20 @@ public class TestFramework extends TestCase {
 		assertNotNull(Version.version_name);
 	}
 	
+	public void testGetApplication(){
+		assertNotNull(Framework.getApplication());
+		
+		Object context = new Object();
+		Application application = new Application(context,new MockModule());
+		assertNotNull(application.getContext());
+		assertNotNull(application.getRootModule());
+		Framework.setThreadLocalApplication(application);
+		
+		assertNotNull(Framework.getApplication());
+		assertEquals(application, Framework.getApplication());
+		assertEquals(application, Framework.getApplication(context));
+		
+		Framework.setThreadLocalApplication(null);
+		assertNotSame(application, Framework.getApplication());
+	}
 }

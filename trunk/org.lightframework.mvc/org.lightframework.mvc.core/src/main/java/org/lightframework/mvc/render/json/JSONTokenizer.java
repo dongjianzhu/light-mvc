@@ -22,7 +22,11 @@ import java.util.Map;
 /**
  * json string parser
  * 
- * @author fenghm (live.fenghm@gmail.com)
+ * <p>
+ * copied from google project <a href="http://code.google.com/p/lite/">lite</a> 
+ * 
+ * @author original author : jindwcn (jindwcn@gmail.com)
+ * @author mofified by     : fenghm  (live.fenghm@gmail.com)
  * @since 1.0.0
  */
 class JSONTokenizer {
@@ -68,7 +72,7 @@ class JSONTokenizer {
 	}
 
 	protected JSONException buildError(String msg) {
-		return new JSONException("语法错误:" + msg + "\n" + value + "@" + start);
+		return new JSONException("invalid syntax:" + msg + "\n" + value + "@" + start);
 	}
 
 	/*
@@ -101,7 +105,7 @@ class JSONTokenizer {
 			skipComment();
 			c = value.charAt(start++);
 			if (c != ':') {
-				throw buildError("无效对象语法");
+				throw buildError("invalid json object syntax");
 			}
 			Object valueObject = parse();
 			skipComment();
@@ -110,7 +114,7 @@ class JSONTokenizer {
 				result.put(key, valueObject);
 				return result;
 			} else if (c != ',') {
-				throw buildError("无效对象语法");
+				throw buildError("invalid json object syntax");
 			} else {
 				result.put(key, valueObject);
 				skipComment();
@@ -138,7 +142,7 @@ class JSONTokenizer {
 				skipComment();
 				result.add(parse());
 			} else {
-				throw buildError("无效数组语法:");
+				throw buildError("invalid json array syntax:");
 			}
 		}
 	}
@@ -200,7 +204,7 @@ class JSONTokenizer {
 			char c = value.charAt(start++);
 			if (c == 'x' || c == 'X') {
 				if (strict) {
-					throw buildError("JSON未定义16进制数字");
+					throw buildError("json not support hexadecimal number");
 				}
 				long value = parseHex();
 				if (neg) {
@@ -209,7 +213,7 @@ class JSONTokenizer {
 				return value;
 			} else if (c > '0' && c <= '7') {
 				if (strict) {
-					throw buildError("JSON未定义8进制数字");
+					throw buildError("json not support octal number");
 				}
 				start--;
 				int value = parseOctal();
@@ -230,10 +234,7 @@ class JSONTokenizer {
 	}
 
 	/**
-	 * 当前值为 . 或者 E，e
-	 * 
-	 * @param begin
-	 * @return
+	 * current value is '.' , 'E' or 'e'
 	 */
 	private Number parseFloat(final int begin) {
 		boolean isFloatingPoint = false;
@@ -242,7 +243,7 @@ class JSONTokenizer {
 			start++;
 			int p = start;
 			seekDecimal();
-			if (start == p) {// 复位
+			if (start == p) {// reset
 				start--;
 				String ns = value.substring(begin, start);
 				long l = Long.parseLong(ns);
@@ -266,7 +267,7 @@ class JSONTokenizer {
 			seekDecimal();
 		}
 		String ns = value.substring(begin, start);
-		// System.out.println(ns);
+
 		if (isFloatingPoint) {
 			return Double.parseDouble(ns);
 		} else {
@@ -278,9 +279,8 @@ class JSONTokenizer {
 		}
 	}
 
-	// 还是改成JDK自己的parser？
+	//XXX : use jdk's number parser 
 	protected Number findNumber() {
-		// 10进制优化
 		final int begin = start;
 		boolean nag = false;
 		char c = value.charAt(start++);
@@ -328,7 +328,7 @@ class JSONTokenizer {
 			}
 			return (value.substring(start, start = p));
 		}
-		throw buildError("无效id");
+		throw buildError("invalid id");
 
 	}
 
@@ -338,7 +338,7 @@ class JSONTokenizer {
 	protected String findString() {
 		char quoteChar = value.charAt(start++);
 		if (strict && quoteChar == '\'') {
-			throw buildError("JSON标准 字符串应该是双引号\"...\")");
+			throw buildError("json standard not support strings quoted in '...')");
 		}
 		StringBuilder buf = new StringBuilder();
 		while (start < end) {
@@ -390,7 +390,7 @@ class JSONTokenizer {
 					break;
 				default:
 					if (strict) {
-						throw buildError("发现JSON 标准未定义转义字符");
+						throw buildError("found not supported escape char '" + c + "'");
 					}
 					buf.append(c);
 					buf.append(c2);
@@ -407,14 +407,14 @@ class JSONTokenizer {
 			case '\r':
 			case '\n':
 				if (strict) {
-					throw buildError("JSON 标准字符串不能换行");
+					throw buildError("json standard not support multi-line string");
 				}
 			default:
 				buf.append(c);
 
 			}
 		}
-		throw buildError("未结束字符串");
+		throw buildError("not terminated string");
 	}
 
 	protected void skipComment() {

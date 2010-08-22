@@ -38,7 +38,7 @@ public class MockFramework extends Framework {
 		Framework.stop(module);
 	}
 	
-	public static boolean mockIgnore(Request request) {
+	public static boolean mockIgnore(Request request) throws Exception {
 		return Framework.ignore(request);
 	}
 	

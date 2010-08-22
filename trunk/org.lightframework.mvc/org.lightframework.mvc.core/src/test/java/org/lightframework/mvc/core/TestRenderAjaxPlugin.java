@@ -18,7 +18,7 @@ package org.lightframework.mvc.core;
 import org.lightframework.mvc.HTTP;
 import org.lightframework.mvc.MvcException;
 import org.lightframework.mvc.Result;
-import org.lightframework.mvc.Result.Content;
+import org.lightframework.mvc.Result.ContentResult;
 import org.lightframework.mvc.config.Ajax;
 import org.lightframework.mvc.test.JSONResult;
 import org.lightframework.mvc.test.MvcTestCase;
@@ -45,7 +45,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 
 	public void testRenderResult() throws Exception{
 		RenderAjaxPlugin plugin = new RenderAjaxPlugin();
-		Content content = new Content("text");
+		ContentResult content = new ContentResult("text");
 		plugin.renderJson(request, response, content);
 		
 		String json = plugin.encodeJson(content);

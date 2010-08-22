@@ -105,13 +105,13 @@ public class ResolvePlugin extends Plugin {
 		String guessName4 = pkg + controller + "." + upperClassName(controller) + "Service";
 		String guessName5 = pkg + upperClassName(controller);
 		
-		if(log.isTraceEnabled()){
-			log.trace("[action:'{}'] -> guess the names by orders :",action.getName());
-			log.trace(" 1. '{}'",guessName1);
-			log.trace(" 2. '{}'",guessName2);
-			log.trace(" 3. '{}'",guessName3);
-			log.trace(" 4. '{}'",guessName4);
-			log.trace(" 5. '{}'",guessName5);
+		if(log.isDebugEnabled()){
+			log.debug("[action:'{}'] -> guess the names by orders :",action.getName());
+			log.debug(" 1. '{}'",guessName1);
+			log.debug(" 2. '{}'",guessName2);
+			log.debug(" 3. '{}'",guessName3);
+			log.debug(" 4. '{}'",guessName4);
+			log.debug(" 5. '{}'",guessName5);
 		}
 		
 		Class<?> clazz = 
