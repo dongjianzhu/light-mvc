@@ -43,9 +43,9 @@ public class ErrorPlugin extends Plugin {
 	
 	
 	@Override
-    public boolean error(Request request, Response response, Result.Error error) throws Exception {
+    public boolean error(Request request, Response response, Result.ErrorResult error) throws Exception {
 		if(log.isInfoEnabled()){
-			log.error("[mvc:error] -> {}",error.getDescription(),error.getException());
+			log.error("[mvc:error] -> {}",error.getDescription(),error.getError());
 		}
 		
 	    // TODO : implement ErrorPlugin.error

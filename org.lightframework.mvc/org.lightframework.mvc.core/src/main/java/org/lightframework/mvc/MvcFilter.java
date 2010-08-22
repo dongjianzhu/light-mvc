@@ -19,6 +19,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -37,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.lightframework.mvc.HTTP.Cookie;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,11 +58,29 @@ public class MvcFilter implements javax.servlet.Filter {
 	public static final String INIT_PARAM_MODULE         = "module";
 	public static final String ATTRIBUTE_MVC_REQUEST     = Request.class.getName();
 	public static final String ATTRIBUTE_SERLVET_REQUEST = HttpServletRequest.class.getName();
-	
-	protected ModuleImpl module; //current web module
+	 
+	protected ServletContext context;      //current servlet context
+	protected ModuleImpl     module;       //current application' root module	
+	protected Application    application;  //current application
 	
 	@SuppressWarnings("unchecked")
 	public void init(FilterConfig config) throws ServletException {
+		Framework.initialize();
+		
+		context     = config.getServletContext();
+		module      = new ModuleImpl(context);
+		application = Framework.getApplication(context);
+		
+		boolean root = true;  //is root module ?
+		if(null == application){
+			log.info("[mvc] -> create mvc application");
+			application = new Application(context,module);
+		}else{
+			root = false;
+		}
+		
+		Framework.setThreadLocalApplication(application);
+		
 		Map<String, String> params = new HashMap<String, String>();
 		Enumeration<String> names  = config.getInitParameterNames();
 		while(names.hasMoreElements()){
@@ -68,14 +89,32 @@ public class MvcFilter implements javax.servlet.Filter {
 		}
 		
 		doInit(config.getServletContext(), params);
+		
+		if(!root){
+			log.info("[mvc] -> loading application configrations...");
+			loadApplicationConfiguration();
+		}else{
+			application.getChildModules().add(module);
+			log.info("[mvc] -> load a child module '{}'",module.getName());
+		}
 	}
 	
-	public void destroy() {
-		doDestroy();
+	public final void destroy() {
+		try{
+			Framework.setThreadLocalApplication(application);
+			doDestroy();
+		}finally{
+			Framework.setThreadLocalApplication(null);	
+		}
 	}
 
 	public void doFilter(final ServletRequest servletRequest,final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
-		doHandle((HttpServletRequest)servletRequest, (HttpServletResponse)servletResponse, filterChain);
+		try{
+			Framework.setThreadLocalApplication(application);
+			doHandle((HttpServletRequest)servletRequest, (HttpServletResponse)servletResponse, filterChain);
+		}finally{
+			Framework.setThreadLocalApplication(null);
+		}
 	}
 	
 	protected void doHandle(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
@@ -118,8 +157,6 @@ public class MvcFilter implements javax.servlet.Filter {
 	}
 	
 	protected void doInit(ServletContext context, Map<String,String> params){
-		module = new ModuleImpl(context);
-		
 		doConfig(params);
 		
 		//config packages
@@ -147,6 +184,50 @@ public class MvcFilter implements javax.servlet.Filter {
 	
 	protected void doInited() {
 		
+	}
+	
+	protected void loadApplicationConfiguration(){
+		//XXX : load application configuration
+		boolean loaded = false;
+		Class<?> clazz = module.findClass("home");
+		if(null != clazz){
+			try {
+	            Method method = ClassUtils.findMethodIgnoreCase(clazz, "config");
+	            if(null != method){
+	            	if(method.getParameterTypes().length > 0){
+	            		log.warn("[mvc] -> config method in class '{}' should had no parameters",clazz.getName());
+	            		return ;
+	            	}
+	            	
+	    			log.debug("[mvc] -> found config method in home controller : '{}'",clazz.getName());
+
+	    			if(Modifier.isPublic(method.getModifiers())){
+	    				log.debug("[mvc] -> call the config method to config mvc application");
+	    				try {
+	                        if(Modifier.isStatic(method.getModifiers())){
+	                        	method.invoke(null, new Object[]{});  					
+	                        }else{
+	                        	Object object = module.getControllerObject("home", clazz);
+	                        	method.invoke(object, new Object[]{});
+	                        }
+	                        loaded = true;
+                        } catch (Exception e) {
+                        	log.error("[mvc] -> error calling config method ",e);
+                        }
+	    			}else{
+	    				log.debug("[mvc] -> config method is not public,ignore it");
+	    			}
+	            }
+            } catch (IOException e) {
+            	log.warn("[mvc] -> find config method error : {}",e.getMessage(),e);
+            }
+		}
+		
+		if(!loaded){
+			log.info("[mvc] -> application configuration not loaded");
+		}else{
+			log.info("[mvc] -> application configuration was loaded");
+		}
 	}
 
 	protected void doNotHandled(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {

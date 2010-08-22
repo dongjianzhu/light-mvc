@@ -75,12 +75,12 @@ public class ExecutePlugin extends Plugin {
 				if(log.isTraceEnabled()){
 					log.trace("[action:'{}'] -> return value : '{}'",action.getName(),value);
 				}
-				return new Result.Value(value);
+				return new Result.DataResult(value);
 			}else{
 				if(log.isTraceEnabled()){
 					log.trace("[action:'{}'] -> return empty result",action.getName());
 				}
-				return new Result.Empty();
+				return new Result.EmptyResult();
 			}
 //		} catch(Return returned){
 //			if(log.isTraceEnabled()){

@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -128,16 +127,16 @@ public class Module {
 		for(String name : names){
 			for(String clazz : classes){
 				if(clazz.equalsIgnoreCase(name)){
-					if(log.isTraceEnabled()){
-						log.trace("[module:'{}'] -> found class name '{}'",getName(),clazz);
+					if(log.isDebugEnabled()){
+						log.debug("[module:'{}'] -> found class name '{}'",getName(),clazz);
 					}
 					return loadClassForName(clazz);
 				}
 			}
 		}
 		
-		if(log.isTraceEnabled()){
-			log.trace("[module:'{}'] -> no class found with the given names",getName());
+		if(log.isDebugEnabled()){
+			log.debug("[module:'{}'] -> no class found with the given names",getName());
 		}
 		
 		return null;
@@ -326,7 +325,7 @@ public class Module {
 		return classNames;
 	}
 	
-	protected List<Plugin> getPlugins(){
+	public LinkedList<Plugin> getPlugins(){
 		return plugins;
 	}
 	

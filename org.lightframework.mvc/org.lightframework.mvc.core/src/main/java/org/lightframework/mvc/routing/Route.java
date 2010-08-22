@@ -61,8 +61,7 @@ public class Route {
 			if(null == path || "".equals(path = path.trim())){
 				path = "*";
 			}else{
-				Ref<String> expr    = new Ref<String>(path);
-				
+				Ref<String> expr      = new Ref<String>(path);
 				compiled.pathParams   = findParams(expr,true);
 				compiled.actionParams = findParams(new Ref<String>(action),false);
 				compiled.pattern      = Pattern.compile(expr.value.replaceAll("\\*", "\\[^/]\\*"));

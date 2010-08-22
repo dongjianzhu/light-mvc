@@ -53,6 +53,15 @@ public abstract class Plugin {
 	protected void unload()  throws Exception{
 	    
     }
+	
+	/**
+	 * called at {@link Framework#ignore(Request)} to determine that should current request be ignored?
+	 * @param request http request
+	 * @return true if ignore current request,else return false
+	 */
+	public boolean ignore(Request request) throws Exception{
+		return false;
+	}
 
 	/**
 	 * called at framework handling a http request
@@ -138,10 +147,10 @@ public abstract class Plugin {
 	 * called at error occurs while handling a http request
 	 * @param request   http request
 	 * @param response  http response
-	 * @param error {@link org.lightframework.mvc.Result.Error} object
+	 * @param error {@link org.lightframework.mvc.Result.ErrorResult} object
 	 * @return true if this plugin handled this exception
 	 */	
-	public boolean error(Request request, Response response, Result.Error error) throws Exception{
+	public boolean error(Request request, Response response, Result.ErrorResult error) throws Exception{
 		return false;
 	}
 }

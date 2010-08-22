@@ -26,11 +26,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO : document me
+ * internal used json decoder
  * 
- * @author fenghm (live.fenghm@gmail.com)
+ * <p>
+ * copied from google project <a href="http://code.google.com/p/lite/">lite</a> 
  * 
- * @since 1.x.x
+ * @author original author : jindwcn (jindwcn@gmail.com)
+ * @author mofified by     : fenghm  (live.fenghm@gmail.com)
+ * @since 1.0.0
  */
 class JSONDecoder {
 	private static final Logger log = LoggerFactory.getLogger(JSONDecoder.class);
@@ -85,11 +88,11 @@ class JSONDecoder {
 			        || Collection.class.isAssignableFrom(type)) {
 				return (T) value;
 			} else if (Character.class == type) {
-				if (value instanceof String) {// 正常
+				if (value instanceof String) {// OK
 					value = ((String) value).charAt(0);
-				} else if (value instanceof Number) {// 异常数据
+				} else if (value instanceof Number) {// invalid data
 					value = (char) ((Number) value).intValue();
-				} else if (isPrimitive && value == null) {// 异常数据
+				} else if (isPrimitive && value == null) {// invalid data
 					value = '\0';
 				}
 				return (T) value;
@@ -117,10 +120,10 @@ class JSONDecoder {
 				}
 				return (T) result;
 			}
-			log.warn("JSON 类型异常" + type);
+			log.warn("unknow json type : {}" + type);
 			return null;
 		} catch (Exception e) {
-			log.warn("JSON 类型异常", e);
+			log.warn("unknow json type", e);
 			return null;
 		}
 	}

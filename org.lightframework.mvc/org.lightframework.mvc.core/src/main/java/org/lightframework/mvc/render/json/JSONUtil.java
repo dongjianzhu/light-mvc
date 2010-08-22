@@ -32,11 +32,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO : document me
+ * internal used json util
  * 
- * @author fenghm (live.fenghm@gmail.com)
+ * <p>
+ * copied from google project <a href="http://code.google.com/p/lite/">lite</a> 
  * 
- * @since 1.x.x
+ * @author original author : jindwcn (jindwcn@gmail.com)
+ * @author mofified by     : fenghm  (live.fenghm@gmail.com)
+ * @since 1.0.0
  */
 class JSONUtil {
 	private static final Logger log = LoggerFactory.getLogger(JSONUtil.class);
@@ -198,7 +201,7 @@ class JSONUtil {
 				return getTureType(getParameterizedType(clazz.getGenericSuperclass(), destClass, paramIndex), tps, ats);
 			}
 		}
-		throw new IllegalArgumentException("必须是Collection 子类");
+		throw new IllegalArgumentException("should be subclass of Collection");
 	}
 
 	private static Type getTureType(Type type, TypeVariable<?>[] typeVariables, Type[] actualTypes) {

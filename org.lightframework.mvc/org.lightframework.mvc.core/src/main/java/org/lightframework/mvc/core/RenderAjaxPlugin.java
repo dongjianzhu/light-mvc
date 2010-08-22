@@ -109,11 +109,11 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 		return JSON.encode(result,jsonContext);
 	}
 	
-	protected String generateErrorContent(Result.Error error){
-		if(null != error.getException()){
+	protected String generateErrorContent(Result.ErrorResult error){
+		if(null != error.getError()){
 			StringWriter writer = new StringWriter();
 			PrintWriter printer = new PrintWriter(writer);
-			error.getException().printStackTrace(printer);
+			error.getError().printStackTrace(printer);
 			return writer.toString();
 		}else{
 			return null;
@@ -123,9 +123,9 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 	protected class AjaxJsonContext extends JSONContext {
 		@Override
         public void beforeEncodeEnd(String name, Object value, StringBuilder out) {
-			if(value instanceof Result.Error && null != value){
+			if(value instanceof Result.ErrorResult && null != value){
 				//append error
-				String error = generateErrorContent((Result.Error)value);
+				String error = generateErrorContent((Result.ErrorResult)value);
 				if(null != error){
 					out.append(",");
 					writer.writeName("error", out);
