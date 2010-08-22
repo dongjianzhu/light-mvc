@@ -202,7 +202,7 @@ public class Module {
 		String controller = action.getControllerName().replaceAll("\\.", "/");
 		//guess the path : {module-view-path}/{controller}
 		String root  = getViewPath();
-		String path = root + (root.endsWith("/") ? ""  : "/") + controller;
+		String path = root + (root.endsWith("/") ? "" : "/") + controller + "/";
 		
 		URL url = findWebResource(path);
 		if(null == url && action.isHome()){
@@ -212,10 +212,14 @@ public class Module {
 			if(null == url && action.isHome() && !root.equals(getRootPath())){
 				//guess the path of home controller : {module-root-path}
 				path = getRootPath();
-			}			
-		}else{
+			}		
+			if(!path.endsWith("/")){
+				path = path + "/";
+			}
+		}else if(null == url){
 			path = null;
 		}
+		
 		return path;
 	}
 	
