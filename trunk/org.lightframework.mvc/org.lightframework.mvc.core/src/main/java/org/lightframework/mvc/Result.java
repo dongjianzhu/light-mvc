@@ -338,7 +338,7 @@ public abstract class Result {
 		
 		private String url;
 		
-		private Redirect(String url){
+		Redirect(String url){
 			this.url = url;
 		}
 
@@ -354,7 +354,7 @@ public abstract class Result {
 						Module module = request.getModule();
 						String controllerPath = module.findControllerPath(action);
 						if(null != controllerPath){
-							newUrl = controllerPath + url;
+							newUrl = controllerPath + newUrl;
 							if(log.isDebugEnabled()){
 								log.debug("[redirect] -> change the url '{}' to '{}'",url,newUrl);
 							}
@@ -375,7 +375,7 @@ public abstract class Result {
 		
 		private String path;
 		
-		private Forward(String path){
+		Forward(String path){
 			this.path = path;
 		}
 
@@ -388,7 +388,7 @@ public abstract class Result {
 					Module module = request.getModule();
 					String controllerPath = module.findControllerPath(action);
 					if(null != controllerPath){
-						newPath = controllerPath + path;
+						newPath = controllerPath + newPath;
 						if(log.isDebugEnabled()){
 							log.debug("[forward] -> change path '{}' to '{}'",path,newPath);
 						}

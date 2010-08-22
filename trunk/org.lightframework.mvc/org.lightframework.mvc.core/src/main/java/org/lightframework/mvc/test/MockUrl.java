@@ -29,7 +29,7 @@ public class MockUrl extends Url {
 	public static final String PROTOCOL       = "HTTP";
 	public static final String SERVER_NAME    = "localhost";
 	public static final int    SERVER_PORT    = 8080;
-	public static final String CONTEXT        = "/test";
+	public static final String CONTEXT        = "/mvc";
 	public static final String PATH           = "";
 	
 	protected String server;
