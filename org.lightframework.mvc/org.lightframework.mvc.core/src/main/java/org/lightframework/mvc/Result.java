@@ -343,6 +343,26 @@ public abstract class Result {
 		}
 
 		public void render(Request request, Response response) throws Exception {
+			//handle path starts with "~/" or "./" or path not starts with "/" and not contains "://"
+			if(null != url && !url.startsWith("/") && !url.contains("://")){
+				if(url.startsWith("~/")){
+					url = request.getContext() + url.substring(1);
+				}else {
+					String newUrl = url.startsWith("./") ? url.substring(2) : url;
+					Action action = request.getAction();
+					if(null != action){
+						Module module = request.getModule();
+						String controllerPath = module.findControllerPath(action);
+						if(null != controllerPath){
+							newUrl = controllerPath + url;
+							if(log.isDebugEnabled()){
+								log.debug("[redirect] -> change the url '{}' to '{}'",url,newUrl);
+							}
+							url = newUrl;
+						}
+					}					
+				}
+			}
 	        response.redirect(url);
         }
 	}
@@ -370,7 +390,7 @@ public abstract class Result {
 					if(null != controllerPath){
 						newPath = controllerPath + path;
 						if(log.isDebugEnabled()){
-							log.debug("[forward] -> auto change path '{}' to '{}'",path,newPath);
+							log.debug("[forward] -> change path '{}' to '{}'",path,newPath);
 						}
 						path = newPath;
 					}
