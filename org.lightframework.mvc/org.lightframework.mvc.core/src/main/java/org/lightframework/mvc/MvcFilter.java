@@ -19,8 +19,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.lightframework.mvc.HTTP.Cookie;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
-import org.lightframework.mvc.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,9 +90,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		doInit(config.getServletContext(), params);
 		
 		if(!root){
-			log.info("[mvc] -> loading application configrations...");
-			loadApplicationConfiguration();
-		}else{
+			//XXX : load child module of application
 			application.getChildModules().add(module);
 			log.info("[mvc] -> load a child module '{}'",module.getName());
 		}
@@ -110,6 +107,7 @@ public class MvcFilter implements javax.servlet.Filter {
 
 	public void doFilter(final ServletRequest servletRequest,final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 		try{
+			servletRequest.setCharacterEncoding(application.getEncoding());
 			Framework.setThreadLocalApplication(application);
 			doHandle((HttpServletRequest)servletRequest, (HttpServletResponse)servletResponse, filterChain);
 		}finally{
@@ -118,9 +116,6 @@ public class MvcFilter implements javax.servlet.Filter {
 	}
 	
 	protected void doHandle(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
-		//XXX : setCharacterEncoding here ?
-		servletRequest.setCharacterEncoding(module.getEncoding());
-		
 		//create mvc framework http request and response
 		Request request   = new RequestImpl((HttpServletRequest)servletRequest,module);
 		Response response = new ResponseImpl((HttpServletRequest)servletRequest,(HttpServletResponse)servletResponse,module);
@@ -186,50 +181,6 @@ public class MvcFilter implements javax.servlet.Filter {
 		
 	}
 	
-	protected void loadApplicationConfiguration(){
-		//XXX : load application configuration
-		boolean loaded = false;
-		Class<?> clazz = module.findClass("home");
-		if(null != clazz){
-			try {
-	            Method method = ClassUtils.findMethodIgnoreCase(clazz, "config");
-	            if(null != method){
-	            	if(method.getParameterTypes().length > 0){
-	            		log.warn("[mvc] -> config method in class '{}' should had no parameters",clazz.getName());
-	            		return ;
-	            	}
-	            	
-	    			log.debug("[mvc] -> found config method in home controller : '{}'",clazz.getName());
-
-	    			if(Modifier.isPublic(method.getModifiers())){
-	    				log.debug("[mvc] -> call the config method to config mvc application");
-	    				try {
-	                        if(Modifier.isStatic(method.getModifiers())){
-	                        	method.invoke(null, new Object[]{});  					
-	                        }else{
-	                        	Object object = module.getControllerObject("home", clazz);
-	                        	method.invoke(object, new Object[]{});
-	                        }
-	                        loaded = true;
-                        } catch (Exception e) {
-                        	log.error("[mvc] -> error calling config method ",e);
-                        }
-	    			}else{
-	    				log.debug("[mvc] -> config method is not public,ignore it");
-	    			}
-	            }
-            } catch (IOException e) {
-            	log.warn("[mvc] -> find config method error : {}",e.getMessage(),e);
-            }
-		}
-		
-		if(!loaded){
-			log.info("[mvc] -> application configuration not loaded");
-		}else{
-			log.info("[mvc] -> application configuration was loaded");
-		}
-	}
-
 	protected void doNotHandled(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
 		((FilterChain)context).doFilter(servletRequest, servletResponse);
 	}
@@ -250,6 +201,15 @@ public class MvcFilter implements javax.servlet.Filter {
 		}
 		
 		@Override
+        protected URL findWebResource(String path) {
+	        try {
+	            return context.getResource(path);
+            } catch (MalformedURLException e) {
+            	throw new MvcException("error servletContext.getResource('" + path + "')",e);
+            }
+        }
+
+		@Override
 		@SuppressWarnings("unchecked")
         protected Collection<String> findWebResources(String path) {
 			if(!path.endsWith("/")){
@@ -257,7 +217,6 @@ public class MvcFilter implements javax.servlet.Filter {
 			}
 			return context.getResourcePaths(path);
         }
-		
 	}
 
 	/**

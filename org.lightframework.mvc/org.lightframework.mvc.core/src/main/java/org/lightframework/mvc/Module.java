@@ -16,6 +16,8 @@
 package org.lightframework.mvc;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.lightframework.mvc.clazz.ClassFinder;
+import org.lightframework.mvc.clazz.ClassUtils;
 import org.lightframework.mvc.clazz.ClazzLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +45,7 @@ public class Module {
     
     private static final Logger log = LoggerFactory.getLogger(Module.class);
     
-    public static final String DEFAULT_NAME     = "default";
+    public static final String DEFAULT_NAME     = "root";
     public static final String DEFAULT_ENCODING = "UTF-8";
     public static final String DEFAULT_PACKAGE  = "app";
     public static final String DEFAULT_ROOTPATH = "/";
@@ -66,7 +69,7 @@ public class Module {
     
     final void start(){
     	if(!started){
-    		//TODO : load module plugins
+    		config();
     		started = true;
     	}else{
     		throw new MvcException("module '" + getName() + "' aleady started");
@@ -192,6 +195,29 @@ public class Module {
         return clazz;
 	}
 	
+	/**
+	 * find the controller's path(the folder contains action's view),if not found,return null
+	 */
+	public String findControllerPath(Action action){
+		String controller = action.getControllerName().replaceAll("\\.", "/");
+		//guess the path : {module-view-path}/{controller}
+		String root  = getViewPath();
+		String path = root + (root.endsWith("/") ? ""  : "/") + controller;
+		
+		URL url = findWebResource(path);
+		if(null == path && action.isHome()){
+			//guess the path of home controller : {module-view-path}
+			path = root;
+			url = findWebResource(path);
+			if(null == url && action.isHome() && !root.equals(getRootPath())){
+				//guess the path of home controller : {module-root-path}
+				root = getRootPath();
+				path = root.endsWith("/") ? root.substring(0,root.length() - 1) : root;
+			}			
+		}
+		return path;
+	}
+	
 	public View findView(Action action){
 		String controller = action.getControllerName().replaceAll("\\.", "/");
 		String actionName = action.getSimpleName();
@@ -220,6 +246,50 @@ public class Module {
 		}
 		
 		return null;
+	}
+	
+	protected void config(){
+		//XXX : load module configuration
+		boolean loaded = false;
+		Class<?> clazz = findClass(packagee + ".home");
+		if(null != clazz){
+			try {
+	            Method method = ClassUtils.findMethodIgnoreCase(clazz, "config");
+	            if(null != method){
+	            	if(method.getParameterTypes().length > 0){
+	            		log.warn("[module:'{}'] -> config method in class '{}' should had no parameters",getName(),clazz.getName());
+	            		return ;
+	            	}
+	            	
+	    			log.debug("[module:'{}'] -> found config method in home controller : '{}'",getName(),clazz.getName());
+
+	    			if(Modifier.isPublic(method.getModifiers())){
+	    				log.debug("[module:'{}'] -> call the config method to config module",getName());
+	    				try {
+	                        if(Modifier.isStatic(method.getModifiers())){
+	                        	method.invoke(null, new Object[]{});  					
+	                        }else{
+	                        	Object object = getControllerObject("home", clazz);
+	                        	method.invoke(object, new Object[]{});
+	                        }
+	                        loaded = true;
+                        } catch (Exception e) {
+                        	log.error("[module:'{}'] -> error calling config method ",getName(),e);
+                        }
+	    			}else{
+	    				log.debug("[module:'{}'] -> config method is not public,ignore it",getName());
+	    			}
+	            }
+            } catch (IOException e) {
+            	log.warn("[module:'{}'] -> find config method error",getName(),e);
+            }
+		}
+		
+		if(!loaded){
+			log.info("[module:'{}'] -> configuration not found",getName());
+		}else{
+			log.info("[module:'{}'] -> configuration was loaded",getName());
+		}		
 	}
 	
 	protected String findView(String path,String controller,String action){
@@ -286,6 +356,11 @@ public class Module {
 				}
 			}
 		}
+		return null;
+	}
+	
+	protected URL findWebResource(String path){
+		//XXX: implement findWebResource
 		return null;
 	}
 	

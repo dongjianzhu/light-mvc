@@ -20,6 +20,8 @@ import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.config.Ignore;
 import org.lightframework.mvc.config.Name;
 import org.lightframework.mvc.render.json.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -29,6 +31,7 @@ import org.lightframework.mvc.render.json.JSON;
  * @since 1.0.0
  */
 public abstract class Result {
+	private static final Logger log = LoggerFactory.getLogger(Result.class);
 	private static final ThreadLocal<Result> context = new ThreadLocal<Result>();
 	
 	//------public static constatns--------
@@ -357,6 +360,23 @@ public abstract class Result {
 		}
 
 		public void render(Request request, Response response) throws Exception{
+			if(null != path && !path.startsWith("/")){
+				String newPath = path.startsWith("./") ? path.substring(2) : path;
+				
+				Action action = request.getAction();
+				if(null != action){
+					Module module = request.getModule();
+					String controllerPath = module.findControllerPath(action);
+					if(null != controllerPath){
+						newPath = controllerPath + path;
+						if(log.isDebugEnabled()){
+							log.debug("[forward] -> auto change path '{}' to '{}'",path,newPath);
+						}
+						path = newPath;
+					}
+				}
+			}
+			
 			response.forward(path);
         }
 	}

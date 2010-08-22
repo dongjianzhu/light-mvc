@@ -49,11 +49,11 @@ public class RenderViewPlugin extends Plugin {
 		
 		View view = findView(request, response, result);
 		
-		if(log.isTraceEnabled()){
+		if(log.isDebugEnabled()){
 			if(null == view){
-				log.trace("[action:'{}'] -> view not found",action);
+				log.debug("[action:'{}'] -> view not found",action);
 			}else{
-				log.trace("[action:'{}'] -> found view '{}'",action,view.getName());
+				log.debug("[action:'{}'] -> found view '{}'",action,view.getName());
 			}
 		}
 		
@@ -77,6 +77,8 @@ public class RenderViewPlugin extends Plugin {
 			if(log.isTraceEnabled()){
 				log.trace("[action:'{}'] -> view '{}' rendered!",action,view.getName());
 			}
+			
+			return true;
 		}
 		
 	    return false;
