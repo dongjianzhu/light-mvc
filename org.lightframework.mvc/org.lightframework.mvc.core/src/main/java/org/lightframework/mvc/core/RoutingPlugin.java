@@ -18,12 +18,12 @@ package org.lightframework.mvc.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Assert;
 import org.lightframework.mvc.Plugin;
+import org.lightframework.mvc.Routes;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.routing.Match;
@@ -53,8 +53,6 @@ public class RoutingPlugin extends Plugin {
 		DEFAULT_ROUTES.add(Route.compile("*", "/{ActionOrController}",   "{ActionOrController}.index,home.{ActionOrController}"));
 		DEFAULT_ROUTES.add(Route.compile("*", "/{controller*}/{action}", "{controller}.{action}"));
 	}
-	
-	protected List<Route> routes = new ArrayList<Route>();
 	
 	public Action[] route(Request request, Response response) throws Exception{
 		String method = request.getMethod();
@@ -146,6 +144,6 @@ public class RoutingPlugin extends Plugin {
 	}
 	
 	public Collection<Route> routes(){
-		return routes;
+		return Routes.table();
 	}
 }

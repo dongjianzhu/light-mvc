@@ -15,14 +15,43 @@
  */
 package org.lightframework.mvc;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.lightframework.mvc.routing.Route;
+
 /**
- * TODO : document me
+ * the route table define routing rules mapping a request path to an action
  *
  * @author author (author@gmail.com)
  * @since 1.x.x
  */
 public final class Routes {
+	
+	private static final LinkedList<Route> table = new LinkedList<Route>();
 
+	/**
+	 * add a routing rule to route table which match all http methods
+	 * @see #add(String, String, String) 
+	 */
+	public static void add(String path,String action){
+		table.add(Route.compile("*", path, action));
+	}
 	
+	/**
+	 * add a routing rule to route table
+	 * @param method http method,ignore case,the value "*" matches all methods 
+	 * @param path   request path starts '/' without context path and query string
+	 * @param action the action name with controller,such as 'user.list'
+	 */
+	public static void add(String method,String path,String action){
+		table.add(Route.compile(method, path, action));
+	}
 	
+	/**
+	 * @return the routing rules table
+	 */
+	public static List<Route> table(){
+		return table;
+	}
 }
