@@ -28,11 +28,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Application {
 	private static final String DEFAULT_APPLICATION_NAME = "default";
 
-	String                      name       = DEFAULT_APPLICATION_NAME;
-	private Object              context    = new Object();
-	private Module              root       = null;
-	private LinkedList<Module>  modules    = new LinkedList<Module>();
-	private Map<Object, Object> attributes = new ConcurrentHashMap<Object, Object>();
+	protected String              name       = DEFAULT_APPLICATION_NAME;
+	protected String              encoding   = "UTF-8";
+	
+	private   Object              context    = new Object();
+	private   Module              root       = null;
+	private   LinkedList<Module>  modules    = new LinkedList<Module>();
+	private   Map<Object, Object> attributes = new ConcurrentHashMap<Object, Object>();
 	
 	public Application(){
 		
@@ -46,6 +48,18 @@ public class Application {
 	public String getName() {
 		return name;
 	}
+	
+	public void setName(String name) {
+    	this.name = name;
+    }
+	
+	public String getEncoding() {
+    	return encoding;
+    }
+
+	public void setEncoding(String encoding) {
+    	this.encoding = encoding;
+    }
 
 	/**@return External Applicatoin Context Object,such as {@link javax.servlet.ServletContext} */
 	public Object getContext() {
