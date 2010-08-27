@@ -4,7 +4,7 @@
 <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
 <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
 <wb-resource deploy-path="/" source-path="/WebRoot"/>
-<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/org.lightframework.mvc.core/org.lightframework.mvc.core">
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/light-mvc-core/light-mvc-core">
 <dependency-type>uses</dependency-type>
 </dependent-module>
 <property name="java-output-path" value="/org.lightframework.mvc.webapp/WebRoot/WEB-INF/classes"/>
