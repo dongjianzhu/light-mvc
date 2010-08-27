@@ -42,7 +42,6 @@ public class MvcServlet extends MvcFilter implements Servlet {
     private static final long serialVersionUID = -5501605125611318665L;
     
     private ServletConfig  config;
-    private ServletContext context;
 
     @SuppressWarnings("unchecked")
 	public void init(ServletConfig config) throws ServletException {
