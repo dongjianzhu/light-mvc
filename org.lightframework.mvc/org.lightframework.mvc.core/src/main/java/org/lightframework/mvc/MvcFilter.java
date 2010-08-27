@@ -64,21 +64,7 @@ public class MvcFilter implements javax.servlet.Filter {
 	
 	@SuppressWarnings("unchecked")
 	public void init(FilterConfig config) throws ServletException {
-		Framework.initialize();
-		
-		context     = config.getServletContext();
-		module      = new ModuleImpl(context);
-		application = Framework.getApplication(context);
-		
-		boolean root = true;  //is root module ?
-		if(null == application){
-			log.info("[mvc] -> create mvc application");
-			application = new Application(context,module);
-		}else{
-			root = false;
-		}
-		
-		Framework.setThreadLocalApplication(application);
+		context = config.getServletContext();
 		
 		Map<String, String> params = new HashMap<String, String>();
 		Enumeration<String> names  = config.getInitParameterNames();
@@ -88,12 +74,6 @@ public class MvcFilter implements javax.servlet.Filter {
 		}
 		
 		doInit(config.getServletContext(), params);
-		
-		if(!root){
-			//XXX : load child module of application
-			application.getChildModules().add(module);
-			log.info("[mvc] -> load a child module '{}'",module.getName());
-		}
 	}
 	
 	public final void destroy() {
@@ -151,7 +131,21 @@ public class MvcFilter implements javax.servlet.Filter {
 		}
 	}
 	
-	protected void doInit(ServletContext context, Map<String,String> params){
+	protected final void doInit(ServletContext context, Map<String,String> params){
+		Framework.initialize();
+		module      = new ModuleImpl(context);
+		application = Framework.getApplication(context);
+		
+		boolean root = true;  //is root module ?
+		if(null == application){
+			log.info("[mvc] -> create mvc application");
+			application = new Application(context,module);
+		}else{
+			root = false;
+		}
+		
+		Framework.setThreadLocalApplication(application);		
+		
 		doConfig(params);
 		
 		//config packages
@@ -171,6 +165,12 @@ public class MvcFilter implements javax.servlet.Filter {
 		Framework.start(module);
 		
 		doInited();
+		
+		if(!root){
+			//XXX : load child module of application
+			application.getChildModules().add(module);
+			log.info("[mvc] -> load a child module '{}'",module.getName());
+		}		
 	}
 	
 	protected void doConfig(Map<String, String> params){
