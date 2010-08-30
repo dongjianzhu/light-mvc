@@ -38,9 +38,6 @@
           <id>bingo-maven-repository-snapshots</id>
           <name>Bingo Maven Snapshot Repository</name>
           <url>http://maven.bingosoft.net/content/repositories/snapshots/</url>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
         </snapshotRepository>
     </distributionManagement>
         
