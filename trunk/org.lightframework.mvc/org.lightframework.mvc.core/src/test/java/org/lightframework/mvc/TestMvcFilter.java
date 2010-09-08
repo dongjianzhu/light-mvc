@@ -23,6 +23,9 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
 
@@ -32,6 +35,7 @@ import com.mockrunner.mock.web.MockFilterChain;
 import com.mockrunner.mock.web.MockFilterConfig;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
+import com.mockrunner.mock.web.MockHttpSession;
 import com.mockrunner.mock.web.MockServletContext;
 
 /**
@@ -51,6 +55,7 @@ public class TestMvcFilter extends TestCase {
 	private MockServletContext      context;
 	private MockHttpServletRequest  request;
 	private MockHttpServletResponse response;
+	private MockHttpSession         session;
 	
 	@Override
     protected void setUp() throws Exception {
@@ -60,9 +65,11 @@ public class TestMvcFilter extends TestCase {
 		context  = new MockServletContext();
 		request  = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
+		session  = new MockHttpSession();
 		
 		config.setupServletContext(context);
 		request.setContextPath(CONTEXT_PATH);
+		request.setSession(session);
     }
 
 	public void testInit() throws Exception{
@@ -149,7 +156,13 @@ public class TestMvcFilter extends TestCase {
 			
 			Request req = (Request)request.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST);
 			assertNotNull(req);
+			assertNotNull(req.getApplication());
+			assertNotNull(req.getSession());
+			assertNotNull(req.getResponse());
 			assertNotNull(req.getModule());
+			assertTrue(req.getExternalRequest() instanceof HttpServletRequest);
+			assertTrue(req.getResponse().getExternalResponse() instanceof HttpServletResponse);
+			assertTrue(req.getSession().getExternalSession() instanceof HttpSession);
 			assertNotNull(req.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST));
 			assertEquals("a=b",req.getQueryString());
 			assertEquals("/hello",req.getPath());
