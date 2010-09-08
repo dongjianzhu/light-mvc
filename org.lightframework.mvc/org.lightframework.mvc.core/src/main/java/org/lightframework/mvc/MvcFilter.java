@@ -201,7 +201,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		
 		private final ServletContext context;
 		
-		private ModuleImpl(ServletContext context){
+		ModuleImpl(ServletContext context){
 			this.context = context;
 		}
 		
@@ -230,7 +230,7 @@ public class MvcFilter implements javax.servlet.Filter {
 	public static final class RequestImpl extends Request {
 		private final HttpServletRequest request;
 		
-		private RequestImpl(HttpServletRequest request,Application application, Module module){
+		RequestImpl(HttpServletRequest request,Application application, Module module){
 			this.request         = request;
 			this.module  		 = module;
 			this.application     = application;
@@ -364,7 +364,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		private final HttpServletRequest  servletRequest;
         private final HttpServletResponse servletResponse;
 		
-		private ResponseImpl(HttpServletRequest request,HttpServletResponse response,Module module){
+		ResponseImpl(HttpServletRequest request,HttpServletResponse response,Module module){
 			this.servletRequest  = request;
 			this.servletResponse = response;
 			this.externalResponse = response;
@@ -435,7 +435,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		
 		private final HttpSession session;
 		
-		private SessionImpl(HttpSession session){
+		SessionImpl(HttpSession session){
 			this.session         = session;
 			this.externalSession = session;
 		}

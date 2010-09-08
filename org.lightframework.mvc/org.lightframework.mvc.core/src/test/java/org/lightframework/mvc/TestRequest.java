@@ -17,8 +17,7 @@ package org.lightframework.mvc;
 
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.test.MockRequest;
-
-import junit.framework.TestCase;
+import org.lightframework.mvc.test.MvcTestCase;
 
 /**
  * Test Case of {@link Request}
@@ -27,7 +26,7 @@ import junit.framework.TestCase;
  *
  * @since 1.0.0
  */
-public class TestRequest extends TestCase {
+public class TestRequest extends MvcTestCase {
 
 	public void testIsAjax(){
 		MockRequest request = new MockRequest();
@@ -36,5 +35,13 @@ public class TestRequest extends TestCase {
 
 		request.setHeader(HTTP.HEADER_NAME_AJAX_REQUEST, HTTP.HEADER_VALUE_AJAX_REQUEST);
 		assertTrue(request.isAjax());
+	}
+	
+	public void testBase() throws Exception{
+		execute();
+		Request request = Request.current();
+		assertNotNull(request);
+		assertNotNull(request.getResponse());
+		assertNotNull(request.getSession());
 	}
 }
