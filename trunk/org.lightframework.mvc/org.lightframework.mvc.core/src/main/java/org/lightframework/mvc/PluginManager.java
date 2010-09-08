@@ -56,6 +56,6 @@ public final class PluginManager {
 	}
 	
 	private static LinkedList<Plugin> getPlugins(){
-		return Framework.getApplication().getRootModule().getPlugins();
+		return Application.current().getRootModule().getPlugins();
 	}
 }

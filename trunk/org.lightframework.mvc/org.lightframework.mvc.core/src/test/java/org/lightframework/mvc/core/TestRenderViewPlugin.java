@@ -15,7 +15,7 @@
  */
 package org.lightframework.mvc.core;
 
-import org.lightframework.mvc.test.JSONResult;
+import org.lightframework.mvc.test.MockJSONResult;
 import org.lightframework.mvc.test.MvcTestCase;
 
 /**
@@ -36,7 +36,7 @@ public class TestRenderViewPlugin extends MvcTestCase {
 
 	public void testHomeViewNotFound() throws Exception {
 		execute();
-		JSONResult result = response.getJSONResult();
+		MockJSONResult result = response.getJSONResult();
 		assertNotNull(result);
 	}
 	

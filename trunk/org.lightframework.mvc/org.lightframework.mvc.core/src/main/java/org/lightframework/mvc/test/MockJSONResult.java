@@ -26,19 +26,19 @@ import org.lightframework.mvc.render.json.JSONObject;
  *
  * @since 1.0.0
  */
-public final class JSONResult {
+public final class MockJSONResult {
 	private int    code;
 	private String status;
 	private String error;
 	private String value;
 	private String description;
 	
-	private JSONResult() {
+	private MockJSONResult() {
 
 	}
 	
-	public static JSONResult parse(String content) throws Exception{
-		JSONResult result = new JSONResult();
+	public static MockJSONResult parse(String content) throws Exception{
+		MockJSONResult result = new MockJSONResult();
 		JSONObject json   = JSON.decode(content);
 
 		

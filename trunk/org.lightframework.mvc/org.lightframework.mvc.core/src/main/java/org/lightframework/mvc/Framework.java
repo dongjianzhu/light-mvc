@@ -16,8 +16,6 @@
 package org.lightframework.mvc;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
@@ -35,15 +33,6 @@ import org.slf4j.LoggerFactory;
 public class Framework {
 	private static final Logger log = LoggerFactory.getLogger(Framework.class);
 	
-	/** {@link ThreadLocal} to store context {@link Application} object */
-	private static final ThreadLocal<Application> applicationThreadLocal = new ThreadLocal<Application>();
-
-	/** store all the {@link Application}s managed by current mvc framwork  */
-	private static final Map<Object, Application> applications = new ConcurrentHashMap<Object, Application>();
-	
-	/** default instance of {@link Application} */
-	private static final Application defaultApplication = new Application();
-	
 	/** represents was framework initialized ?*/
 	private static boolean initialized = false;
 	
@@ -52,21 +41,6 @@ public class Framework {
 	
 	static {
 		
-	}
-	
-	/**
-	 * @return current {@link Application}
-	 */
-	public static Application getApplication(){
-		Application application = applicationThreadLocal.get();
-		if(null == application){
-			return defaultApplication;
-		}
-		return application;
-	}
-	
-	public static Application getApplication(Object context){
-		return applications.get(context);
 	}
 	
 	protected static void initialize(){
@@ -112,8 +86,8 @@ public class Framework {
 			Result.reset();
 			Request.reset();
 			
-			//remove current applications
-			applications.remove(getApplication().getContext());			
+			//remove application
+			Application.removeCurrent();
 		}
 	}
 	
@@ -257,13 +231,6 @@ public class Framework {
 			return false;
 		}else{
 			return true;
-		}
-	}
-	
-	static void setThreadLocalApplication(Application application){
-		applicationThreadLocal.set(application);
-		if(null != application){
-			applications.put(application.getContext(),application);
 		}
 	}
 	

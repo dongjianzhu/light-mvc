@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author fenghm (live.fenghm@gmail.com)
  */
-public class TestFramework extends TestCase {
+public class TestApplication extends TestCase {
 
-	private static final Logger log = LoggerFactory.getLogger(TestFramework.class);
+	private static final Logger log = LoggerFactory.getLogger(TestApplication.class);
 	
 	public void testGetVersion(){
 		log.info("mvc version:{}",Version.version_name);
@@ -36,19 +36,19 @@ public class TestFramework extends TestCase {
 	}
 	
 	public void testGetApplication(){
-		assertNotNull(Framework.getApplication());
+		assertNotNull(Application.current());
 		
 		Object context = new Object();
 		Application application = new Application(context,new MockModule());
 		assertNotNull(application.getContext());
 		assertNotNull(application.getRootModule());
-		Framework.setThreadLocalApplication(application);
+		Application.setCurrent(application);
 		
-		assertNotNull(Framework.getApplication());
-		assertEquals(application, Framework.getApplication());
-		assertEquals(application, Framework.getApplication(context));
+		assertNotNull(Application.current());
+		assertEquals(application, Application.current());
+		assertEquals(application, Application.currentOf(context));
 		
-		Framework.setThreadLocalApplication(null);
-		assertNotSame(application, Framework.getApplication());
+		Application.setCurrent(null);
+		assertNotSame(application, Application.current());
 	}
 }

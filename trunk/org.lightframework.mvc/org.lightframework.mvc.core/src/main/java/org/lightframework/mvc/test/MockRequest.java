@@ -17,6 +17,7 @@ package org.lightframework.mvc.test;
 
 import java.io.InputStream;
 
+import org.lightframework.mvc.Application;
 import org.lightframework.mvc.HTTP;
 import org.lightframework.mvc.Module;
 import org.lightframework.mvc.HTTP.Request;
@@ -45,8 +46,9 @@ public class MockRequest extends Request {
 		this.contentType   = CONTENT_TYPE;
 	}
 	
-	public MockRequest(Module module){
+	public MockRequest(Application application, Module module){
 		this();
+		this.application = application;
 		this.module = module;
 	}
 	
@@ -77,6 +79,15 @@ public class MockRequest extends Request {
 		}else{
 			removeHeader(HTTP.HEADER_NAME_AJAX_REQUEST);
 		}
+	}
+	
+	public void setResponse(MockResponse response){
+		response.setRequest(this);
+		this.response = response;
+	}
+	
+	public void setSession(MockSession session){
+		this.session = session;
 	}
 	
 	public void setContent(String content){
