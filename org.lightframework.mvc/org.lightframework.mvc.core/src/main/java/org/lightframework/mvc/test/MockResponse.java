@@ -36,6 +36,18 @@ public class MockResponse extends Response {
 	protected String forwardPath;
 	protected String redirectUrl;
 	protected ByteArrayOutputStream bytesOut;
+	
+	public MockResponse(){
+		
+	}
+	
+	public MockResponse(MockRequest request){
+		this.setRequest(request);
+	}
+	
+	public void setRequest(MockRequest request){
+		this.request = request;
+	}
 
 	public String getContent() {
 		if (null == bytesOut) {
@@ -48,11 +60,11 @@ public class MockResponse extends Response {
 		}
 	}
 
-	public JSONResult getJSONResult() {
+	public MockJSONResult getJSONResult() {
 		String content = getContent();
 		if (null != content) {
 			try {
-				return JSONResult.parse(content);
+				return MockJSONResult.parse(content);
 			} catch (Exception e) {
 				log.info("content is not json format : {}", e.getMessage());
 			}

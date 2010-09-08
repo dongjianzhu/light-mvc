@@ -35,12 +35,15 @@ public abstract class MvcTestCase extends TestCase {
 	private static boolean javassisted;
 	private static boolean setUpOnce;
 
-	protected MockModule    module;
-	protected MockRequest   request;
-	protected MockResponse  response;
-	protected boolean       ignored;
-	protected boolean       managed;
-	protected String        packagee;
+	protected static MockApplication application;
+	
+	protected MockModule      module;
+	protected MockSession     session;
+	protected MockRequest     request;
+	protected MockResponse    response;
+	protected boolean         ignored;
+	protected boolean         managed;
+	protected String          packagee;
 	
 	@Override
     protected final void setUp() throws Exception {
@@ -49,18 +52,33 @@ public abstract class MvcTestCase extends TestCase {
 		
 		this.packagee = this.getClass().getPackage().getName();
 		
-		module = new MockModule();
+		if(null == module){
+			module = new MockModule();
+		}
+		
+		if(null == session){
+			session = new MockSession();
+		}
+		
+		if(null == application){
+			application = new MockApplication(new Object(),module);
+		}
 		
 		reset();
 		
-		if(!setUpOnce){
-			setUpOnlyOnce();
-			setUpOnce = true;
+		MockApplication.mockSetCurrent(application);		
+		try{
+			if(!setUpOnce){
+				setUpOnlyOnce();
+				setUpOnce = true;
+			}
+			
+		    setUpEveryTest();
+		    
+		    MockFramework.mockStart(module);
+		}finally{
+			MockApplication.mockSetCurrent(null);
 		}
-		
-	    setUpEveryTest();
-	    
-	    MockFramework.mockStart(module);
     }
 	
 	@Override
@@ -69,6 +87,7 @@ public abstract class MvcTestCase extends TestCase {
 		
 		MockFramework.mockHandleFinally(request, response);
 		MockFramework.mockStop(module);
+		MockApplication.mockSetCurrent(null);
 		
 		log.info("============================END:{}===============================",getName());
 		log.info("EOT");//add blank line for viewing log better. (EOT : END OF TEST)
@@ -92,6 +111,7 @@ public abstract class MvcTestCase extends TestCase {
 	}
 	
 	protected final Result execute() throws Exception {
+		MockApplication.mockSetCurrent(application);
 		if(MockFramework.mockIgnore(request)){
 			ignored = true;
 			return null;
@@ -112,8 +132,11 @@ public abstract class MvcTestCase extends TestCase {
 	protected final void reset (){
 		managed   = false;
 		ignored   = false;
-		request   = new MockRequest(module);
+		request   = new MockRequest(application,module);
 		response  = new MockResponse();
+		
+		request.setResponse(response);
+		request.setSession(session);
 	}
 	
 	protected final Class<?> loadClass(String className) throws Exception {

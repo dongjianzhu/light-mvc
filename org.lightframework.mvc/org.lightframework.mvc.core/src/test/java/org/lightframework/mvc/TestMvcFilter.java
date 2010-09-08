@@ -70,6 +70,11 @@ public class TestMvcFilter extends TestCase {
 		try{
 			filter.init(config);
 			
+			Application application = Application.current();
+			assertNotNull(application);
+			assertNotNull(application.getContext());
+			assertEquals(context, application.getContext());
+			
 			Module module = filter.module;
 			assertNotNull(module);
 			assertTrue(module.isStarted());

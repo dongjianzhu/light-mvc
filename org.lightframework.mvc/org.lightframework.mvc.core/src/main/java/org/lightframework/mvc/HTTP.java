@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * defines http request and response 
@@ -171,18 +172,21 @@ public final class HTTP {
 	public static class Request {
 	    protected static final InheritableThreadLocal<Request> current = new InheritableThreadLocal<Request>();
 
-	    protected Url      url;
-	    protected String   context = "";
-	    protected String   path    = "";
-	    protected String   remoteAddress;
-	    protected String   contentType;
-	    protected String   method;
-	    protected boolean  secure;
-	    protected String   content;
-	    protected Response response;
-	    protected Module   module;
-	    protected Action   action;	    
-	    protected Result   result;
+	    protected Url         url;
+	    protected String      context = "";
+	    protected String      path    = "";
+	    protected String      remoteAddress;
+	    protected String      contentType;
+	    protected String      method;
+	    protected boolean     secure;
+	    protected String      content;
+	    protected Session     session;
+	    protected Response    response;
+	    protected Module      module;
+	    protected Action      action;	    
+	    protected Result      result;
+	    protected Object      externalRequest;
+	    protected Application application;
 
 	    protected InputStream           inputStream;
 	    protected UserAgent             userAgent;
@@ -374,6 +378,10 @@ public final class HTTP {
 			return userAgent;
 		}
 
+		public Session getSession() {
+        	return session;
+        }
+
 		public Module getModule() {
 	    	return module;
 	    }
@@ -386,9 +394,20 @@ public final class HTTP {
 			return result;
 		}
 		
+		public Application getApplication() {
+        	return application;
+        }
+
 		public Response getResponse(){
 			return response;
 		}
+
+		/**
+		 * @return the real http request object such as {@link javax.servlet.http.HttpServletRequest} when mvc running in a servlet container.
+		 */
+		public Object getExternalRequest() {
+        	return externalRequest;
+        }
 	}
 	
 	/**
@@ -400,7 +419,9 @@ public final class HTTP {
 	    protected int          status = 200;
 	    protected String       encoding = Module.DEFAULT_ENCODING;
 	    protected String       contentType;
+	    protected Request      request;
 	    protected OutputStream out;
+	    protected Object       externalResponse;
 	    
 	    protected Map<String, String> headers;
 	    protected Map<String, Cookie> cookies;
@@ -477,7 +498,9 @@ public final class HTTP {
 	    }
 		
 		public final void redirect(String url){
-			//TODO : parse url
+			if(null != url && url.startsWith("~/")){
+				url = request.getContext() + url.substring(1);
+			}
 			redirectTo(url);
 		}
 		
@@ -504,6 +527,13 @@ public final class HTTP {
 			return out;
 		}
 		
+		/**
+		 * @return the real http response object such as {@link javax.servlet.http.HttpServletResponse} when mvc running in a servlet container.
+		 */
+		public Object getExternalResponse() {
+        	return externalResponse;
+        }
+
 		protected void forwardTo(String forwardPath){
 			
 		}
@@ -512,4 +542,35 @@ public final class HTTP {
 			
 		}
 	}	
+	
+	/**
+	 * http session
+	 * @since 1.0.0
+	 */
+	public static class Session {
+		
+		protected String id;
+		protected Object externalSession;
+		protected Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
+		
+		public String getId(){
+			return id;
+		}
+		
+		public void setAttribute(String key,Object value){
+			attributes.put(key, value);
+		}
+		
+		public Object getAttribute(String key){
+			return attributes.get(key);
+		}
+		
+		public void removeAttribute(String key){
+			attributes.remove(key);
+		}
+
+		public Object getExternalSession() {
+        	return externalSession;
+        }
+	}
 }

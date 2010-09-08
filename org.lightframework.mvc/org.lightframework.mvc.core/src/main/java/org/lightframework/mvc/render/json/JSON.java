@@ -23,7 +23,7 @@ import org.lightframework.mvc.render.IRenderContext;
 import org.lightframework.mvc.render.DataRender;
 
 /**
- * json encoder
+ * json encoder and decoder
  * 
  * @author fenghm (live.fenghm@gmail.com)
  * 

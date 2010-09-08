@@ -35,10 +35,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.lightframework.mvc.HTTP.Cookie;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.HTTP.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,29 +80,31 @@ public class MvcFilter implements javax.servlet.Filter {
 	
 	public final void destroy() {
 		try{
-			Framework.setThreadLocalApplication(application);
+			Application.setCurrent(application);
 			doDestroy();
 		}finally{
-			Framework.setThreadLocalApplication(null);	
+			Application.setCurrent(null);	
 		}
 	}
 
 	public void doFilter(final ServletRequest servletRequest,final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
-		try{
-			servletRequest.setCharacterEncoding(application.getEncoding());
-			Framework.setThreadLocalApplication(application);
-			doHandle((HttpServletRequest)servletRequest, (HttpServletResponse)servletResponse, filterChain);
-		}finally{
-			Framework.setThreadLocalApplication(null);
-		}
+		doHandle((HttpServletRequest)servletRequest, (HttpServletResponse)servletResponse, filterChain);
 	}
 	
 	protected void doHandle(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
-		//create mvc framework http request and response
-		Request request   = new RequestImpl((HttpServletRequest)servletRequest,module);
-		Response response = new ResponseImpl((HttpServletRequest)servletRequest,(HttpServletResponse)servletResponse,module);
-		
 		try{
+			servletRequest.setCharacterEncoding(application.getEncoding());
+			Application.setCurrent(application);
+			
+			//create mvc framework http request and response
+			RequestImpl  request  = new RequestImpl((HttpServletRequest)servletRequest,application,module);
+			ResponseImpl response = new ResponseImpl((HttpServletRequest)servletRequest,(HttpServletResponse)servletResponse,module);
+			SessionImpl  session  = new SessionImpl(servletRequest.getSession(true));
+			
+			request.response = response;
+			request.session  = session;
+			response.request = request;
+			
 			servletRequest.setAttribute(ATTRIBUTE_MVC_REQUEST, request);
 			servletRequest.setAttribute(ATTRIBUTE_SERLVET_REQUEST, servletRequest);
 			
@@ -128,13 +132,14 @@ public class MvcFilter implements javax.servlet.Filter {
 			}
 		}finally{
 			servletRequest.removeAttribute(ATTRIBUTE_SERLVET_REQUEST);
+			Application.setCurrent(null);
 		}
 	}
 	
 	protected final void doInit(ServletContext context, Map<String,String> params){
 		Framework.initialize();
 		module      = new ModuleImpl(context);
-		application = Framework.getApplication(context);
+		application = Application.currentOf(context);
 		
 		boolean root = true;  //is root module ?
 		if(null == application){
@@ -144,7 +149,7 @@ public class MvcFilter implements javax.servlet.Filter {
 			root = false;
 		}
 		
-		Framework.setThreadLocalApplication(application);		
+		Application.setCurrent(application);		
 		
 		doConfig(params);
 		
@@ -170,7 +175,7 @@ public class MvcFilter implements javax.servlet.Filter {
 			//XXX : load child module of application
 			application.getChildModules().add(module);
 			log.info("[mvc] -> load a child module '{}'",module.getName());
-		}		
+		}
 	}
 	
 	protected void doConfig(Map<String, String> params){
@@ -225,9 +230,11 @@ public class MvcFilter implements javax.servlet.Filter {
 	public static final class RequestImpl extends Request {
 		private final HttpServletRequest request;
 		
-		private RequestImpl(HttpServletRequest request,Module module){
+		private RequestImpl(HttpServletRequest request,Application application, Module module){
 			this.request         = request;
 			this.module  		 = module;
+			this.application     = application;
+			this.externalRequest = request;
 			this.url             = new HTTP.Url();
 			this.url.port        = request.getServerPort(); //TODO : is server port right ?
 			this.url.protocol    = request.getProtocol();
@@ -354,25 +361,26 @@ public class MvcFilter implements javax.servlet.Filter {
 	 * @since 1.0.0
 	 */
 	public final class ResponseImpl extends Response{
-		private final HttpServletRequest  request;
-        private final HttpServletResponse response;
+		private final HttpServletRequest  servletRequest;
+        private final HttpServletResponse servletResponse;
 		
 		private ResponseImpl(HttpServletRequest request,HttpServletResponse response,Module module){
-			this.request  = request;
-			this.response = response;
+			this.servletRequest  = request;
+			this.servletResponse = response;
+			this.externalResponse = response;
 			this.encoding = module.getEncoding();
 		}
 
 		@Override
         public void setStatus(int status) {
-			response.setStatus(status);
+			servletResponse.setStatus(status);
 			super.setStatus(status);
         }
 		
 		@Override
         protected void forwardTo(String forwardPath) {
 			try {
-	            request.getRequestDispatcher(forwardPath).forward(request, response);
+				servletRequest.getRequestDispatcher(forwardPath).forward(servletRequest, servletResponse);
             } catch (Exception e) {
             	throw new MvcException(e);
             }
@@ -381,7 +389,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		@Override
         protected void redirectTo(String redirectUrl) {
 			try {
-	            response.sendRedirect(redirectUrl);
+	            servletResponse.sendRedirect(redirectUrl);
             } catch (Exception e) {
             	throw new MvcException(e);
             }
@@ -390,7 +398,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		@Override
         public OutputStream getOut() {
 			try {
-				return response.getOutputStream();
+				return servletResponse.getOutputStream();
 			}catch(IOException e){
 				throw new MvcException(e);
 			}
@@ -398,17 +406,17 @@ public class MvcFilter implements javax.servlet.Filter {
 
 		@Override
         public void setContentType(String contentType) {
-			response.setContentType(contentType);
+			servletResponse.setContentType(contentType);
         }
 
 		@Override
         public String getContentType() {
-			return response.getContentType();
+			return servletResponse.getContentType();
 		}
 
 		@Override
         public void setHeader(String name, String value) {
-			response.setHeader(name, value);
+			servletResponse.setHeader(name, value);
 			super.setHeader(name, value);
         }
 
@@ -418,8 +426,38 @@ public class MvcFilter implements javax.servlet.Filter {
 			cookie.setDomain(domain);
 			cookie.setMaxAge(maxAge);
 			cookie.setPath(path);
-			response.addCookie(cookie);
+			servletResponse.addCookie(cookie);
 	        super.setCookie(name, value, domain, path, maxAge);
+        }
+	}
+	
+	public static final class SessionImpl extends Session {
+		
+		private final HttpSession session;
+		
+		private SessionImpl(HttpSession session){
+			this.session         = session;
+			this.externalSession = session;
+		}
+
+		@Override
+        public Object getAttribute(String key) {
+	        return session.getAttribute(key);
+        }
+
+		@Override
+        public String getId() {
+	        return session.getId();
+        }
+
+		@Override
+        public void removeAttribute(String key) {
+			session.removeAttribute(key);
+        }
+
+		@Override
+        public void setAttribute(String key, Object value) {
+			session.setAttribute(key, value);
         }
 	}
 	

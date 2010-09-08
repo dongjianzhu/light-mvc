@@ -20,7 +20,7 @@ import org.lightframework.mvc.MvcException;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.Result.ContentResult;
 import org.lightframework.mvc.config.Ajax;
-import org.lightframework.mvc.test.JSONResult;
+import org.lightframework.mvc.test.MockJSONResult;
 import org.lightframework.mvc.test.MvcTestCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		assertEquals(HTTP.CONTENT_TYPE_JSON, response.getContentType());
 		assertEquals(json, response.getContent());
 		
-		JSONResult result = JSONResult.parse(json);
+		MockJSONResult result = MockJSONResult.parse(json);
 		assertNotNull(result);
 		assertEquals(200, result.getCode());
 		assertEquals(null, result.getDescription());
@@ -93,7 +93,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		
 		log.info("result : {}",response.getContent());
 		
-		JSONResult result = response.getJSONResult();
+		MockJSONResult result = response.getJSONResult();
 		assertNotNull(result);
 		assertEquals(500, result.getCode());
 		assertEquals("hello", result.getDescription());
@@ -105,7 +105,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		
 		execute();
 		
-		JSONResult result = response.getJSONResult();
+		MockJSONResult result = response.getJSONResult();
 		assertNotNull(result);
 		assertEquals(200, result.getCode());
 		assertEquals(null, result.getDescription());

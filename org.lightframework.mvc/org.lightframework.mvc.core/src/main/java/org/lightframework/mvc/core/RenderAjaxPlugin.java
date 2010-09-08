@@ -120,6 +120,9 @@ public class RenderAjaxPlugin extends Plugin implements IViewNotFoundRender {
 		}
 	}
 	
+	/**
+	 * @since 1.0.0
+	 */
 	protected class AjaxJsonContext extends JSONContext {
 		@Override
         public void beforeEncodeEnd(String name, Object value, StringBuilder out) {
