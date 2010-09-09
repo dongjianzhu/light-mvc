@@ -90,6 +90,10 @@ public class MockRequest extends Request {
 		this.session = session;
 	}
 	
+	public void setModule(MockModule module){
+		this.module = module;
+	}
+	
 	public void setContent(String content){
 		this.content = content;
 	}

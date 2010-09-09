@@ -41,6 +41,14 @@ public class MockModule extends Module {
 	protected List<String> webResources  = new ArrayList<String>();
 	protected ClassLoader  classLoader   = null;
 
+	public void mockStop(){
+		this.stop();
+	}
+	
+	public void mockStart(){
+		this.start();
+	}
+	
 	public void setPackagee(String packagee){
 		this.packagee = packagee;
 	}

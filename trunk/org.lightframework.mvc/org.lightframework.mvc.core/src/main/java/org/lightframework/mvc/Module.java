@@ -67,7 +67,7 @@ public class Module {
     protected long        lastFindClassesTime;
     protected Set<String> classNames;
     
-    final void start(){
+    protected final void start(){
     	if(!started){
     		config();
     		started = true;
@@ -76,7 +76,7 @@ public class Module {
     	}
     }
 
-    final void stop(){
+    protected final void stop(){
     	if(started){
 	    	//unload plugins
 	    	for(Plugin plugin : plugins){
@@ -86,6 +86,7 @@ public class Module {
 	    			log.error("[module '{}'] -> unload plugin '{}' error", plugin.getName(),e);
 	    		}
 	    	}
+	    	started = false;
     	}else{
     		throw new MvcException("module '" + getName() + "' not started");
     	}
