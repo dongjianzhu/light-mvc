@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-  <display-name>org.lightframework.mvc.webapp</display-name>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+    <display-name>org.lightframework.mvc.webapp</display-name>
+
+    <!-- spring application context configuration -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath*:spring/*.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- mvc configuration -->
+    <filter>
+        <filter-name>mvc-filter</filter-name>
+        <filter-class>org.lightframework.mvc.MvcFilter</filter-class>
+        <init-param>
+            <param-name>package</param-name>     
+            <param-value>org.lightframework.mvc.webapp</param-value> 
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>mvc-filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

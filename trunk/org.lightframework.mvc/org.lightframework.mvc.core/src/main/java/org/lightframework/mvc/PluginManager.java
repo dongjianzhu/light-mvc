@@ -25,6 +25,8 @@ import java.util.List;
  * @since 1.0.0
  */
 public final class PluginManager {
+	
+	private static final LinkedList<Plugin> plugins = new LinkedList<Plugin>();
 
 	/**
 	 * register a {@link Plugin} to current {@link Application} and order first
@@ -55,7 +57,7 @@ public final class PluginManager {
 		getPlugins().addAll(0, plugins);
 	}
 	
-	private static LinkedList<Plugin> getPlugins(){
-		return Application.current().getRootModule().getPlugins();
+	protected static LinkedList<Plugin> getPlugins(){
+		return plugins;
 	}
 }
