@@ -167,6 +167,9 @@ public class MvcFilter implements javax.servlet.Filter {
 			module.name = moduleName;
 		}
 		
+		//add plugins to module
+		module.getPlugins().addAll(PluginManager.getPlugins());
+		
 		Framework.start(module);
 		
 		doInited();

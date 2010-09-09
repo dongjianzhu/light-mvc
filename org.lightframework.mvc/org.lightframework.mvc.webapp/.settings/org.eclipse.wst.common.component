@@ -7,6 +7,9 @@
 <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/light-mvc-core/light-mvc-core">
 <dependency-type>uses</dependency-type>
 </dependent-module>
+<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/light-mvc-plugin-spring/light-mvc-plugin-spring">
+<dependency-type>uses</dependency-type>
+</dependent-module>
 <property name="java-output-path" value="/org.lightframework.mvc.webapp/WebRoot/WEB-INF/classes"/>
 <property name="context-root" value="mvc"/>
 </wb-module>
