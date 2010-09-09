@@ -5,9 +5,28 @@
         <groupId>org.lightframework</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.lightframework.mvc</groupId>
+    <groupId>org.lightframework</groupId>
     <artifactId>light-mvc-plugin-spring</artifactId>
     <version>1.0.0-alpha</version>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>    
+    
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
