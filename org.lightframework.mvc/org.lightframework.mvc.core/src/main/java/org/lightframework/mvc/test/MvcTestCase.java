@@ -67,18 +67,14 @@ public abstract class MvcTestCase extends TestCase {
 		reset();
 		
 		MockApplication.mockSetCurrent(application);		
-		try{
-			if(!setUpOnce){
-				setUpOnlyOnce();
-				setUpOnce = true;
-			}
-			
-		    setUpEveryTest();
-		    
-		    MockFramework.mockStart(module);
-		}finally{
-			MockApplication.mockSetCurrent(null);
+		if(!setUpOnce){
+			setUpOnlyOnce();
+			setUpOnce = true;
 		}
+		
+	    setUpEveryTest();
+	    
+	    MockFramework.mockStart(module);
     }
 	
 	@Override

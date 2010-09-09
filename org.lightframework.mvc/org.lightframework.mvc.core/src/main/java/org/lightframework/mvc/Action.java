@@ -181,6 +181,9 @@ public class Action {
 		
 		public static void setControllerObject(Action action,Object controllerObject) {
 			action.controllerObject = controllerObject;
+			if(null != controllerObject){
+				action.controllerClass = controllerObject.getClass();
+			}
 	    }
 		
 		public static void setMethod(Action action,Method actionMethod) {
