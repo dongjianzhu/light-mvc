@@ -32,6 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -195,10 +196,11 @@ public final class ClassUtils {
 	}
 	
 	public static Argument[] getMethodParameters(Method method) throws IOException{
-		Class<?>[] types = method.getParameterTypes();
+		Class<?>[] types    = method.getParameterTypes();
+		Type[] genericTypes = method.getGenericParameterTypes();
 		
 		if(types.length > 0){
-			Class<?> clazz = method.getDeclaringClass();
+			Class<?> clazz   = method.getDeclaringClass();
 			
 			ClassReader cr = null;
 			try{
@@ -209,9 +211,13 @@ public final class ClassUtils {
 				
 				Annotation[][] annotations = method.getParameterAnnotations();
 				for(int i=0;i<args.length;i++){
+					Class<?> type    = types[i];
+					Type genericType = genericTypes[i];					
+					
 					Argument arg = new Argument();
 					arg.setName(names[i]);
-					arg.setType(types[i]);
+					arg.setType(type);
+					arg.setGenericType(genericType);
 					arg.setConfigs(annotations[i]);
 					args[i] = arg;
 				}

@@ -21,8 +21,10 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.lightframework.mvc.HTTP;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.config.Format;
 import org.lightframework.mvc.test.MvcTestCase;
@@ -123,6 +125,61 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
+	public void testDirectArrayBinding() throws Exception {
+		request.setPath("/binding/array1");
+		request.setMethod(HTTP.METHOD_POST);
+		request.setContentType(HTTP.CONTENT_TYPE_JSON);
+		request.setContent("{values:['1','2','3']}");
+		
+		Result result = execute();
+		assertNotNull(result);
+		assertEquals(true, result.getValue());
+	}	
+	
+	public void testBeanArrayBinding() throws Exception {
+		request.setPath("/binding/array2");
+		request.setMethod(HTTP.METHOD_POST);
+		request.setContentType(HTTP.CONTENT_TYPE_JSON);
+		request.setContent("{users:[{name:'n1',age:100},{name:'n2',age:200}]}");
+		
+		Result result = execute();
+		assertNotNull(result);
+		assertEquals(true, result.getValue());
+	}	
+	
+	public void testBeanArrayBinding1() throws Exception {
+		request.setPath("/binding/array2");
+		request.setMethod(HTTP.METHOD_POST);
+		request.setContentType(HTTP.CONTENT_TYPE_JSON);
+		request.setContent("[{name:'n1',age:100},{name:'n2',age:200}]");
+		
+		Result result = execute();
+		assertNotNull(result);
+		assertEquals(true, result.getValue());
+	}
+	
+	public void testBeanListBinding() throws Exception {
+		request.setPath("/binding/list2");
+		request.setMethod(HTTP.METHOD_POST);
+		request.setContentType(HTTP.CONTENT_TYPE_JSON);
+		request.setContent("{users:[{name:'n1',age:100},{name:'n2',age:200}]}");
+		
+		Result result = execute();
+		assertNotNull(result);
+		assertEquals(true, result.getValue());
+	}
+	
+	public void testCombine1() throws Exception {
+		request.setPath("/binding/combine1");
+		request.setMethod(HTTP.METHOD_POST);
+		request.setContentType(HTTP.CONTENT_TYPE_JSON);
+		request.setContent("{size:3,users:[{name:'n1',age:100},{name:'n2',age:200}],values:[1,2,3]}");
+		
+		Result result = execute();
+		assertNotNull(result);
+		assertEquals(true, result.getValue());
+	}	
+	
 	public void testEnumBinding() throws Exception {
 		request.setPath("/binding/enums");
 		request.setParameter("color", "RED");
@@ -208,6 +265,47 @@ public class TestBindingPlugin extends MvcTestCase {
 			}
 			return false;
 		}
+		
+		public static boolean array1(int[] values){
+			if(values.length == 3 && values[0] == 1 && values[1] == 2 && values[2] == 3){
+				return true;
+			}
+			return false;
+		}	
+		
+		public static boolean array2(User[] users){
+			if(null != users && users.length == 2){
+				User user1 = users[0];
+				User user2 = users[1];
+				
+				if(user1.getName().equals("n1") && user1.getAge() == 100 &&
+				   user2.getName().equals("n2") && user2.getAge() == 200){
+					
+					return true;
+				}
+				
+			}
+			return false;
+		}	
+		
+		public static boolean list2(List<User> users){
+			if(null != users && users.size() == 2){
+				User user1 = users.get(0);
+				User user2 = users.get(1);
+				
+				if(user1.getName().equals("n1") && user1.getAge() == 100 &&
+				   user2.getName().equals("n2") && user2.getAge() == 200){
+					
+					return true;
+				}
+				
+			}
+			return false;
+		}
+		
+		public static boolean combine1(int size,int[] values,List<User> users){
+			return size == 3 && array(values) && list2(users);
+		}		
 		
 		public static boolean enums(Color color){
 			if(null != color && color == Color.RED){

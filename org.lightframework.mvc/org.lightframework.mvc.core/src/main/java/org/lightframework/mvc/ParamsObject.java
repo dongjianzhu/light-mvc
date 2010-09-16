@@ -47,7 +47,7 @@ public class ParamsObject {
 	}
 	
 	public boolean isEmpty(){
-		return map.isEmpty();
+		return null == array ? map.isEmpty() : array.length() == 0;
 	}
 	
 	public boolean contains(String name){
