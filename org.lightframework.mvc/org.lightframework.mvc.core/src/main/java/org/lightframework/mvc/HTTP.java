@@ -194,6 +194,7 @@ public final class HTTP {
 	    protected Map<String, String[]> headers;	    
 	    protected Map<String, String[]> parameters;
 	    protected Map<String, Object>   attributes;
+	    protected ParamsObject               bodyParameters;
 
 	    public static Request current(){
 	    	return current.get();
@@ -408,6 +409,14 @@ public final class HTTP {
 		public Object getExternalRequest() {
         	return externalRequest;
         }
+		
+		public boolean hasBodyParameters(){
+			return null != bodyParameters && !bodyParameters.isEmpty();
+		}
+		
+		public ParamsObject getBodyParameters(){
+			return bodyParameters;
+		}
 	}
 	
 	/**
@@ -572,5 +581,14 @@ public final class HTTP {
 		public Object getExternalSession() {
         	return externalSession;
         }
+	}
+	
+	/**
+	 * @since 1.0.0
+	 */
+	public static final class Setter {
+		public static void setBodyParameters(Request request, ParamsObject bodyParameters){
+			request.bodyParameters = bodyParameters;
+		}
 	}
 }

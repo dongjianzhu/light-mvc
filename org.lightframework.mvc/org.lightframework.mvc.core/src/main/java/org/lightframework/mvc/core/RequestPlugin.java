@@ -16,6 +16,7 @@
 package org.lightframework.mvc.core;
 
 import org.lightframework.mvc.HTTP;
+import org.lightframework.mvc.ParamsObject;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
@@ -52,19 +53,21 @@ public class RequestPlugin extends Plugin {
 							  body.length() < 256 ? body : body.substring(0,250) + "..." + body.charAt(body.length()-1));
 				}
 				
-				if(body.charAt(0) == JSONWriter.OPEN_OBJECT){
+				char c = body.charAt(0);
+				if(c == JSONWriter.OPEN_OBJECT || c == JSONWriter.OPEN_ARRAY){
 					try {
 		                JSONObject json = JSON.decode(request.getContent());
-		                for(String name : json.keys()){
-		                	//TODO : set json paremeter
-//		                	request.setParameter(name, json.getString(name));
+		                if(json.isArray()){
+		                	HTTP.Setter.setBodyParameters(request, new ParamsObject(json.array().array()));
+		                }else{
+		                	HTTP.Setter.setBodyParameters(request, new ParamsObject(json.map()));	
 		                }
 	                } catch (Exception e) {
-	                	Result.error(Result.CODE_BAD_REQUEST,"invalid json params");
-	                }	
+	                	Result.error(Result.CODE_BAD_REQUEST,"invalid json params",e);
+	                }
 				}else{
-					if(log.isTraceEnabled()){
-						log.trace("[mvc:request] -> json is not a map params(starts with '{'),ignore it");
+					if(log.isWarnEnabled()){
+						log.warn("[mvc:request] -> content is not a json params(starts with '{' || '[')");
 					}
 				}
 			}

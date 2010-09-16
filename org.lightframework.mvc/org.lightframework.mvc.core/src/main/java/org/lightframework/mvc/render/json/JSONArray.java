@@ -16,85 +16,73 @@
 package org.lightframework.mvc.render.json;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
- * represents a json value. 
- *
- * @author fenghm (live.fenghm@gmail.com)
- *
+ * represents a json array
+ * @author fenghm (fenghm@bingosoft.net)
  * @since 1.0.0
  */
-public class JSONObject {
+public class JSONArray {
+	
+	private Object[] array;
 
-	private JSONArray           array;
-	private Map<String, Object> map;
-	
-    JSONObject(Map<String, Object> map) {
-    	this.map = map;
-    }
-    
-    JSONObject(Object[] array){
-    	this.array = new JSONArray(array);
-    }
-    
-    public boolean isArray(){
-    	return null != array;
-    }
-    
-    public JSONArray array(){
-    	return array;
-    }
-    
-    public Set<String> keys(){
-    	return map.keySet();
-    }
-	
-	public Map<String, Object> map(){
-		return map;
+	public JSONArray(){
+		this.array = new Object[]{};
 	}
 	
-	public boolean contains(String name){
-		return map.containsKey(name);
+	public JSONArray(Object[] array){
+		this.array = array;
 	}
 	
-	public Object get(String name){
-		return map.get(name);
+	public Object[] array(){
+		return array;
 	}
 	
-	public JSONArray getJSONArray(String name){
-		Object[] array = getArray(name);
-		return null == array ? null : new JSONArray(array);
+	public int length(){
+		return array.length;
 	}
 	
-	public Object[] getArray(String name){
-		Object value = get(name);
+	public boolean isEmpty(){
+		return array.length == 0;
+	}
+	
+	public Object get(int index){
+		return array[index];
+	}
+	
+	public Object[] getArray(int index){
+		Object value = get(index);
 		return null == value ? null : (Object[])value;
 	}
 	
-	public String getString(String name){
-		Object value = get(name);
+	public String getString(int index){
+		Object value = get(index);
 		return null == value ? null : value.toString();
 	}
 	
-	public int getInt(String name){
-		Object value = get(name);
+	public int getInt(int index){
+		Object value = get(index);
 		return null == value ? 0 : Integer.parseInt(value.toString());
 	}
 	
-	public Integer getInteger(String name){
-		Object value = get(name);
+	public Integer getInteger(int index){
+		Object value = get(index);
 		return null == value ? null : Integer.parseInt(value.toString());
 	}
 	
-	public Boolean getBoolean(String name){
-		Object value = get(name);
+	public Long getLong(int index){
+		Object value = get(index);
+		return null == value ? null : Long.parseLong(value.toString());
+	}
+	
+	public Boolean getBoolean(int index){
+		Object value = get(index);
 		return null == value ? null : Boolean.parseBoolean(value.toString());
 	}
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject getObject(String name){
-		Object value = get(name);
+	public JSONObject getObject(int index){
+		Object value = get(index);
 		if(null == value){
 			return null;
 		}else if(value instanceof Map){
