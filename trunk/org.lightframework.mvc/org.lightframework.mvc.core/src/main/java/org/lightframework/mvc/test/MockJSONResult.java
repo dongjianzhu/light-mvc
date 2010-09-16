@@ -42,23 +42,23 @@ public final class MockJSONResult {
 		JSONObject json   = JSON.decode(content);
 
 		
-		if(json.exists(RenderAjaxPlugin.RETURN_CODE)){
+		if(json.contains(RenderAjaxPlugin.RETURN_CODE)){
 			result.code = json.getInteger(RenderAjaxPlugin.RETURN_CODE);
 		}
 		
-		if(json.exists(RenderAjaxPlugin.RETURN_STATUS)){
+		if(json.contains(RenderAjaxPlugin.RETURN_STATUS)){
 			result.status = json.getString(RenderAjaxPlugin.RETURN_STATUS);
 		}
 		
-		if(json.exists(RenderAjaxPlugin.RETURN_DESC)){
+		if(json.contains(RenderAjaxPlugin.RETURN_DESC)){
 			result.description = json.getString(RenderAjaxPlugin.RETURN_DESC);
 		}
 		
-		if(json.exists(RenderAjaxPlugin.RETURN_VALUE)){
+		if(json.contains(RenderAjaxPlugin.RETURN_VALUE)){
 			result.value = json.getString(RenderAjaxPlugin.RETURN_VALUE);
 		}
 		
-		if(json.exists(RenderAjaxPlugin.RETURN_ERROR)){
+		if(json.contains(RenderAjaxPlugin.RETURN_ERROR)){
 			result.error = json.getString(RenderAjaxPlugin.RETURN_ERROR);
 		}
 

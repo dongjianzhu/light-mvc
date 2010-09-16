@@ -59,7 +59,12 @@ public class JSON {
 
 	@SuppressWarnings("unchecked")
 	public static JSONObject decode(String source) {
-		return new JSONObject(decoder.decode(source, Map.class));
+		Object result = decoder.decode(source, Map.class);
+		if(result instanceof Map){
+			return new JSONObject((Map)result);
+		}else{
+			return new JSONObject((Object[])result);
+		}
 	}
 
 	private static final class JSONRender extends DataRender {
