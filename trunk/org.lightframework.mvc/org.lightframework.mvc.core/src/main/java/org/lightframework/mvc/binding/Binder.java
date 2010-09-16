@@ -20,6 +20,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +118,11 @@ public final class Binder {
 			if (type.isArray()) {
 				return arrayBinding(arg, value, context);
 			}
+			
+			// list bind
+			if(List.class.isAssignableFrom(type)){
+				return listBinding(arg,value,context);
+			}
 
 			// map bind
 			if (type.equals(Map.class)) {
@@ -123,7 +131,7 @@ public final class Binder {
 
 			// bean bind
 			if (!ClassUtils.isJdkClass(type)) {
-				return beanBinding(arg, context);
+				return beanBinding(arg,value,context);
 			}
 		} catch (Exception e) {
 			throw new BindingException("binding '" + arg.getName() + "' error", e);
@@ -132,9 +140,25 @@ public final class Binder {
 	}
 
 	private static Object arrayBinding(Argument arg, Object value, IBindingContext context) throws Exception {
-		Class<?> clazz = arg.getType().getComponentType();
+		return arrayBinding(arg,arg.getType().getComponentType(),value,context);
+	}
+	
+	private static Object arrayBinding(Argument arg,Class<?> clazz, Object value, IBindingContext context) throws Exception {
 		if (null == value) {
 			return Array.newInstance(arg.getType().getComponentType(), 0);
+		} else if(value.getClass().isArray()){
+			Class<?> valueComponentType = value.getClass().getComponentType();
+			if(clazz.isAssignableFrom(valueComponentType)){
+				return value;
+			}else{
+				int length = Array.getLength(value);
+				Argument type = new Argument(arg.getName(), clazz);
+				Object array = Array.newInstance(clazz, length);
+				for(int i=0;i<length;i++){
+					Array.set(array, i, binding(type,Array.get(value, i),context));
+				}
+				return array;
+			}
 		} else {
 			Object[] values = null;
 			if (String.class == value.getClass()) {
@@ -144,12 +168,36 @@ public final class Binder {
 			}
 
 			Argument type = new Argument(arg.getName(), clazz);
-			Object array = Array.newInstance(arg.getType().getComponentType(), values.length);
+			Object array = Array.newInstance(clazz, values.length);
 			for (int i = 0; i < values.length; i++) {
 				Array.set(array, i, binding(type, values[i], context));
 			}
 			return array;
 		}
+	}	
+	
+	@SuppressWarnings("unchecked")
+	private static Object listBinding(Argument arg, Object value, IBindingContext context) throws Exception {
+		if(!arg.isParameterizedType()){
+			throw new BindingException("type of argument '" + arg.getName() + "' must be parameterized(see java.lang.reflect.ParameterizedType)");
+		}
+		
+		Type actualType = arg.getActualTypeArguments()[0];
+		if(actualType instanceof WildcardType){
+			throw new BindingException("parameterized type of argument '" + arg.getName() + "' must not be List<?>");
+		}
+		
+		Class<?> clazz = (Class<?>)actualType;
+		Object   array = arrayBinding(arg,clazz,value,context);
+		
+		List list = new ArrayList();
+		int length = Array.getLength(array);
+		
+		for(int i=0;i<length;i++){
+			list.add(Array.get(array, i));
+		}
+		
+		return list;
 	}
 
 	private static Map<String, Object> mapBinding(Argument arg, Object value, IBindingContext context) throws Exception {
@@ -171,15 +219,25 @@ public final class Binder {
 		return null;
 	}
 
-	private static Object beanBinding(Argument arg, IBindingContext context) throws Exception {
+	@SuppressWarnings("unchecked")
+	private static Object beanBinding(Argument arg,Object data, IBindingContext context) throws Exception {
 		Object bean = ClassUtils.newInstance(arg.getType());
 		List<Field> fileds = ClassUtils.getDeclaredFields(arg.getType(), null);
 
 		for (Field field : fileds) {
 			Argument type = new Argument(field.getName(), field.getType(), field.getAnnotations());
-			Object param = getParameterValue(type, context);
-			Object value = binding(type, param, context);
-
+			
+			Object param = null;
+			Object value = null;
+			
+			if(data instanceof Map){
+				param = ((Map)data).get(type.getName());
+			}else {
+				param = getParameterValue(type, context);
+			}
+			
+			value = binding(type,param,context);
+			
 			if (null != value) {
 				Method setterMethod = getSetterMethod(arg.getType(), field.getName(), field.getType());
 				if (null != setterMethod) {

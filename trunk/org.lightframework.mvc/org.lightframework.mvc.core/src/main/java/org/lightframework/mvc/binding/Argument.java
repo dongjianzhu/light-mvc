@@ -16,6 +16,8 @@
 package org.lightframework.mvc.binding;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 /**
  * represents an action execution argument
@@ -28,6 +30,7 @@ public class Argument {
 	
 	protected String       name;
 	protected Class<?>     type;
+	protected Type         genericType;
 	protected String       format;
 	protected String       defaultValue;		
 	protected Annotation[] configs = EMPTY_CONFIGS;
@@ -45,15 +48,34 @@ public class Argument {
         this(name,type);
         this.configs = configs;
     }		
-	
 
 	public String getName(){
 		return name;
 	}
+	
 	public Class<?> getType() {
     	return type;
     }
 	
+	public boolean isParameterizedType(){
+		return genericType instanceof ParameterizedType;
+	}
+	
+	/**
+	 * @see ParameterizedType#getActualTypeArguments()
+	 */
+	public Type[] getActualTypeArguments(){
+		return ((ParameterizedType)genericType).getActualTypeArguments();
+	}
+	
+	public Type getGenericType() {
+    	return genericType;
+    }
+
+	public void setGenericType(Type genericType) {
+    	this.genericType = genericType;
+    }
+
 	public String getFormat() {
     	return format;
     }

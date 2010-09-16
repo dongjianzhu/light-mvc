@@ -45,6 +45,13 @@ public class BindingPlugin extends Plugin {
 		for(Argument arg : action.getArguments()){
 			if(!arg.isBinded()){
 				Object value = context.getParameter(arg.getName());
+				
+				if(null == value && request.hasBodyParameters() && action.getArguments().length == 1){
+					value = request.getBodyParameters().isArray() ? 
+								request.getBodyParameters().array().array() : 
+								request.getBodyParameters().map();
+				}
+				
 				if(log.isTraceEnabled()){
 					String type = value == null ? "null" : value.getClass().getName();
 					log.trace("[arg:'{}'] -> tryto binding : '{}'-'{}'",
@@ -90,6 +97,9 @@ public class BindingPlugin extends Plugin {
 		public Object getParameter(String name) {
 			//get arg's raw value
 			Object value = action.getParameter(name);
+			if(null == value && request.hasBodyParameters() && request.getBodyParameters().isMap()){
+				value = request.getBodyParameters().get(name);
+			}
 			if(null == value){
 				value = request.getParameter(name);
 			}

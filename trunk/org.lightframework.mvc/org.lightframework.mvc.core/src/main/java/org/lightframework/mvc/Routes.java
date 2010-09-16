@@ -23,8 +23,8 @@ import org.lightframework.mvc.routing.Route;
 /**
  * the route table define routing rules mapping a request path to an action
  *
- * @author author (author@gmail.com)
- * @since 1.x.x
+ * @author fenghm(live.fenghm@gmail.com)
+ * @since 1.0.0
  */
 public final class Routes {
 	
