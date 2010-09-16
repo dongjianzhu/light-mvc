@@ -57,7 +57,7 @@ public final class PluginManager {
 		getPlugins().addAll(0, plugins);
 	}
 	
-	protected static LinkedList<Plugin> getPlugins(){
+	public static LinkedList<Plugin> getPlugins(){
 		return plugins;
 	}
 }

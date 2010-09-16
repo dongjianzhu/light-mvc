@@ -17,6 +17,7 @@ package org.lightframework.mvc.test;
 
 import junit.framework.TestCase;
 
+import org.lightframework.mvc.PluginManager;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.clazz.ClassUtils;
 import org.slf4j.Logger;
@@ -74,6 +75,7 @@ public abstract class MvcTestCase extends TestCase {
 		
 	    setUpEveryTest();
 	    
+	    module.getPlugins().addAll(PluginManager.getPlugins());
 	    MockFramework.mockStart(module);
     }
 	
