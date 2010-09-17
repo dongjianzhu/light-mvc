@@ -355,16 +355,6 @@ public final class HTTP {
 			}
 	    	return headers;
 	    }
-		
-		public void addCookies(Cookie[] cookies){
-			for(Cookie cookie:cookies){
-				addCookie(cookie);
-			}
-		}
-		
-		public void addCookie(Cookie cookie){
-			getCookies().put(cookie.getName(), cookie) ;
-		}
 
 		public Cookie getCookie(String name){
 			return getCookies().get(name);
