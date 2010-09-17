@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Application;
 import org.lightframework.mvc.Plugin;
+import org.lightframework.mvc.Routes;
 import org.lightframework.mvc.test.MockModule;
 import org.lightframework.mvc.test.MvcTestCase;
 import org.springframework.context.ApplicationContext;
@@ -57,6 +58,10 @@ public class TestSpringPlugin extends MvcTestCase {
 			root = module;
 		}
     }
+	
+	public void tesrRouteRegister() throws Exception {
+		assertEquals(4, Routes.table().size());
+	}
 
 	public void testPluginRegister() throws Exception {
 		Application application = Application.current();

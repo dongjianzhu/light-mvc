@@ -47,6 +47,18 @@ public class Route {
 		return route;
 	}
 	
+	public String getMethod(){
+		return method;
+	}
+	
+	public String getPath(){
+		return path;
+	}
+	
+	public String getAction(){
+		return action;
+	}
+	
 	public void compile() {
 		if(null == compiled){
 			if(null == action || "".equals(action = action.trim())){

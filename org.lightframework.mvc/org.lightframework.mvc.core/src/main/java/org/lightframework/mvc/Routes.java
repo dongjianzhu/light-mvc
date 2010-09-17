@@ -49,6 +49,13 @@ public final class Routes {
 	}
 	
 	/**
+	 * add a routing rule to route table
+	 */	
+	public static void add(Route route){
+		table.add(route);
+	}
+	
+	/**
 	 * @return the routing rules table
 	 */
 	public static List<Route> table(){

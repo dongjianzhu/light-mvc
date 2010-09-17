@@ -51,4 +51,7 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+    <modules>
+    	<module>org.lightframework.mvc.plugin.common</module>
+    </modules>
 </project>
