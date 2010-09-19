@@ -189,6 +189,13 @@ public class TestMvcFilter extends TestCase {
 			req.getResponse().setCookie("cookieName", "hello, cookie updated") ;
 			assertEquals( ((Cookie)response.getCookies().get(1)).getValue() ,"hello, cookie updated") ;
 			
+			//session
+			req.getSession().setAttribute("sessionName", "hello , session") ;
+			assertNotNull( request.getSession().getAttribute("sessionName") ) ;
+			assertEquals( (String)request.getSession().getAttribute("sessionName") , "hello , session" ) ;
+			assertEquals( (String)req.getSession().getAttribute("sessionName") , "hello , session" ) ;
+			
+			
 		}finally{
 			filter.destroy();
 		}
