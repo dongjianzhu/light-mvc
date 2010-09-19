@@ -492,6 +492,7 @@ public final class HTTP {
 	        } else {
 	            cookie = new Cookie();
 	            cookie.name   = name;
+	            cookie.value  = value ;
 	            cookie.domain = domain;
 	            cookie.path   = (null == path || "".equals(path) ? "/" : path);
 	            cookie.maxAge = null == maxAge ?  -1 : maxAge;
