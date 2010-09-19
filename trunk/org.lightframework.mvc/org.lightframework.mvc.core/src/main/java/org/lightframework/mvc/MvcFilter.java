@@ -232,7 +232,6 @@ public class MvcFilter implements javax.servlet.Filter {
 	 */
 	public static final class RequestImpl extends Request {
 		private final HttpServletRequest request;
-		
 		RequestImpl(HttpServletRequest request,Application application, Module module){
 			this.request         = request;
 			this.module  		 = module;
@@ -271,14 +270,16 @@ public class MvcFilter implements javax.servlet.Filter {
 			if(null == cookies){
 				super.getCookies(); //create cookies
 				javax.servlet.http.Cookie[] servletCookies = request.getCookies();
-				for(javax.servlet.http.Cookie servletCookie : servletCookies){
-					Cookie cookie = new Cookie(servletCookie.getName(),servletCookie.getValue());
-					cookie.domain = servletCookie.getDomain();
-					cookie.maxAge = servletCookie.getMaxAge();
-					cookie.path   = servletCookie.getPath();
-					cookie.secure = servletCookie.getSecure();
-					
-					cookies.put(cookie.name, cookie);
+				if(null != servletCookies ){
+					for(javax.servlet.http.Cookie servletCookie : servletCookies){
+						Cookie cookie = new Cookie(servletCookie.getName(),servletCookie.getValue());
+						cookie.domain = servletCookie.getDomain();
+						cookie.maxAge = servletCookie.getMaxAge();
+						cookie.path   = servletCookie.getPath();
+						cookie.secure = servletCookie.getSecure();
+						
+						cookies.put(cookie.name, cookie);
+					}
 				}
 			}
 	        return super.getCookies();
@@ -426,9 +427,9 @@ public class MvcFilter implements javax.servlet.Filter {
 		@Override
         public void setCookie(String name, String value, String domain, String path, Integer maxAge) {
 			javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie(name, value);
-			cookie.setDomain(domain);
-			cookie.setMaxAge(maxAge);
-			cookie.setPath(path);
+			if(null != domain)cookie.setDomain(domain);
+			if(null != path)cookie.setMaxAge(maxAge);
+			if(null != maxAge)cookie.setPath(path);
 			servletResponse.addCookie(cookie);
 	        super.setCookie(name, value, domain, path, maxAge);
         }
