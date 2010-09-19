@@ -15,6 +15,9 @@
  */
 package org.lightframework.mvc.render;
 
+import java.io.Reader;
+import java.io.StringReader;
+
 import junit.framework.TestCase;
 
 import org.lightframework.mvc.render.json.JSON;
@@ -29,6 +32,29 @@ import org.lightframework.mvc.render.json.JSONObject;
  * @since 1.0.0
  */
 public class TestJSONDecode extends TestCase {
+	public void testReader(){
+		
+		String source = "{name:'xiaoming',childs:[{name:'c1'},{name:'c2'}]}";
+		Reader reader = new StringReader(source) ;
+		JSONObject json = JSON.decode(reader);
+		
+		assertNotNull(json);
+		assertEquals("xiaoming", json.get("name"));
+		
+		JSONArray array = json.getJSONArray("childs");
+		assertNotNull(array);
+		assertEquals(2, array.length());
+		
+		JSONObject child1 = array.getObject(0);
+		JSONObject child2 = array.getObject(1);
+		
+		assertNotNull(child1);
+		assertEquals("c1", child1.get("name"));
+		
+		assertNotNull(child2);
+		assertEquals("c2", child2.get("name"));
+	}
+	
 
 	public void testMap() {
 		String source = "{\"name\":'xiaoming','age':100};";
@@ -77,4 +103,5 @@ public class TestJSONDecode extends TestCase {
 		assertNotNull(child2);
 		assertEquals("c2", child2.get("name"));
 	}
+
 }
