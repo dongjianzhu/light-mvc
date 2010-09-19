@@ -16,13 +16,13 @@
 package org.lightframework.mvc;
 
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -70,6 +70,7 @@ public class TestMvcFilter extends TestCase {
 		config.setupServletContext(context);
 		request.setContextPath(CONTEXT_PATH);
 		request.setSession(session);
+		
     }
 
 	public void testInit() throws Exception{
@@ -174,8 +175,19 @@ public class TestMvcFilter extends TestCase {
 			request.setMethod("POST");
 			assertEquals(request.getMethod(), req.getMethod());
 			
+			
 			request.setHeader("header", "hello");
 			assertEquals(request.getHeader("header"), req.getHeader("header"));
+		
+			//cookie
+			req.getResponse().setCookie("cookieName", "hello, cookie") ;
+			
+			assertNotNull( response.getCookies() ) ;
+			assertEquals( ((Cookie)response.getCookies().get(0)).getValue() ,"hello, cookie") ;
+			
+			//update cookie
+			req.getResponse().setCookie("cookieName", "hello, cookie updated") ;
+			assertEquals( ((Cookie)response.getCookies().get(1)).getValue() ,"hello, cookie updated") ;
 			
 		}finally{
 			filter.destroy();
