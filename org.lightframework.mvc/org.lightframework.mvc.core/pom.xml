@@ -10,18 +10,11 @@
     <name>org.lightframework.mvc.core</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    
-    <properties>
-        <webRootDir>${basedir}/WebRoot</webRootDir>
-        <webInfDir>${webRootDir}/WEB-INF</webInfDir>
-        <sonar.dynamicAnalysis>true</sonar.dynamicAnalysis>
-    </properties>
 
     <build>
     	<directory>target</directory>
         <finalName>light-mvc-core</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
-        <outputDirectory>${webInfDir}/classes</outputDirectory>
 
         <resources>
             <resource>
