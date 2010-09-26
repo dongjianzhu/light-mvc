@@ -45,6 +45,7 @@ class JSONDecoder {
 		this.strict = strict;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> T decode(Reader value) throws IOException {
 		StringBuilder buf = new StringBuilder();
 		char[] cbuf = new char[32];
@@ -52,7 +53,7 @@ class JSONDecoder {
 		while ((c = value.read(cbuf)) >= 0) {
 			buf.append(cbuf, 0, c);
 		}
-		return decode(buf.toString());
+		return (T)decode(buf.toString());
 	}
 
 	@SuppressWarnings("unchecked")
