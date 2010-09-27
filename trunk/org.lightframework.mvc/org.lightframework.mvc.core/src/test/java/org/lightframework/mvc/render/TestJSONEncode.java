@@ -66,7 +66,7 @@ public class TestJSONEncode extends TestCase {
 		
 		//date type
 		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2010-11-01 10:10:10");
-		assertEquals("2010-11-01T10:10:10" + getTimeZone(), encode(date));
+		assertEquals("\"2010-11-01T10:10:10" + getTimeZone()+"\"", encode(date));
 	}
 	
 	public void testSimpleArray() throws Exception {
@@ -99,6 +99,13 @@ public class TestJSONEncode extends TestCase {
 		assertEquals("{\"key\":\"key\",\"name\":\"xiaoming\",\"age\":100}", encode(new SuperUser("xiaoming",100,"key")));
 	}
 	
+	public void testDateBean() throws Exception {
+		DateBean db = new DateBean() ;
+		db.setDate(new Date()) ;
+		//...
+	}
+	
+	
 	protected String encode(Object value){
 		return JSON.encode(value);
 	}
@@ -117,6 +124,25 @@ public class TestJSONEncode extends TestCase {
 		Date date = new Date(0);
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 		return c + formatter.format(date);
+	}
+	
+	public static class DateBean{
+		private Date  date ;
+
+		/**
+         * @return the date
+         */
+        public Date getDate() {
+        	return date;
+        }
+
+		/**
+         * @param date the date to set
+         */
+        public void setDate(Date date) {
+        	this.date = date;
+        }
+		
 	}
 	
 	public static class User {
