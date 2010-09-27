@@ -64,7 +64,8 @@ public abstract class RenderWriter implements IRenderWriter {
     }
 
 	public void writeDate(Date date, StringBuilder out) {
-		out.append(RFC_DATE_FORMAT.format(date)); //rfc3339
-        out.insert(out.length() - 2, ':');	    
+		StringBuffer temp = new StringBuffer(RFC_DATE_FORMAT.format(date)); //rfc3339
+		temp.insert(temp.length() - 2, ':');	
+		writeString(temp.toString(),out) ;	    
     }
 }
