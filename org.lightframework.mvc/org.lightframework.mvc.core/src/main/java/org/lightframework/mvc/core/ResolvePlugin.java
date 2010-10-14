@@ -70,6 +70,7 @@ public class ResolvePlugin extends Plugin {
 			Method method = action.getMethod();
 			
 			if(null == method){
+				methodName = Utils.replace(methodName, "_", "");
 				method = ClassUtils.findMethodIgnoreCase(controllerClass, methodName);
 			}
 			
