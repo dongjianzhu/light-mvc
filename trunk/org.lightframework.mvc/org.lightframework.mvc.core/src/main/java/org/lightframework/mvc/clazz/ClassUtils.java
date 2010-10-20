@@ -132,7 +132,15 @@ public final class ClassUtils {
 			if (stopClass != null && c == stopClass) {
 				break;
 			}else{
-				fields.addAll(Arrays.asList(c.getDeclaredFields()));
+				for(Field field : c.getDeclaredFields()){
+					//exclude final and static field
+					if(!( Modifier.isFinal(field.getModifiers())
+							||Modifier.isStatic(field.getModifiers()))){
+						fields.add(field) ;
+					}
+				}
+				
+				//fields.addAll(Arrays.asList(c.getDeclaredFields()));
 			}
 		}
 		return fields;
