@@ -74,7 +74,7 @@ public class SpringPlugin extends Plugin implements BeanFactoryAware{
         } catch (NoSuchBeanDefinitionException e) {
         	log.debug("[mvc:spring] -> no such bean '{}'",beanName);
         	return null;
-        }		
+        }
 	}
 
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
