@@ -52,10 +52,9 @@ public class CachePlugin extends Plugin {
 
 			log.debug(">>>>>>Cache URI {}", request.getUriString());
 
-			HttpServletResponse resp = (HttpServletResponse) request
-					.getResponse().getExternalResponse();
-			resp.setHeader("Cache-Control", "Public");
-			resp.setHeader("Expires", getExpiresFormatted());
+			//resp.setHeader("Cache-Control", "Public");
+			request.getResponse().setHeader("Expires", getExpiresFormatted());
+			//request.addHeader("Expires", getExpiresFormatted());
 			return true;
 		}
 		return false;
