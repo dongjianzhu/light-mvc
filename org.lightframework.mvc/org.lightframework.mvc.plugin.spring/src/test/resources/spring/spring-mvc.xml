@@ -5,6 +5,15 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
     <util:list id="mvc-plugins">
+    	<bean class="org.lightframework.mvc.plugin.cache.CachePlugin">
+    		<property name="pattern">
+    			<value>^.*(.*.js|.*.css|.*.gif)$</value>
+    		</property>
+    		<!--day-->
+    		<!-- 
+    		<property name="expires" value=""></property>
+    		-->
+    	</bean>
         <bean class="org.lightframework.mvc.plugin.spring.SpringPlugin"/>        
     </util:list>
 
