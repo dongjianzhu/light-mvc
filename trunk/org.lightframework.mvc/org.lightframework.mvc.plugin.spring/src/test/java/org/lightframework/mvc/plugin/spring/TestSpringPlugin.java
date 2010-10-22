@@ -67,10 +67,10 @@ public class TestSpringPlugin extends MvcTestCase {
 		Application application = Application.current();
 		
 		LinkedList<Plugin> plugins = application.getRootModule().getPlugins();
-		assertEquals(1,plugins.size());
+		assertEquals(2,plugins.size());
 		
 		PluginRegistry registry = spring.getBean(PluginRegistry.class);
-		assertEquals(1, registry.getPlugins().size());
+		assertEquals(2, registry.getPlugins().size());
 	}
 	
 	public void testPluginResolve1() throws Exception {
