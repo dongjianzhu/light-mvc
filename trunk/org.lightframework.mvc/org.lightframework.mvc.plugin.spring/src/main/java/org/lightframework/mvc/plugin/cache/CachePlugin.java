@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.HTTP.Request;
 import org.slf4j.Logger;
