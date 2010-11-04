@@ -49,20 +49,19 @@ public class FilterMappingPlugin extends Plugin {
 		
 		return false ;
 	}
-	
 
 	private boolean isIncludeRequest(Request request){
 		if( null == includesPattern )
 				return false ;
 		
-		return Pattern.matches(includesPattern, request.getPath().toLowerCase()) ;
+		return Pattern.matches(includesPattern.trim(), request.getPath().toLowerCase()) ;
 	}
 	
 	private boolean isExcludeRequest(Request request){
 		if( null == excludesPattern )
 			return false ;
 	
-		return Pattern.matches(excludesPattern, request.getPath().toLowerCase()) ;
+		return Pattern.matches(excludesPattern.trim(), request.getPath().toLowerCase()) ;
 	}
 	
 	/**
