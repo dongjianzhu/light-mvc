@@ -43,6 +43,9 @@ public abstract class Result {
 	public static final int CODE_NOT_FOUND         = 404;
 	public static final int CODE_SERVER_ERROR      = 500;
 	
+	public static final String RENDER_FOR_FORWARD     = "$_FORWARD_$" ;
+	public static final String RENDER_FOR_REDIRECT    = "$_REDIRECT_$" ;
+	
 	@Name("returnCode")
 	protected int code = CODE_OK;
 	
@@ -117,11 +120,23 @@ public abstract class Result {
 	}
 	
 	public static void redirect(String url) {
-		throw new Return(new Redirect(url));
+		try {
+			Request.current().setAttribute(Result.RENDER_FOR_REDIRECT, true) ;
+	        new Forward(url).render(Request.current(), Request.current().getResponse()) ;
+        } catch (Exception e) {
+	        log.error("redirect {} :",url,e) ;
+        }
+		//throw new Return(new Redirect(url));
 	}
 	
 	public static void forward(String path){
-		throw new Return(new Forward(path));
+		try {
+			Request.current().setAttribute(Result.RENDER_FOR_FORWARD, true) ;
+	        new Forward(path).render(Request.current(), Request.current().getResponse()) ;
+        } catch (Exception e) {
+	        log.error("forward {} :",path,e) ;
+        }
+		//throw new Return(new Forward(path));
 	}
 	
 	public static void content(String text) {

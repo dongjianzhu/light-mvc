@@ -38,13 +38,34 @@ public class RenderPlugin extends Plugin {
 		
 		setAttributes(request,result);
 		
-		if(result instanceof IRender){
-			((IRender) result).render(request, response);
-			return true;
-		}else{
-			return renderResult(request,response,result);
+		if( isNeedRender() ){
+			if(result instanceof IRender){
+				((IRender) result).render(request, response);
+				return true;
+			}else{
+				return renderResult(request,response,result);
+			}
 		}
+		return true ;
+		
     }
+	
+	protected boolean isNeedRender(){
+	
+		Object forward  = Result.getAttribute(Result.RENDER_FOR_FORWARD) ;
+		Object redirect = Result.getAttribute(Result.RENDER_FOR_REDIRECT) ;
+		if( null != forward && Boolean.parseBoolean(forward.toString())){
+			Result.removeAttribute(Result.RENDER_FOR_FORWARD) ;
+			return false ;
+		}
+		
+		if( null != redirect && Boolean.parseBoolean(redirect.toString())){
+			Result.removeAttribute(Result.RENDER_FOR_REDIRECT) ;
+			return false ;
+		}
+		
+		return true ;
+	}
 
 	protected void setAttributes(Request request,Result result){
 		request.setAttribute("result", result);
