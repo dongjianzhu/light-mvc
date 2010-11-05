@@ -534,9 +534,14 @@ public final class ClassUtils {
 	     * @throws IOException
 	     */
 	    protected static byte[] getBytes(Class c) throws IOException {
-	        InputStream fin = c.getResourceAsStream('/' + c.getName().replace('.', '/') + ".class");
+	    	
+	    	String className = c.getName() ;
+	    	//在类被增强以后，名称已经发生变化，分割符为$$
+	    	String name = className.split("[$][$]")[0] ;
+	    	
+	        InputStream fin = c.getResourceAsStream('/' + name.replace('.', '/') + ".class");
 	        if (fin == null) {
-	            throw new IOException("Unable to load bytecode for class " + c.getName()
+	            throw new IOException("Unable to load bytecode for class " + name
 	                   );
 	        }
 	        try {
