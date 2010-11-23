@@ -140,15 +140,23 @@ public abstract class Result {
 	}
 	
 	public static void content(String text) {
-		throw new Return(new ContentResult(text));
+		content(text,HTTP.CONTENT_TYPE_TEXT) ;
+		//throw new Return(new ContentResult(text));
 	}
 	
 	public static void content(String text,String contentType){
-		throw new Return(new ContentResult(text,contentType));
+		try {
+			Request.current().setAttribute(Result.RENDER_FOR_FORWARD, true) ;
+			new ContentResult(text,contentType).render(Request.current(), Request.current().getResponse()) ;
+        } catch (Exception e) {
+	        log.error("content {}:",text,e) ;
+        }
+		//throw new Return(new ContentResult(text,contentType));
 	}
 	
 	public static void json(Object value){
-		throw new Return(new ContentResult(JSON.encode(value),HTTP.CONTENT_TYPE_JSON));
+		content(JSON.encode(value),HTTP.CONTENT_TYPE_JSON) ;
+		//throw new Return(new ContentResult(JSON.encode(value),HTTP.CONTENT_TYPE_JSON));
 	}
 	
 	public static void data(Object data){
