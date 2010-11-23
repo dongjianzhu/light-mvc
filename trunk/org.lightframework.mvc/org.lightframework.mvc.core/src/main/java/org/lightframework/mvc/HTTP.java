@@ -290,7 +290,7 @@ public final class HTTP {
 			getAttributes().put(name, value);
 		}
 		
-		public void removeAttribte(String name){
+		public void removeAttribute(String name){
 			getAttributes().remove(name);
 		}
 		
