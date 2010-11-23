@@ -116,13 +116,13 @@ public abstract class Result {
 	}
 	
 	public static void removeAttribute(String name){
-		Request.current().removeAttribte(name);
+		Request.current().removeAttribute(name);
 	}
 	
 	public static void redirect(String url) {
 		try {
 			Request.current().setAttribute(Result.RENDER_FOR_REDIRECT, true) ;
-	        new Forward(url).render(Request.current(), Request.current().getResponse()) ;
+	        new Redirect(url).render(Request.current(), Request.current().getResponse()) ;
         } catch (Exception e) {
 	        log.error("redirect {} :",url,e) ;
         }
