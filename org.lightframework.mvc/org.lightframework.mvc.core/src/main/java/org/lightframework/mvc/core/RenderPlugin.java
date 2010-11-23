@@ -38,7 +38,7 @@ public class RenderPlugin extends Plugin {
 		
 		setAttributes(request,result);
 		
-		if( isNeedRender() ){
+		if( isNeedRender(request) ){
 			if(result instanceof IRender){
 				((IRender) result).render(request, response);
 				return true;
@@ -50,17 +50,17 @@ public class RenderPlugin extends Plugin {
 		
     }
 	
-	protected boolean isNeedRender(){
-	
-		Object forward  = Result.getAttribute(Result.RENDER_FOR_FORWARD) ;
-		Object redirect = Result.getAttribute(Result.RENDER_FOR_REDIRECT) ;
+	protected boolean isNeedRender(Request request){
+		
+		Object forward  = request.getAttribute(Result.RENDER_FOR_FORWARD) ;
+		Object redirect = request.getAttribute(Result.RENDER_FOR_REDIRECT) ;
 		if( null != forward && Boolean.parseBoolean(forward.toString())){
-			Result.removeAttribute(Result.RENDER_FOR_FORWARD) ;
+			request.removeAttribute(Result.RENDER_FOR_FORWARD) ;
 			return false ;
 		}
 		
 		if( null != redirect && Boolean.parseBoolean(redirect.toString())){
-			Result.removeAttribute(Result.RENDER_FOR_REDIRECT) ;
+			request.removeAttribute(Result.RENDER_FOR_FORWARD) ;
 			return false ;
 		}
 		
