@@ -15,6 +15,9 @@
  */
 package org.lightframework.mvc.plugin.mapping;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import org.lightframework.mvc.Plugin;
@@ -32,11 +35,23 @@ import org.slf4j.LoggerFactory;
 public class FilterMappingPlugin extends Plugin {
 	private static final Logger log = LoggerFactory.getLogger(FilterMappingPlugin.class);
 	
+	private long lastExpiresCalculated = 0;
+	private static final int EXPIRES_HEADER_PRECISION = 60 * 60 * 24 * 1000; // one
+	private String lastExpiresFormatted;
+	private Long  expires  = 365L;//day
+	
 	private String includesPattern ;
 	private String excludesPattern ;
-	
+	private String cachePattern ;
+
+
 	@Override
 	public boolean ignore(Request request) throws Exception {
+		
+		if(isCacheRequest(request)){
+			request.getResponse().setHeader("Cache-Control", "Public");
+			request.getResponse().setHeader("Expires", getExpiresFormatted());
+		}
 		
 		if( isIncludeRequest(request) ){
 			return false ;
@@ -48,6 +63,13 @@ public class FilterMappingPlugin extends Plugin {
 		}
 		
 		return false ;
+	}
+	
+	private boolean isCacheRequest(Request request){
+		if( null == cachePattern )
+				return false ;
+		
+		return Pattern.matches(cachePattern.trim(), request.getPath().toLowerCase()) ;
 	}
 
 	private boolean isIncludeRequest(Request request){
@@ -64,6 +86,20 @@ public class FilterMappingPlugin extends Plugin {
 		return Pattern.matches(excludesPattern.trim(), request.getPath().toLowerCase()) ;
 	}
 	
+	private String getExpiresFormatted() {
+		long now = System.currentTimeMillis();
+		if (lastExpiresCalculated + EXPIRES_HEADER_PRECISION > now)
+			return lastExpiresFormatted;
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+				"EEE, d MMM yyyy HH:mm:ss Z", java.util.Locale.ENGLISH);
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		lastExpiresCalculated = now;
+		lastExpiresFormatted = simpleDateFormat.format(new Date(System
+				.currentTimeMillis()
+				+ expires* 60 * 60 * 24 * 1000));
+		return lastExpiresFormatted;
+	}
 	/**
      * @return the includesPattern
      */
@@ -90,6 +126,21 @@ public class FilterMappingPlugin extends Plugin {
      */
     public void setExcludesPattern(String excludesPattern) {
     	this.excludesPattern = excludesPattern;
+    }
+	
+	public String getCachePattern() {
+    	return cachePattern;
+    }
+
+	public void setCachePattern(String cachePattern) {
+    	this.cachePattern = cachePattern;
+    }
+	
+	/**
+     * @param expires the expires to set
+     */
+    public void setExpires(Long expires) {
+    	this.expires = expires;
     }
 
 }
