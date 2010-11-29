@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -41,9 +42,9 @@ import org.lightframework.mvc.HTTP.Cookie;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.HTTP.Session;
+import org.lightframework.mvc.gzip.GzipResponseWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * mvc web module http filter,configed in web.xml
@@ -63,6 +64,8 @@ public class MvcFilter implements javax.servlet.Filter {
 	protected ServletContext context;      //current servlet context
 	protected ModuleImpl     module;       //current application' root module	
 	protected Application    application;  //current application
+	
+	protected String 		 gzipPattern ;
 	
 	@SuppressWarnings("unchecked")
 	public void init(FilterConfig config) throws ServletException {
@@ -92,6 +95,7 @@ public class MvcFilter implements javax.servlet.Filter {
 	}
 	
 	protected void doHandle(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
+		
 		try{
 			servletRequest.setCharacterEncoding(application.getEncoding());
 			Application.setCurrent(application);
@@ -108,7 +112,19 @@ public class MvcFilter implements javax.servlet.Filter {
 			servletRequest.setAttribute(ATTRIBUTE_MVC_REQUEST, request);
 			servletRequest.setAttribute(ATTRIBUTE_SERLVET_REQUEST, servletRequest);
 			
-			boolean managed = false;
+			//gzip support start
+			boolean isSupportGzip = false ;
+			GzipResponseWrapper wrappedResponse = null ;
+			if( null != gzipPattern && isMatchPath(request, gzipPattern)){
+	            String ae = request.getHeader("accept-encoding");
+	            if (ae != null && ae.indexOf("gzip") != -1) {
+	            	isSupportGzip = true ;
+	                wrappedResponse =  new GzipResponseWrapper(servletResponse);
+	                request.response.externalResponse = wrappedResponse ;
+	            }
+			}
+			
+			boolean managed = false ;
 
 			//is current request ignored or managed by mvc framework ?
 			if(!Framework.ignore(request)){
@@ -121,6 +137,10 @@ public class MvcFilter implements javax.servlet.Filter {
 			
 			if(!managed){
 				doNotHandled(servletRequest, servletResponse,context);
+			}
+			
+			if(isSupportGzip){
+				 wrappedResponse.finishResponse();
 			}
 		}catch(Throwable e){
 			if(e instanceof ServletException){
@@ -140,6 +160,8 @@ public class MvcFilter implements javax.servlet.Filter {
 		Framework.initialize();
 		module      = new ModuleImpl(context);
 		application = Application.currentOf(context);
+		
+		gzipPattern = params.get("gzipPattern") ;//获取Gzip压缩
 		
 		boolean root = true;  //is root module ?
 		if(null == application){
@@ -463,6 +485,13 @@ public class MvcFilter implements javax.servlet.Filter {
         public void setAttribute(String key, Object value) {
 			session.setAttribute(key, value);
         }
+	}
+	
+	private boolean isMatchPath(Request request , String pattern){
+		if( null == pattern )
+			return false ;
+	
+		return Pattern.matches(pattern.trim(), request.getPath().toLowerCase()) ;
 	}
 	
 	private static String getContextPath(HttpServletRequest request){
