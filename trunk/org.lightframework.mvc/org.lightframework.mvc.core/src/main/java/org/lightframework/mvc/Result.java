@@ -15,10 +15,13 @@
  */
 package org.lightframework.mvc;
 
+import java.io.InputStream;
+
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.config.Ignore;
 import org.lightframework.mvc.config.Name;
+import org.lightframework.mvc.file.Download;
 import org.lightframework.mvc.render.json.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +46,7 @@ public abstract class Result {
 	public static final int CODE_NOT_FOUND         = 404;
 	public static final int CODE_SERVER_ERROR      = 500;
 	
-	public static final String RENDER_FOR_FORWARD     = "$_FORWARD_$" ;
-	public static final String RENDER_FOR_REDIRECT    = "$_REDIRECT_$" ;
+	public static final String RESPONSE_HAS_RENDER     = "$_RESPONSE_HAS_RENDER_$" ;
 	
 	@Name("returnCode")
 	protected int code = CODE_OK;
@@ -119,22 +121,28 @@ public abstract class Result {
 		Request.current().removeAttribute(name);
 	}
 	
+	public static void renderResponse(){
+		Request.current().setAttribute(Result.RESPONSE_HAS_RENDER, true) ;
+	}
+	
 	public static void redirect(String url) {
 		try {
-			Request.current().setAttribute(Result.RENDER_FOR_REDIRECT, true) ;
+			renderResponse() ;
 	        new Redirect(url).render(Request.current(), Request.current().getResponse()) ;
         } catch (Exception e) {
 	        log.error("redirect {} :",url,e) ;
+	        throw new MvcException("redirect "+url+" :",e) ;
         }
 		//throw new Return(new Redirect(url));
 	}
 	
 	public static void forward(String path){
 		try {
-			Request.current().setAttribute(Result.RENDER_FOR_FORWARD, true) ;
+			renderResponse() ;
 	        new Forward(path).render(Request.current(), Request.current().getResponse()) ;
         } catch (Exception e) {
 	        log.error("forward {} :",path,e) ;
+	        throw new MvcException("forward "+path+" :",e) ;
         }
 		//throw new Return(new Forward(path));
 	}
@@ -146,13 +154,53 @@ public abstract class Result {
 	
 	public static void content(String text,String contentType){
 		try {
-			Request.current().setAttribute(Result.RENDER_FOR_FORWARD, true) ;
+			renderResponse() ;
 			new ContentResult(text,contentType).render(Request.current(), Request.current().getResponse()) ;
         } catch (Exception e) {
 	        log.error("content {}:",text,e) ;
+	        throw new MvcException("content "+text+" :",e) ;
         }
 		//throw new Return(new ContentResult(text,contentType));
 	}
+	
+	public static void script(String script){
+		String text = "<script type='text/javascript'>"+script+"</script>" ;
+		content(text) ;
+	}
+	
+	//download file
+	public static void file(InputStream in , String fileName){
+		file(in, fileName, null) ;
+	}
+	
+	public static void file(String filePath){
+		file(filePath, null, null) ;
+	}
+	
+	public static void file(String filePath , String fileName){
+		file(filePath, fileName, null) ;
+	}
+	
+	public static void file(InputStream in , String fileName,String encoding){
+		try {
+			renderResponse() ;
+	        new DownloadResult(in, fileName,encoding).render(Request.current(), Request.current().getResponse()) ;
+        } catch (Exception e) {
+        	log.error("下载文件异常",e) ;
+	        throw new MvcException("下载文件异常",e) ;
+        }
+	}
+	
+	public static void file(String filePath , String fileName,String encoding){
+		try {
+			renderResponse() ;
+	        new DownloadResult(filePath, fileName,encoding).render(Request.current(), Request.current().getResponse()) ;
+        } catch (Exception e) {
+        	log.error("下载文件异常",e) ;
+	        throw new MvcException("下载文件异常",e) ;
+        }
+	}
+	
 	
 	public static void json(Object value){
 		content(JSON.encode(value),HTTP.CONTENT_TYPE_JSON) ;
@@ -323,6 +371,51 @@ public abstract class Result {
 	 * @since 1.0.0
 	 */
 	public static final class EmptyResult extends Result {
+		
+	}
+	
+	/**
+	 * 下载文件或流
+	 * TODO : document me
+	 *
+	 * @author User
+	 * @since 1.x.x
+	 */
+	public static final class DownloadResult extends Result implements IRender{
+		private InputStream in ;
+		private String fileName ;
+		private String encoding = "UTF-8" ;
+		private String filePath ;
+		
+		public DownloadResult(InputStream in,String fileName){
+			this.in = in ;
+			this.fileName = fileName ;
+		}
+		
+		public DownloadResult(InputStream in,String fileName,String encoding){
+			this.in = in ;
+			this.fileName = fileName ;
+			this.encoding = encoding ;
+		}
+		
+		public DownloadResult(String filePath,String fileName){
+			this.filePath = filePath ;
+			this.fileName = fileName ;
+		}
+		
+		public DownloadResult(String filePath,String fileName,String encoding){
+			this.filePath = filePath ;
+			this.fileName = fileName ;
+			this.encoding = encoding ;
+		}
+
+        public void render(Request request, Response response) throws Exception {
+	       if(null != this.filePath){
+	    	   Download.download(filePath, fileName, encoding,request) ;
+	       }else if(null != this.in){
+	    	   Download.download(in, fileName, encoding,request) ;
+	       }
+        }
 		
 	}
 	

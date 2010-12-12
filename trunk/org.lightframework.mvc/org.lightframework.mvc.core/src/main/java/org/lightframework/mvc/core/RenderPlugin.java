@@ -52,15 +52,10 @@ public class RenderPlugin extends Plugin {
 	
 	protected boolean isNeedRender(Request request){
 		
-		Object forward  = request.getAttribute(Result.RENDER_FOR_FORWARD) ;
-		Object redirect = request.getAttribute(Result.RENDER_FOR_REDIRECT) ;
-		if( null != forward && Boolean.parseBoolean(forward.toString())){
-			request.removeAttribute(Result.RENDER_FOR_FORWARD) ;
-			return false ;
-		}
+		Object render = request.getAttribute(Result.RESPONSE_HAS_RENDER) ;
 		
-		if( null != redirect && Boolean.parseBoolean(redirect.toString())){
-			request.removeAttribute(Result.RENDER_FOR_FORWARD) ;
+		if( null != render && Boolean.parseBoolean(render.toString())){
+			request.removeAttribute(Result.RESPONSE_HAS_RENDER) ;
 			return false ;
 		}
 		
