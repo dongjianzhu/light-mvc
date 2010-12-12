@@ -112,22 +112,24 @@ public class ResolvePlugin extends Plugin {
 		 */
 		
 		String guessName1 = pkg + upperClassName(controller) + "Controller";
-		String guessName2 = pkg + upperClassName(controller) + "Service";
+		//String guessName2 = pkg + upperClassName(controller) + "Service";
 		String guessName3 = pkg + controller + "." + upperClassName(controller) + "Controller";
-		String guessName4 = pkg + controller + "." + upperClassName(controller) + "Service";
+		//String guessName4 = pkg + controller + "." + upperClassName(controller) + "Service";
 		String guessName5 = pkg + upperClassName(controller);
 		
 		if(log.isDebugEnabled()){
 			log.debug("[action:'{}'] -> guess the names by orders :",action.getName());
 			log.debug(" 1. '{}'",guessName1);
-			log.debug(" 2. '{}'",guessName2);
+			//log.debug(" 2. '{}'",guessName2);
 			log.debug(" 3. '{}'",guessName3);
-			log.debug(" 4. '{}'",guessName4);
+			//log.debug(" 4. '{}'",guessName4);
 			log.debug(" 5. '{}'",guessName5);
 		}
 		
+		//Class<?> clazz = 
+		//	request.getModule().findClass(new String[]{guessName1,guessName2,guessName3,guessName4,guessName5});
 		Class<?> clazz = 
-			request.getModule().findClass(new String[]{guessName1,guessName2,guessName3,guessName4,guessName5});
+			request.getModule().findClass(new String[]{guessName1,guessName3,guessName5});
 		
 		return clazz;
 	}

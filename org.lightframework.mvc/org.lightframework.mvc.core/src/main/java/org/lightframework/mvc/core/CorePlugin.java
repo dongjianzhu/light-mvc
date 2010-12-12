@@ -15,6 +15,8 @@
  */
 package org.lightframework.mvc.core;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Result;
@@ -64,6 +66,7 @@ public class CorePlugin extends Plugin{
 
 	@Override
     public boolean render(Request request, Response response, Result render) throws Exception {
+		//需要判断是否已经Render
 	    return renderer.render(request, response, render);
     }
 
