@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,10 +48,8 @@ public class Download {
 		response.setCharacterEncoding(encoding);
 		response.setContentType("application/x-download");
 		
-		fileName = new String(fileName.getBytes("GBK"), "ISO8859_1");
-		response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+		response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
 
-		
 		try {
 			OutputStream out = response.getOutputStream();
 			byte[] b = new byte[buffeSize];
