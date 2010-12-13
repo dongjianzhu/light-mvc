@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  * @author lixiaohong
  * @since 1.x.x
  */
+@Deprecated
 public class CachePlugin extends Plugin {
 	private static final Logger log = LoggerFactory
 			.getLogger(CachePlugin.class);
