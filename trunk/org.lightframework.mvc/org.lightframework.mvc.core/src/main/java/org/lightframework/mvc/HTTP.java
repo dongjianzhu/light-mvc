@@ -556,6 +556,7 @@ public final class HTTP {
 		 * @return
 		 */
 		public Object getExternalResponse(boolean isCommit) {
+			if(isCommit) Result.renderResponse() ;
         	return externalResponse;
         }
 
