@@ -436,7 +436,11 @@ public final class HTTP {
 	    protected Map<String, Cookie> cookies;
 	    
 	    protected Response(){
-	    	
+	   
+	    }
+	    
+	    public static Response current(){
+	    	return Request.current().getResponse();
 	    }
 	    
 	    public int getStatus() {
@@ -541,6 +545,17 @@ public final class HTTP {
 		 * @return the real http response object such as {@link javax.servlet.http.HttpServletResponse} when mvc running in a servlet container.
 		 */
 		public Object getExternalResponse() {
+        	return externalResponse;
+        }
+		
+		/**
+		 *
+		 * @param isCommit 
+		 * 	    true   获取外部response时，需要提交response ，如forward，redirect，ajax输出等
+		 *      false  同getExternalResponse()
+		 * @return
+		 */
+		public Object getExternalResponse(boolean isCommit) {
         	return externalResponse;
         }
 
