@@ -22,6 +22,8 @@ import org.lightframework.mvc.HTTP;
 import org.lightframework.mvc.Module;
 import org.lightframework.mvc.HTTP.Request;
 
+import com.mockrunner.mock.web.MockHttpServletRequest;
+
 /**
  * mock object of {@link Request} for testing.
  * 
@@ -36,9 +38,11 @@ public class MockRequest extends Request {
 	public static final String CONTENT_TYPE   = "text/html";
 	
 	protected MockUrl mockUrl;
+	protected MockHttpServletRequest externalRequest ;
 	
 	public MockRequest(){
 		this.mockUrl = new MockUrl();
+		this.externalRequest = new MockHttpServletRequest() ;
 		this.url = this.mockUrl;
 		
 		this.remoteAddress = REMOTE_ADDRESS;
