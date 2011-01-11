@@ -23,6 +23,8 @@ import org.lightframework.mvc.HTTP.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mockrunner.mock.web.MockHttpServletResponse;
+
 /**
  * mock object of {@link Response} for testing
  * 
@@ -36,10 +38,15 @@ public class MockResponse extends Response {
 	protected String forwardPath;
 	protected String redirectUrl;
 	protected ByteArrayOutputStream bytesOut;
+	protected MockHttpServletResponse externalResponse ;
 	
 	public MockResponse(){
-		
+		this.externalResponse = new MockHttpServletResponse();
 	}
+	
+	public Object getExternalResponse() {
+    	return externalResponse;
+    }
 	
 	public MockResponse(MockRequest request){
 		this.setRequest(request);
