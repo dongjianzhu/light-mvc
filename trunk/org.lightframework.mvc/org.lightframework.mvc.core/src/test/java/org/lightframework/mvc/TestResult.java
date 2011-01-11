@@ -25,7 +25,7 @@ import org.lightframework.mvc.test.MvcTestCase;
  * @since 1.0.0
  */
 public class TestResult extends MvcTestCase {
-
+	
 	public void testRedirect() throws Exception{
 		module.setPackagee(packagee);
 		request("/");
