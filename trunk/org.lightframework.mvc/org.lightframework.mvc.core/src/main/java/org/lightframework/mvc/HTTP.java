@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.mockrunner.util.common.StringUtil;
+
 /**
  * defines http request and response 
  *
@@ -314,6 +316,45 @@ public final class HTTP {
 			}else{
 				return Utils.arrayToString(values);
 			}
+		}
+		
+		//添加参数获取方法
+		public String getStringParam(String name ){
+			return this.getParameter(name) ;
+		}
+		
+		public String getStringParam(String name , String defaultValue ){
+			String value =  getStringParam(name) ;
+			if(StringUtil.isEmptyOrNull(value))
+				value = defaultValue ;
+			return value ;
+		}
+		
+		public Boolean getBooleanParam(String name){
+			return getBooleanParam(name , null) ;
+		}
+		
+		public Boolean getBooleanParam(String name,Boolean defaultValue){
+			String value = this.getStringParam(name,null) ;
+			return null == value?defaultValue:Boolean.parseBoolean(value) ;
+		}
+		
+		public Integer getIntParam(String name){
+			return getIntParam(name , null) ;
+		}
+		
+		public Integer getIntParam(String name,Integer defaultValue){
+			String value = this.getStringParam(name,null) ;
+			return null == value?defaultValue:Integer.parseInt(value) ;
+		}
+		
+		public Long getLongParam(String name){
+			return getLongParam(name , null) ;
+		}
+		
+		public Long getLongParam(String name,Long defaultValue){
+			String value = this.getStringParam(name,null) ;
+			return null == value?defaultValue:Long.parseLong(value) ;
 		}
 		
 		public String[] getParameterValues(String name){

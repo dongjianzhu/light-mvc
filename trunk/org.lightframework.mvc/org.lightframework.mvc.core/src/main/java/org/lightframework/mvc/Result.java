@@ -19,6 +19,7 @@ import java.io.InputStream;
 
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.HTTP.Session;
 import org.lightframework.mvc.config.Ignore;
 import org.lightframework.mvc.config.Name;
 import org.lightframework.mvc.file.Download;
@@ -94,7 +95,7 @@ public abstract class Result {
 	public void setValue(Object value) {
     	this.value = value;
     }
-
+	
 	//--------static methods of Result classs-----------
 	static void reset(){
 		context.set(null);
@@ -123,6 +124,39 @@ public abstract class Result {
 	
 	public static void renderResponse(){
 		Request.current().setAttribute(Result.RESPONSE_HAS_RENDER, true) ;
+	}
+	
+	//request , response
+	public static Request getRequest(){
+		return Request.current() ;
+	}
+	
+	public static Session getSession(){
+		return getRequest().getSession() ;
+	}
+	
+	public static Response getResponse(){
+		return Response.current() ;
+	}
+	
+	@SuppressWarnings("unchecked")
+    public static <T> T getSevletRequest(){
+		return (T)getRequest().getExternalRequest() ;
+	}
+	
+	@SuppressWarnings("unchecked")
+    public static <T> T getSevletSession(){
+		return (T)getSession().getExternalSession() ;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T getServletResponse(){
+		return (T)getResponse().getExternalResponse() ;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T getServletResponse(boolean isCommit){
+		return (T)getResponse().getExternalResponse(isCommit) ;
 	}
 	
 	public static void redirect(String url) {
