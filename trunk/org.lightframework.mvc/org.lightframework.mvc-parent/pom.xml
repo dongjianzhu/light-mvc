@@ -40,7 +40,7 @@
             <artifactId>junit</artifactId>
             <version>3.8.2</version>
             <type>jar</type>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
         	<groupId>ch.qos.logback</groupId>
@@ -51,7 +51,4 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-    <modules>
-    	<module>org.lightframework.mvc.plugin.common</module>
-    </modules>
 </project>
