@@ -450,8 +450,8 @@ public class MvcFilter implements javax.servlet.Filter {
         public void setCookie(String name, String value, String domain, String path, Integer maxAge) {
 			javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie(name, value);
 			if(null != domain)cookie.setDomain(domain);
-			if(null != path)cookie.setMaxAge(maxAge);
-			if(null != maxAge)cookie.setPath(path);
+			if(null != path)cookie.setPath(path);
+			if(null != maxAge)cookie.setMaxAge(maxAge);
 			servletResponse.addCookie(cookie);
 	        super.setCookie(name, value, domain, path, maxAge);
         }
