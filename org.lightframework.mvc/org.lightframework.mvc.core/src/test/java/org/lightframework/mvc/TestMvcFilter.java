@@ -155,6 +155,7 @@ public class TestMvcFilter extends TestCase {
 			request.setHeader("accept-encoding", "gzip") ;
 			request.setRequestURL("http://localhost:8080/test/123.js");
 			request.setRequestURI("/test/123.js");
+			request.setQueryString("x-format=json");
 			request.setServerPort(8080);
 			request.setRemoteAddr("localhost");
 			
@@ -169,9 +170,9 @@ public class TestMvcFilter extends TestCase {
 		try{
 			filter.init(config);
 
-			request.setRequestURL("http://localhost:8080/mvc/hello?a=b");
+			request.setRequestURL("http://localhost:8080/mvc/hello?a=b&x-format=json");
 			request.setRequestURI("/mvc/hello");
-			request.setQueryString("a=b");
+			request.setQueryString("a=b&x-format=json");
 			request.setServerPort(8080);
 			request.setRemoteAddr("localhost");
 			
@@ -187,7 +188,7 @@ public class TestMvcFilter extends TestCase {
 			assertTrue(req.getResponse().getExternalResponse() instanceof HttpServletResponse);
 			assertTrue(req.getSession().getExternalSession() instanceof HttpSession);
 			assertNotNull(req.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST));
-			assertEquals("a=b",req.getQueryString());
+			assertEquals("a=b&x-format=json",req.getQueryString());
 			assertEquals("/hello",req.getPath());
 			assertEquals(request.getRequestURI(), req.getUriString());
 			assertEquals(request.getRequestURL().toString(),req.getUrlString());
