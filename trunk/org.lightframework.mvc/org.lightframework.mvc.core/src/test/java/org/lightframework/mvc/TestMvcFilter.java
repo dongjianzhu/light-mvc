@@ -20,6 +20,7 @@ import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,7 @@ import junit.framework.TestCase;
 
 import org.lightframework.mvc.HTTP.Cookie;
 import org.lightframework.mvc.HTTP.Request;
+import org.lightframework.mvc.gzip.GzipResponseWrapper;
 import org.lightframework.mvc.test.MockResponse;
 
 import com.mockrunner.mock.web.MockFilterChain;
@@ -158,8 +160,19 @@ public class TestMvcFilter extends TestCase {
 			request.setServerPort(8080);
 			request.setRemoteAddr("localhost");
 			
-			filter.doFilter(request, response, chain);
 			
+			filter.doFilter(request, response, chain);
+			Request req = (Request)request.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST);
+			GzipResponseWrapper gzipResp = (GzipResponseWrapper)req.getResponse().getExternalResponse() ;
+			
+			ServletOutputStream out = gzipResp.getOutputStream() ;
+			assertNotNull(out) ;
+			out.write("hello".getBytes()) ;
+			out.write(123) ;
+			gzipResp.flushBuffer() ;
+			
+			assertNotNull(gzipResp.getWriter()) ;
+			gzipResp.finishResponse() ;
 		}finally{
 			filter.destroy();
 		}
