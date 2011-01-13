@@ -16,9 +16,15 @@
 package org.lightframework.mvc.binder;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.lightframework.mvc.Action;
+import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.binding.Argument;
 import org.lightframework.mvc.binding.Binder;
+import org.lightframework.mvc.convert.IConverter;
 
 import junit.framework.TestCase;
 
@@ -45,6 +51,7 @@ public class TestBinder extends TestCase {
 		assertTrue( arguments[3].getType() == Date.class );
 		assertTrue( arguments[2].getType() == double.class );
 		assertTrue( arguments[4].getType() == List.class );
+	
 	}
 
 	//public  final void  testBindingMethodIBindingContext()  throws Exception{
@@ -68,4 +75,5 @@ public class TestBinder extends TestCase {
 	
 	public static class User{
 	}
+	
 }
