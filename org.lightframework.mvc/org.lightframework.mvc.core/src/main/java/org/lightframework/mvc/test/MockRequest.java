@@ -38,7 +38,6 @@ public class MockRequest extends Request {
 	public static final String CONTENT_TYPE   = "text/html";
 	
 	protected MockUrl mockUrl;
-	protected MockHttpServletRequest externalRequest ;
 	
 	public MockRequest(){
 		this.mockUrl = new MockUrl();

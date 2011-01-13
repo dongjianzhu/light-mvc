@@ -140,12 +140,12 @@ public abstract class Result {
 	}
 	
 	@SuppressWarnings("unchecked")
-    public static <T> T getSevletRequest(){
+    public static <T> T getServletRequest(){
 		return (T)getRequest().getExternalRequest() ;
 	}
 	
 	@SuppressWarnings("unchecked")
-    public static <T> T getSevletSession(){
+    public static <T> T getServletSession(){
 		return (T)getSession().getExternalSession() ;
 	}
 	

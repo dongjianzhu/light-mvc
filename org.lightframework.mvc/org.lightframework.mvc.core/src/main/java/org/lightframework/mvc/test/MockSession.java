@@ -17,11 +17,15 @@ package org.lightframework.mvc.test;
 
 import org.lightframework.mvc.HTTP.Session;
 
+import com.mockrunner.mock.web.MockHttpSession;
+
 /**
  * mock object of {@link Session}
  * @author fenghm (fenghm@bingosoft.net)
  * @since 1.0.0
  */
 public class MockSession extends Session {
-
+	public MockSession(){
+		this.externalSession = new MockHttpSession() ;
+	}
 }

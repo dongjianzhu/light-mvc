@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.mockrunner.util.common.StringUtil;
+
 
 /**
  * defines http request and response 
@@ -325,7 +325,7 @@ public final class HTTP {
 		
 		public String getStringParam(String name , String defaultValue ){
 			String value =  getStringParam(name) ;
-			if(StringUtil.isEmptyOrNull(value))
+			if(null == value || "".equals(value.trim()))
 				value = defaultValue ;
 			return value ;
 		}
@@ -521,6 +521,10 @@ public final class HTTP {
 		
 	    public void setCookie(String name, String value) {
 	        setCookie(name, value, (Integer)null);
+	    }
+	    
+	    public void setCookie(Cookie cookie){
+	    	 setCookie(cookie.getName(),cookie.getValue(),cookie.getDomain(),cookie.getPath(),null) ;
 	    }
 
 	    public void setCookie(String name, String value, Integer maxAge) {

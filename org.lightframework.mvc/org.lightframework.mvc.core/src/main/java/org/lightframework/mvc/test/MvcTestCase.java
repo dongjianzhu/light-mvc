@@ -23,6 +23,10 @@ import org.lightframework.mvc.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+import com.mockrunner.mock.web.MockHttpSession;
+
 /**
  * junit {@link TestCase} for mvc framework
  *
@@ -135,6 +139,7 @@ public abstract class MvcTestCase extends TestCase {
 		
 		request.setResponse(response);
 		request.setSession(session);
+		
 	}
 	
 	protected final Class<?> loadClass(String className) throws Exception {
