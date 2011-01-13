@@ -22,16 +22,15 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
 
+import org.lightframework.mvc.HTTP.Cookie;
 import org.lightframework.mvc.HTTP.Request;
-import org.lightframework.mvc.test.MockApplication;
-import org.lightframework.mvc.test.MockFramework;
+import org.lightframework.mvc.test.MockResponse;
 
 import com.mockrunner.mock.web.MockFilterChain;
 import com.mockrunner.mock.web.MockFilterConfig;
@@ -170,13 +169,16 @@ public class TestMvcFilter extends TestCase {
 		try{
 			filter.init(config);
 
-			request.setRequestURL("http://localhost:8080/mvc/hello?a=b&x-format=json");
+			request.setRequestURL("http://localhost:8080/mvc/hello?a=b&x-format=json&bool=true&int=123");
 			request.setRequestURI("/mvc/hello");
-			request.setQueryString("a=b&x-format=json");
+			request.setQueryString("a=b&x-format=json&bool=true&int=123");
 			request.setServerPort(8080);
 			request.setRemoteAddr("localhost");
+			response.setContentType("text/html") ;
+			
 			
 			filter.doFilter(request, response, chain);
+			
 			
 			Request req = (Request)request.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST);
 			assertNotNull(req);
@@ -188,7 +190,24 @@ public class TestMvcFilter extends TestCase {
 			assertTrue(req.getResponse().getExternalResponse() instanceof HttpServletResponse);
 			assertTrue(req.getSession().getExternalSession() instanceof HttpSession);
 			assertNotNull(req.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST));
-			assertEquals("a=b&x-format=json",req.getQueryString());
+			
+			assertNotNull( req.getContent() ) ;
+			assertNotNull( req.getInputStream() ) ;
+			assertNotNull( req.getSession().getId() ) ;
+			
+			assertEquals("a=b&x-format=json&bool=true&int=123",req.getQueryString());
+			request.setupAddParameter("a", "b");
+			request.setupAddParameter("bool", "true");
+			request.setupAddParameter("int", "123");
+			assertEquals("b",req.getStringParam("a")) ;
+			assertEquals("b",req.getStringParam("a1","b")) ;
+			assertEquals(Boolean.TRUE,req.getBooleanParam("bool")) ;
+			assertEquals(Boolean.FALSE,req.getBooleanParam("bool1",false)) ;
+			assertEquals(new Integer(123),req.getIntParam("int")) ;
+			assertEquals(new Integer(123),req.getIntParam("int1",123)) ;
+			assertEquals(new Long(123),req.getLongParam("int")) ;
+			assertEquals(new Long(123),req.getLongParam("int1",123l)) ;
+			
 			assertEquals("/hello",req.getPath());
 			assertEquals(request.getRequestURI(), req.getUriString());
 			assertEquals(request.getRequestURL().toString(),req.getUrlString());
@@ -199,18 +218,43 @@ public class TestMvcFilter extends TestCase {
 			assertEquals(request.getMethod(), req.getMethod());
 			
 			
-			request.setHeader("header", "hello");
+			req.getResponse().setHeader("header", "hello");
 			assertEquals(request.getHeader("header"), req.getHeader("header"));
-		
+			
+			req.getResponse().setStatus(200) ;
+			assertEquals(response.getStatusCode(),200);
+			
+			assertNotNull( req.getResponse().getOut() ) ;
+			assertEquals("text/html", req.getResponse().getContentType() ) ;
+			
+			//forward redirect
+			req.getResponse().forward("/mvc/testForward") ;
+			//assertEquals ???
+			req.getResponse().redirect("~/mvc/testRedirect") ;
+			//assertEquals ???
+			
 			//cookie
 			req.getResponse().setCookie("cookieName", "hello, cookie") ;
 			
+			Cookie cookie = new Cookie("c_name_1","value1") ;
+			Cookie cookie2 = new Cookie("c_name_2","value2","example.com","/") ;
+			
+			req.getResponse().setCookie(cookie) ;
+			req.getResponse().setCookie(cookie2) ;
+			
+			assertNotNull( req.getResponse().getCookies() ) ;
 			assertNotNull( response.getCookies() ) ;
-			assertEquals( ((Cookie)response.getCookies().get(0)).getValue() ,"hello, cookie") ;
+			assertNotNull( req.getCookies() ) ;
+			assertEquals( ((javax.servlet.http.Cookie)response.getCookies().get(0)).getValue() ,"hello, cookie") ;
+			
+			assertEquals( req.getResponse().getCookie("c_name_1").getValue() ,"value1" ) ;
+			
+			assertEquals( ((javax.servlet.http.Cookie)response.getCookies().get(1)).getValue() ,"value1") ;
+			assertEquals( ((javax.servlet.http.Cookie)response.getCookies().get(2)).getValue() ,"value2") ;
 			
 			//update cookie
 			req.getResponse().setCookie("cookieName", "hello, cookie updated") ;
-			assertEquals( ((Cookie)response.getCookies().get(1)).getValue() ,"hello, cookie updated") ;
+			assertEquals( ((javax.servlet.http.Cookie)response.getCookies().get(3)).getValue() ,"hello, cookie updated") ;
 			
 			//session
 			req.getSession().setAttribute("sessionName", "hello , session") ;

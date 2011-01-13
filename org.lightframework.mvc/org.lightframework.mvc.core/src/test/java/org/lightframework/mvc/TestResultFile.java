@@ -21,6 +21,8 @@ import java.io.InputStream;
 import org.lightframework.mvc.Result.DownloadResult;
 import org.lightframework.mvc.test.MvcTestCase;
 
+import com.mockrunner.mock.web.MockHttpServletResponse;
+
 
 /**
  * TODO : document me
@@ -29,6 +31,7 @@ import org.lightframework.mvc.test.MvcTestCase;
  * @since 1.x.x
  */
 public class TestResultFile  extends MvcTestCase {
+	
 	public void testDownloadStream() throws Exception{
 		
 		String str = "文件下载Demo" ;
@@ -37,6 +40,20 @@ public class TestResultFile  extends MvcTestCase {
 		InputStream in = new ByteArrayInputStream(str.getBytes()) ;
 		
 		new DownloadResult(in, fileName,encoding).render(request, response) ;
+		
+		assertEquals("application/x-download", ((MockHttpServletResponse)request.getResponse().getExternalResponse()).getContentType() );
+		try{
+			new DownloadResult(in, null,encoding).render(request, response) ;
+		}catch(Exception e){
+			assertEquals(true , e.getLocalizedMessage().contains("下载文件名不能为空")) ;
+		}
+		
+		try{
+			in =  null ;
+			new DownloadResult(in, fileName,encoding).render(request, response) ;
+		}catch(Exception e){
+			assertEquals(true , e.getLocalizedMessage().contains("文件下载出现异常")) ;
+		}
 	}
 	
 	public void testDownloadFile() throws Exception{
@@ -46,6 +63,20 @@ public class TestResultFile  extends MvcTestCase {
 		
 		new DownloadResult(filePath, fileName,encoding).render(request, response) ;
 		
-		//Download.download(filePath, null, null, request) ;
+		assertEquals("application/x-download", ((MockHttpServletResponse)request.getResponse().getExternalResponse()).getContentType() );
+		
+		try{
+			filePath = null ;
+			new DownloadResult(filePath, fileName,encoding).render(request, response) ;
+		}catch(Exception e){
+			assertEquals(true , e.getLocalizedMessage().contains("下载文件名不能为空")) ;
+		}
+		
+		try{
+			filePath = "" ;
+			new DownloadResult(filePath, fileName,encoding).render(request, response) ;
+		}catch(Exception e){
+			assertEquals(true , e.getLocalizedMessage().contains("文件下载出现异常")) ;
+		}
 	}
 }

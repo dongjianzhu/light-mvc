@@ -76,10 +76,41 @@ public class TestResult extends MvcTestCase {
 	 * 测试获取request、response、session的公用接口
 	 * @throws Exception
 	 */
-	public void testPublicInterface() throws Exception{
+	public void testContainerContext() throws Exception{
 		//Object externalRequest = request.getExternalRequest() ;
 		assertEquals( request.getExternalRequest().getClass(), MockHttpServletRequest.class);
 		assertEquals( response.getExternalResponse().getClass(), MockHttpServletResponse.class);
 		assertEquals( session.getExternalSession().getClass(), MockHttpSession.class);
+	}
+	
+	@SuppressWarnings("static-access")
+    public void testResult() throws Exception{
+		Result result = request("/");
+		
+		Result.redirect("~/mvc/test") ;
+		assertEquals( request.getContext() + "/mvc/test", response.getRedirectUrl());
+
+		Result.forward("/light_forward") ;
+		assertEquals("/light_forward", response.getForwardPath());
+
+		
+		Result.content("text") ;
+		
+		try{
+			Result.file("C:/test.jsp") ;
+		}catch(Exception e){
+			assertEquals("下载文件异常", e.getLocalizedMessage());	
+		}
+		
+		Result.script("alert(123);") ;
+		
+		assertNotNull( result.getRequest() ) ;
+		assertNotNull( result.getServletRequest() ) ;
+		
+		assertNotNull( result.getResponse() ) ;
+		assertNotNull( result.getServletResponse() ) ;
+		
+		assertNotNull( result.getSession() ) ;
+		assertNotNull( result.getServletSession() ) ;
 	}
 }
