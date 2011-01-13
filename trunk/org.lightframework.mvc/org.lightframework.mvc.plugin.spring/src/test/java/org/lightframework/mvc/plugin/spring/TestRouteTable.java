@@ -50,6 +50,6 @@ public class TestRouteTable extends TestCase {
 		
 		table.register();
 		System.out.println(Routes.table().size());
-		assertEquals(7, Routes.table().size());
+		assertEquals(10, Routes.table().size());
 	}
 }

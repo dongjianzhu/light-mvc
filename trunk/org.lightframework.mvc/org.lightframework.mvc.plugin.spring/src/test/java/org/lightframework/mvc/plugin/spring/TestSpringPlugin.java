@@ -40,7 +40,7 @@ public class TestSpringPlugin extends MvcTestCase {
 	
 	@Override
     protected void setUpOnlyOnce() throws Exception {
-		spring = new ClassPathXmlApplicationContext("classpath*:spring/spring-mvc.xml");
+		spring = new ClassPathXmlApplicationContext("classpath*:spring/lightmvc.xml");
     }
 
 	@Override

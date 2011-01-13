@@ -5,36 +5,53 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
     <util:list id="mvc-plugins">
-    	<bean class="org.lightframework.mvc.plugin.cache.CachePlugin">
-    		<property name="pattern">
-    			<value>^.*(.*.js|.*.css|.*.gif)$</value>
+    	<bean class="org.lightframework.mvc.plugin.mapping.FilterMappingPlugin">
+    		
+    		<property name="includesPattern">
+    			<value>^.*(/jso.*)$</value>
     		</property>
-    		<!--day-->
+    		
+    		<property name="excludesPattern">
+    			<value>
+    			^.*(.*.js|.*.css|.*.gif|.*.png|.*.jsp|.*.html)$
+    			</value>
+    		</property>
+    		
+    		<property name="cachePattern">
+    			<value>^.*(.*.js|.*.css|.*.gif|.*.png|.*.html)$</value>
+    		</property>
     		<!-- 
     		<property name="expires" value=""></property>
     		-->
     	</bean>
+    	
         <bean class="org.lightframework.mvc.plugin.spring.SpringPlugin"/>        
     </util:list>
 
     <bean class="org.lightframework.mvc.plugin.spring.PluginRegistry" init-method="register"
           p:plugins-ref="mvc-plugins"/>
-          
+    
+    <!-- 
+                method      path            action 
+                *           /upload         upload.method
+     -->
+     <!-- .. -->
     <bean class="org.lightframework.mvc.plugin.spring.RouteTable" init-method="register">
         <property name="routes">
             <value>
-            <!-- 
-                method      path            action 
-            -->
-                *           /               home.index
-                *           /user/{id}      user.view   
-                get         /user/get       user.get
-                post        /user/delete    user.delete
+            *     /                              home.index 
+			*     /index.do                      home.index
+			*     /{ActionOrController}.do  	 {ActionOrController}.index,home.{ActionOrController}
+			*     /{controller*}/{action}.do     {controller}.{action}
+			*     /jso/*     					 jso.index
+			*     /portal/services/*     	     portal.index
+			*     /portal/services/**/*     	 portal.index
             </value>
         </property>    
-    </bean>          
-          
-    <bean id="test1Controller" class="org.lightframework.mvc.plugin.spring.TestController"/>
+    </bean>
+   
+     <bean id="test1Controller" class="org.lightframework.mvc.plugin.spring.TestController"/>
     <bean id="test2Service" class="org.lightframework.mvc.plugin.spring.TestController"/>
     <bean id="test3" class="org.lightframework.mvc.plugin.spring.TestController"/>
+
 </beans>
