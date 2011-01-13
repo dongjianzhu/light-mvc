@@ -19,6 +19,10 @@ import org.lightframework.mvc.Result.Forward;
 import org.lightframework.mvc.Result.Redirect;
 import org.lightframework.mvc.test.MvcTestCase;
 
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+import com.mockrunner.mock.web.MockHttpSession;
+
 /**
  * Test Case of {@link Result}
  * @author fenghm (live.fenghm@gmail.com)
@@ -67,4 +71,15 @@ public class TestResult extends MvcTestCase {
 		foward.render(request, response);
 		assertEquals("/test", response.getForwardPath());
 	}	
+	
+	/**
+	 * 测试获取request、response、session的公用接口
+	 * @throws Exception
+	 */
+	public void testPublicInterface() throws Exception{
+		//Object externalRequest = request.getExternalRequest() ;
+		assertEquals( request.getExternalRequest().getClass(), MockHttpServletRequest.class);
+		assertEquals( response.getExternalResponse().getClass(), MockHttpServletResponse.class);
+		assertEquals( session.getExternalSession().getClass(), MockHttpSession.class);
+	}
 }
