@@ -30,6 +30,8 @@ import javax.servlet.http.HttpSession;
 import junit.framework.TestCase;
 
 import org.lightframework.mvc.HTTP.Request;
+import org.lightframework.mvc.test.MockApplication;
+import org.lightframework.mvc.test.MockFramework;
 
 import com.mockrunner.mock.web.MockFilterChain;
 import com.mockrunner.mock.web.MockFilterConfig;
@@ -71,8 +73,11 @@ public class TestMvcFilter extends TestCase {
 		request.setContextPath(CONTEXT_PATH);
 		request.setSession(session);
 		
+		//set gizp config
+		config.setInitParameter("gzipPattern", "^.*(.*.js|.*.css)$") ;
+		
     }
-
+	
 	public void testInit() throws Exception{
 		config.setInitParameter(MvcFilter.INIT_PARAM_PACKAGE, "  ");
 		try{
@@ -143,6 +148,23 @@ public class TestMvcFilter extends TestCase {
 		}
 	}
 	
+	public void testGzip() throws Exception {
+		try{
+			filter.init(config);
+			//test gizp
+			request.setHeader("accept-encoding", "gzip") ;
+			request.setRequestURL("http://localhost:8080/test/123.js");
+			request.setRequestURI("/test/123.js");
+			request.setServerPort(8080);
+			request.setRemoteAddr("localhost");
+			
+			filter.doFilter(request, response, chain);
+			
+		}finally{
+			filter.destroy();
+		}
+	}
+	
 	public void testRequestImpl() throws Exception {
 		try{
 			filter.init(config);
@@ -194,7 +216,6 @@ public class TestMvcFilter extends TestCase {
 			assertNotNull( request.getSession().getAttribute("sessionName") ) ;
 			assertEquals( (String)request.getSession().getAttribute("sessionName") , "hello , session" ) ;
 			assertEquals( (String)req.getSession().getAttribute("sessionName") , "hello , session" ) ;
-			
 			
 		}finally{
 			filter.destroy();
