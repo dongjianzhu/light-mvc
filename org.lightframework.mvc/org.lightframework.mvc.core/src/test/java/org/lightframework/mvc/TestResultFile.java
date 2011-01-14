@@ -46,10 +46,9 @@ public class TestResultFile  extends MvcTestCase {
 	public void testDownloadStream1() throws Exception{
 		
 		String str = "文件下载Demo" ;
-		String encoding = null ;
 		InputStream in = new ByteArrayInputStream(str.getBytes()) ;
 		try{
-			new DownloadResult(in, null,encoding).render(request, response) ;
+			new DownloadResult(in, null).render(request, response) ;
 		}catch(Exception e){
 			assertEquals(true , e.getLocalizedMessage().contains("下载文件名不能为空")) ;
 		}
@@ -83,11 +82,10 @@ public class TestResultFile  extends MvcTestCase {
 	public void testDownloadFile1() throws Exception{
 		String filePath = "E:/test.txt" ;
 		String fileName = null ;
-		String encoding = null ;
 		
 		try{
 			filePath = "" ;
-			new DownloadResult(filePath, fileName,encoding).render(request, response) ;
+			new DownloadResult(filePath, fileName).render(request, response) ;
 		}catch(Exception e){
 			assertEquals(true , e.getLocalizedMessage().contains("文件下载出现异常")) ;
 		}
