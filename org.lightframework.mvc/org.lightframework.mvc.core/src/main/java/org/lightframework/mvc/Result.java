@@ -208,7 +208,7 @@ public abstract class Result {
 	}
 	
 	public static void file(String filePath){
-		file(filePath, null, null) ;
+		file(filePath, null) ;
 	}
 	
 	public static void file(String filePath , String fileName){
