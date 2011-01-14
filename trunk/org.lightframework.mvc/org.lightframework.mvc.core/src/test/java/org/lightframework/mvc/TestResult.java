@@ -30,9 +30,19 @@ import com.mockrunner.mock.web.MockHttpSession;
  */
 public class TestResult extends MvcTestCase {
 	
-	public void testRedirect() throws Exception{
+	@SuppressWarnings("static-access")
+    public void testRedirect() throws Exception{
 		module.setPackagee(packagee);
-		request("/");
+		Result result = request("/");
+		
+		assertNotNull( result.getRequest() ) ;
+		assertNotNull( result.getServletRequest() ) ;
+		
+		assertNotNull( result.getResponse() ) ;
+		assertNotNull( result.getServletResponse() ) ;
+		
+		assertNotNull( result.getSession() ) ;
+		assertNotNull( result.getServletSession() ) ;
 		
 		Redirect redirect = new Redirect("~/test");
 		redirect.render(request, response);
@@ -53,6 +63,9 @@ public class TestResult extends MvcTestCase {
 		redirect = new Redirect("./test");
 		redirect.render(request, response);
 		assertEquals("/test", response.getRedirectUrl());
+		
+		Result.redirect("~/mvc/test") ;
+		assertEquals( request.getContext() + "/mvc/test", response.getRedirectUrl());
 	}
 	
 	public void testForward() throws Exception{
@@ -70,6 +83,9 @@ public class TestResult extends MvcTestCase {
 		foward = new Forward("./test");
 		foward.render(request, response);
 		assertEquals("/test", response.getForwardPath());
+		
+		Result.forward("/light_forward") ;
+		assertEquals("/light_forward", response.getForwardPath());
 	}	
 	
 	/**
@@ -83,19 +99,17 @@ public class TestResult extends MvcTestCase {
 		assertEquals( session.getExternalSession().getClass(), MockHttpSession.class);
 	}
 	
-	@SuppressWarnings("static-access")
-    public void testResult() throws Exception{
-		Result result = request("/");
-		
-		Result.redirect("~/mvc/test") ;
-		assertEquals( request.getContext() + "/mvc/test", response.getRedirectUrl());
-
-		Result.forward("/light_forward") ;
-		assertEquals("/light_forward", response.getForwardPath());
-
-		
+	public void testContent()  throws Exception{
+		request("/");
 		Result.content("text") ;
 		
+		MockHttpServletResponse resp = (MockHttpServletResponse)Result.getServletResponse() ;
+		assertNotNull(resp.getOutputStreamContent() , "text") ;
+	}
+
+
+    public void testResult() throws Exception{
+		request("/");
 		try{
 			Result.file("C:/test.jsp") ;
 		}catch(Exception e){
@@ -104,13 +118,6 @@ public class TestResult extends MvcTestCase {
 		
 		Result.script("alert(123);") ;
 		
-		assertNotNull( result.getRequest() ) ;
-		assertNotNull( result.getServletRequest() ) ;
 		
-		assertNotNull( result.getResponse() ) ;
-		assertNotNull( result.getServletResponse() ) ;
-		
-		assertNotNull( result.getSession() ) ;
-		assertNotNull( result.getServletSession() ) ;
 	}
 }
