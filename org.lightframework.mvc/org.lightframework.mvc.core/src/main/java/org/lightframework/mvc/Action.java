@@ -97,8 +97,13 @@ public class Action {
 		return parameters;
 	}
 	
+
 	public void setParameters(Map<String,Object> parameters){
-		this.parameters = parameters;
+		if( null == this.parameters )
+			this.parameters = parameters;
+		else{
+			this.parameters.putAll(parameters) ;
+		}
 	}
 	
 	public Argument getArgument(String name){

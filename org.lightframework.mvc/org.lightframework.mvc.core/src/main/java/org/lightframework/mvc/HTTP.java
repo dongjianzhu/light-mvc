@@ -196,7 +196,7 @@ public final class HTTP {
 	    protected Map<String, String[]> headers;	    
 	    protected Map<String, String[]> parameters;
 	    protected Map<String, Object>   attributes;
-	    protected ParamsObject               bodyParameters;
+	    protected ParamsObject          bodyParameters;
 
 	    public static Request current(){
 	    	return current.get();
