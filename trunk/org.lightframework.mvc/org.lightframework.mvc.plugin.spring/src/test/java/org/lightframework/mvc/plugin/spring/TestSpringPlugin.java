@@ -92,6 +92,12 @@ public class TestSpringPlugin extends MvcTestCase {
 		assertEquals(controller, action.getControllerObject());	
 		assertNotNull(action.getMethod());
 		assertEquals("list", action.getMethod().getName());
+		
+		request("/test_manage/list");	
+		action = request.getAction();
+		assertEquals(controller, action.getControllerObject());	
+		assertNotNull(action.getMethod());
+		assertEquals("list", action.getMethod().getName());
 	}
 	
 	public void testPluginResolve2() throws Exception {
