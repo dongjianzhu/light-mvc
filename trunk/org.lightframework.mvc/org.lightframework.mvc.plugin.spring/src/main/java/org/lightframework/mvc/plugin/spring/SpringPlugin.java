@@ -66,6 +66,9 @@ public class SpringPlugin extends Plugin implements BeanFactoryAware{
 	
 	protected Object getControllerBean(String beanName){
 		try {
+			//bean转化 ，如 user_manage
+			beanName = resolveBeanName(beanName) ;
+			
 	        Object controller = beanFactory.getBean(beanName);
 	        
 	        log.debug("[mvc:spring] -> resolved spring bean '{}' as controller",beanName);
@@ -75,6 +78,24 @@ public class SpringPlugin extends Plugin implements BeanFactoryAware{
         	log.debug("[mvc:spring] -> no such bean '{}'",beanName);
         	return null;
         }
+	}
+	
+	private String resolveBeanName(String beanName){
+		String[] bn = beanName.split("_") ;
+		if( bn.length<=1 )
+			return beanName ;
+		String _beanName = null ;
+		for(String str:bn){
+			if( _beanName == null )
+				_beanName = str ;
+			else
+				_beanName += upperFirstChar(str) ;
+		}
+		return _beanName ;
+	}
+	
+	private static String upperFirstChar(String string){
+			return string.substring(0,1).toUpperCase() + string.substring(1);	
 	}
 
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
