@@ -17,6 +17,7 @@ package org.lightframework.mvc.routing;
 
 import junit.framework.TestCase;
 
+import org.lightframework.mvc.Routes;
 import org.lightframework.mvc.routing.Match;
 import org.lightframework.mvc.routing.Route;
 
@@ -71,5 +72,17 @@ public class TestRouterRoute extends TestCase{
 		Match match = route.matches("/a/b/c/d");
 		assertTrue(match.isMatched());
 		assertEquals("a.b.c.d", match.getName());
+	}
+	
+	public void testRoutes(){
+		Route route = Route.compile("*", "/{controller*}/{action}", "{controller}.{action}");
+		Routes.add(route) ;
+		Routes.add("/portal/{action}", "portal.{action}") ;
+		Routes.add("post","/jso/{action}", "jso.{action}") ;
+		
+		
+		assertTrue( Routes.table().get(2).matches("/jso/test").isMatched() );
+		assertTrue( Routes.table().get(1).matches("/portal/menu").isMatched() );
+		assertTrue( Routes.table().get(0).matches("/a/b/c/d").isMatched() );
 	}
 }
