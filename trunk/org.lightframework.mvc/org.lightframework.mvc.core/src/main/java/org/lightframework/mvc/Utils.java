@@ -29,7 +29,6 @@ import java.io.InputStreamReader;
  * @since 1.0.0
  */
 public final class Utils {
-	
 	/**
 	 * replace all 'from' to 'to' in string 'string'
 	 * 

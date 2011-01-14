@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.lightframework.mvc.Result.DownloadResult;
+import org.lightframework.mvc.file.Download;
 import org.lightframework.mvc.test.MvcTestCase;
 
 import com.mockrunner.mock.web.MockHttpServletResponse;
@@ -55,6 +56,8 @@ public class TestResultFile  extends MvcTestCase {
 		
 	}
 	
+	
+	
 	public void testDownloadStream2() throws Exception{
 		
 		String fileName = "demo.txt" ;
@@ -63,7 +66,7 @@ public class TestResultFile  extends MvcTestCase {
 		
 		try{
 			in =  null ;
-			new DownloadResult(in, fileName,encoding).render(request, response) ;
+			Download.download(in, fileName, encoding, request) ;
 		}catch(Exception e){
 			assertEquals(true , e.getLocalizedMessage().contains("文件下载出现异常")) ;
 		}
@@ -99,9 +102,9 @@ public class TestResultFile  extends MvcTestCase {
 		
 		try{
 			filePath = null ;
-			new DownloadResult(filePath, fileName,encoding).render(request, response) ;
+			Download.download(filePath, fileName, encoding, request)  ;
 		}catch(Exception e){
-			assertEquals(true , e.getLocalizedMessage().contains("下载文件名不能为空")) ;
+			assertEquals(true , e.getLocalizedMessage().contains("文件路径不能为空")) ;//
 		}
 	}
 }
