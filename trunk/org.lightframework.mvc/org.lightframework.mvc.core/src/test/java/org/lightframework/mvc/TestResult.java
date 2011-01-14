@@ -15,9 +15,14 @@
  */
 package org.lightframework.mvc;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+
 import org.lightframework.mvc.Result.Forward;
 import org.lightframework.mvc.Result.Redirect;
 import org.lightframework.mvc.test.MvcTestCase;
+import org.lightframework.mvc.utils.FileUtils;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
@@ -107,17 +112,32 @@ public class TestResult extends MvcTestCase {
 		assertNotNull(resp.getOutputStreamContent() , "text") ;
 	}
 
-
-    public void testResult() throws Exception{
+	public void testScript()  throws Exception{
 		request("/");
-		try{
-			Result.file("C:/test.jsp") ;
-		}catch(Exception e){
-			assertEquals("下载文件异常", e.getLocalizedMessage());	
-		}
-		
 		Result.script("alert(123);") ;
+		MockHttpServletResponse resp = (MockHttpServletResponse)Result.getServletResponse() ;
+		assertNotNull(resp.getOutputStreamContent()) ;
+	}
+
+    public void testFile() throws Exception{
+    	request("/");
+    	
+    	FileUtils.createDir(new File("C:/mvcTest")) ;  
+    	FileUtils.createFile(new File("C:/mvcTest/test.txt")) ;   
+
+		try{
+			Result.file("C:/mvcTest/test.txt") ;
+		}finally{
+			FileUtils.deleteDir(new File("C:/mvcTest")) ;
+		}
+		MockHttpServletResponse resp = (MockHttpServletResponse)Result.getServletResponse() ;
+		assertNotNull(resp.getOutputStream()) ;
 		
+		String str = "文件下载Demo" ;
+		InputStream in = new ByteArrayInputStream(str.getBytes()) ;
+		Result.file(in, "test.txt") ;
+		resp = (MockHttpServletResponse)Result.getServletResponse() ;
+		assertNotNull(resp.getOutputStream()) ;
 		
 	}
 }
