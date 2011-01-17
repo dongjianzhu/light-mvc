@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author mofified by     : fenghm  (live.fenghm@gmail.com)
  * @since 1.0.0
  */
-class JSONDecoder {
+public class JSONDecoder {
 	private static final Logger log = LoggerFactory.getLogger(JSONDecoder.class);
 	
 	private static JSONDecoder decoder = new JSONDecoder(false);
@@ -44,7 +44,7 @@ class JSONDecoder {
 	public JSONDecoder(boolean strict) {
 		this.strict = strict;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public static <T> T decode(Reader value) throws IOException {
 		StringBuilder buf = new StringBuilder();
