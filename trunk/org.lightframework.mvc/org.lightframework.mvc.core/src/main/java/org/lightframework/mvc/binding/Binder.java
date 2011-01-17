@@ -35,6 +35,7 @@ import org.lightframework.mvc.config.Name;
 import org.lightframework.mvc.convert.DateConverter;
 import org.lightframework.mvc.convert.IConverter;
 import org.lightframework.mvc.convert.PrimitiveConverter;
+import org.lightframework.mvc.render.json.JSONReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,7 +144,8 @@ public final class Binder {
 		return arrayBinding(arg,arg.getType().getComponentType(),value,context);
 	}
 	
-	private static Object arrayBinding(Argument arg,Class<?> clazz, Object value, IBindingContext context) throws Exception {
+	@SuppressWarnings("unchecked")
+    private static Object arrayBinding(Argument arg,Class<?> clazz, Object value, IBindingContext context) throws Exception {
 		if (null == value) {
 			return Array.newInstance(arg.getType().getComponentType(), 0);
 		} else if(value.getClass().isArray()){
@@ -163,7 +165,9 @@ public final class Binder {
 			Object[] values = null;
 			if (String.class == value.getClass()) {
 				values = value.toString().split(",");
-			} else {
+			} else if(ArrayList.class == value.getClass() || List.class == value.getClass()){
+				values = ((List)value).toArray() ;
+			}else {
 				values = new Object[] { value.toString() };
 			}
 
@@ -180,6 +184,10 @@ public final class Binder {
 	private static Object listBinding(Argument arg, Object value, IBindingContext context) throws Exception {
 		if(!arg.isParameterizedType()){
 			throw new BindingException("type of argument '" + arg.getName() + "' must be parameterized(see java.lang.reflect.ParameterizedType)");
+		}
+		
+		if( value instanceof String ){
+			value = JSONReader.decode((String)value) ;
 		}
 		
 		Type actualType = arg.getActualTypeArguments()[0];
