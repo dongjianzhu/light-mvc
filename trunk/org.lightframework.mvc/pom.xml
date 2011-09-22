@@ -21,9 +21,9 @@
 	</build>
     
     <modules>
-        <module>org.lightframework.mvc-parent</module>
-        <module>org.lightframework.mvc.core</module>
+        <module>light-mvc-parent</module>
+        <module>light-mvc-core</module>
+        <module>light-mvc-plugin-spring</module>
         <module>org.lightframework.mvc.webapp</module>
-        <module>org.lightframework.mvc.plugin.spring</module>
     </modules>
 </project>
