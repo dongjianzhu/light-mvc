@@ -18,7 +18,7 @@
         <filter-class>org.lightframework.mvc.MvcFilter</filter-class>
         <init-param>
             <param-name>package</param-name>
-            <param-value>org.lightframework.mvc.webapp</param-value>
+            <param-value>org.lightframework.mvc.demo</param-value>
         </init-param>
     </filter>     
 	

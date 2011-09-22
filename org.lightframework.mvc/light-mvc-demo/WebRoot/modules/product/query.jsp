@@ -1,4 +1,4 @@
-<%@page import="org.lightframework.mvc.webapp.product.Product"%>
+<%@page import="org.lightframework.mvc.demo.product.Product"%>
 <%@page pageEncoding="UTF-8"%>
 <%
 	Product product = (Product)request.getAttribute("result.value");
