@@ -16,6 +16,7 @@
 package org.lightframework.mvc;
 
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -32,7 +33,6 @@ import junit.framework.TestCase;
 import org.lightframework.mvc.HTTP.Cookie;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.gzip.GzipResponseWrapper;
-import org.lightframework.mvc.test.MockResponse;
 
 import com.mockrunner.mock.web.MockFilterChain;
 import com.mockrunner.mock.web.MockFilterConfig;
@@ -275,6 +275,35 @@ public class TestMvcFilter extends TestCase {
 			assertEquals( (String)request.getSession().getAttribute("sessionName") , "hello , session" ) ;
 			assertEquals( (String)req.getSession().getAttribute("sessionName") , "hello , session" ) ;
 			
+		}finally{
+			filter.destroy();
+		}
+	}
+	
+	public void testRequestPath() throws Exception {
+		try{
+			filter.init(config);
+
+			request.setRequestURL("http://localhost:8080/mvc/hello;jsessionid=xxxxxxx?a=b&x-format=json&bool=true&int=123");
+			request.setRequestURI("/mvc/hello;jsessionid=xxxxxxx");
+			request.setQueryString("a=b&x-format=json&bool=true&int=123");
+			request.setServerPort(8080);
+			request.setRemoteAddr("localhost");
+			response.setContentType("text/html") ;
+			
+			filter.doFilter(request, response, chain);	
+			Request req = (Request)request.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST);
+			assertEquals("/hello", req.getPath());
+			
+			request.setRequestURI("/mvc/hel;lo/abcd;jsessionid=xxxxxxx");
+			filter.doFilter(request, response, chain);	
+			req = (Request)request.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST);
+			assertEquals("/hel;lo/abcd", req.getPath());
+			
+			request.setRequestURI("/mvc/hello/abcd;aa;bb");
+			filter.doFilter(request, response, chain);	
+			req = (Request)request.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST);
+			assertEquals("/hello/abcd", req.getPath());
 		}finally{
 			filter.destroy();
 		}
