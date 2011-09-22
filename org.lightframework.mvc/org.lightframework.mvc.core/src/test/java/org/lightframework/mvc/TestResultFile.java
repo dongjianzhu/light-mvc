@@ -16,7 +16,10 @@
 package org.lightframework.mvc;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.UUID;
 
 import org.lightframework.mvc.Result.DownloadResult;
 import org.lightframework.mvc.file.Download;
@@ -24,15 +27,30 @@ import org.lightframework.mvc.test.MvcTestCase;
 
 import com.mockrunner.mock.web.MockHttpServletResponse;
 
-
 /**
- * TODO : document me
- *
- * @author User
- * @since 1.x.x
+ * @author lixh
+ * @author fenghm (fenghm@bingosoft.net)
+ * 
+ * @since 1.0.0
  */
 public class TestResultFile  extends MvcTestCase {
 	
+	private String file;
+	
+	@Override
+    protected void setUpEveryTest() throws Exception {
+		file = System.getProperty("java.io.tmpdir") + File.separator + UUID.randomUUID().toString() + ".txt";
+		
+		FileOutputStream out = new FileOutputStream(file);
+		out.write("test".getBytes());
+		out.close();
+    }
+
+	@Override
+    protected void tearDownEveryTest() throws Exception {
+		new File(file).deleteOnExit();
+	}
+
 	public void testDownloadStream() throws Exception{
 		
 		String str = "文件下载Demo" ;
@@ -55,11 +73,8 @@ public class TestResultFile  extends MvcTestCase {
 		}
 		
 	}
-	
-	
-	
+
 	public void testDownloadStream2() throws Exception{
-		
 		String fileName = "demo.txt" ;
 		String encoding = null ;
 		InputStream in  ;
@@ -73,7 +88,7 @@ public class TestResultFile  extends MvcTestCase {
 	}
 	
 	public void testDownloadFile() throws Exception{
-		String filePath = "E:/test.txt" ;
+		String filePath = file;
 		String fileName = null ;
 		String encoding = null ;
 		
@@ -83,7 +98,7 @@ public class TestResultFile  extends MvcTestCase {
 	}
 	
 	public void testDownloadFile1() throws Exception{
-		String filePath = "E:/test.txt" ;
+		String filePath = file;
 		String fileName = null ;
 		
 		try{
@@ -96,7 +111,7 @@ public class TestResultFile  extends MvcTestCase {
 	
 	
 	public void testDownloadFile2() throws Exception{
-		String filePath = "E:/test.txt" ;
+		String filePath = file;
 		String fileName = null ;
 		String encoding = null ;
 		

@@ -374,12 +374,24 @@ public class MvcFilter implements javax.servlet.Filter {
         }
 		
 		private void init(){
-			context = getContextPath(request);			
-
-			path = getUriString().substring(context.length());
+			this.context = getContextPath(request);			
+			this.path    = extractPath(context,getUriString());
+		}
+		
+		private static String extractPath(String context,String uri){
+			String path = uri.substring(context.length());
+			
 			if(!path.startsWith("/")){
 				path = "/" + path;
 			}
+			
+			//remove ';jsessionid=xxxxxxxxx'
+			int index = path.indexOf(";",path.lastIndexOf("/"));
+			if(index > 0){
+				path = path.substring(0,index);
+			}
+			
+			return path;
 		}
 	}
 	
