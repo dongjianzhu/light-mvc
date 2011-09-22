@@ -46,14 +46,14 @@ public class Framework {
 	protected static void initialize(){
 		if(!initialized){
 			log.info("[mvc] -> current version : '{}'",Version.version_string);
-			log.info("[mvc:'{}'] -> initializing... ",Version.version_name);
+			log.info("[mvc] -> initializing... ");
 			synchronized (Framework.class) {
 	            if(!initialized){
 	            	plugins.add(new CorePlugin());
 	            	initialized = true;
 	            }
             }
-			log.info("[mvc:'{}'] -> initialized!",Version.version_name);
+			log.info("[mvc] -> initialized!");
 		}
 	}
 	

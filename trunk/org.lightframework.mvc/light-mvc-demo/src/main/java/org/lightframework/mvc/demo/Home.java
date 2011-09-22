@@ -13,36 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.webapp.product;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.lightframework.mvc.demo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO : document me
- *
- * @author author (author@gmail.com)
- * @since 1.x.x
+ * Home Controller
+ * @author fenghm (live.fenghm@gmail.com)
+ * @since 1.0.0
  */
-public class ProductService {
-	private static final Logger log = LoggerFactory.getLogger(ProductService.class);
+public class Home {
 	
-	public void index(){
-		log.info("[ProductService] -> index executed");
+	private static final Logger log = LoggerFactory.getLogger(Home.class);
+
+	/**
+	 * index action , mapping request path '/' and view '/index.jsp' 
+	 */
+	public void index() {
+		log.info("** index action of home controller executed **");
 	}
 	
-	public List<Product> list(){
-		log.info("[ProductService] -> list executed");
-		return new ArrayList<Product>();
-	}
-	
-	public Product query(String name){
-		log.info("[ProductService] -> query by name '{}' executed",name);
-		Product product = new Product();
-		product.setName("中文测试");
-		return product;
-	}
 }

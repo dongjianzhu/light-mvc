@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.webapp.product;
+package org.lightframework.mvc.demo.product;
 
 
 /**
