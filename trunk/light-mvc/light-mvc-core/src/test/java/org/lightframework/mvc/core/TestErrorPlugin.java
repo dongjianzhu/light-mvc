@@ -41,7 +41,6 @@ public class TestErrorPlugin extends MvcTestCase {
         }
         assertEquals("no-cache",response.getHeader("Cache-Control"));
         assertEquals("no-cache",response.getHeader("Pragma"));
-        assertEquals("-1",response.getHeader("Expires"));
 	}
 	
 	
