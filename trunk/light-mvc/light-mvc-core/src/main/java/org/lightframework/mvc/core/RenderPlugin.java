@@ -45,6 +45,9 @@ public class RenderPlugin extends Plugin {
 			}else{
 				return renderResult(request,response,result);
 			}
+			
+			
+			
 		}
 		return true ;
 		
@@ -74,6 +77,10 @@ public class RenderPlugin extends Plugin {
 			return renderView.render(request, response, result);
 		}
 		return true;
+	}
+	
+	protected void setCacheControl(Request request,Response response,Result result) {
+		response.setHeader("Cache-Control", "no-cache");
 	}
 	
 	protected RenderAjaxPlugin getRenderAjaxPlugin(){

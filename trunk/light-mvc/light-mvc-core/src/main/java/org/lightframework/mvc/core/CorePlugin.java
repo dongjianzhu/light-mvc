@@ -15,8 +15,6 @@
  */
 package org.lightframework.mvc.core;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Result;
@@ -31,13 +29,14 @@ import org.lightframework.mvc.HTTP.Response;
  */
 public class CorePlugin extends Plugin{
 
-	protected RequestPlugin requestor = new RequestPlugin();
-	protected RoutingPlugin router    = new RoutingPlugin();
-	protected BindingPlugin binder    = new BindingPlugin();
-	protected ExecutePlugin executor  = new ExecutePlugin();
-	protected ResolvePlugin resolver  = new ResolvePlugin();
-	protected RenderPlugin  renderer  = new RenderPlugin();
-	protected ErrorPlugin   errorer   = new ErrorPlugin(renderer.getRenderAjaxPlugin());
+	protected RequestPlugin  requestor = new RequestPlugin();
+	protected RoutingPlugin  router    = new RoutingPlugin();
+	protected BindingPlugin  binder    = new BindingPlugin();
+	protected ExecutePlugin  executor  = new ExecutePlugin();
+	protected ResolvePlugin  resolver  = new ResolvePlugin();
+	protected RenderPlugin   renderer  = new RenderPlugin();
+	protected ErrorPlugin    errorer   = new ErrorPlugin(renderer.getRenderAjaxPlugin());
+	protected ResponsePlugin responser = new ResponsePlugin();
 	
 	@Override
     public boolean request(Request request, Response response) throws Exception {
@@ -73,5 +72,10 @@ public class CorePlugin extends Plugin{
 	@Override
     public boolean error(Request request, Response response, Result.ErrorResult error) throws Exception{
 	    return errorer.error(request, response, error);
+    }
+
+	@Override
+    public boolean response(Request request, Response response, Result result) throws Exception {
+	    return responser.response(request, response, result);
     }
 }
