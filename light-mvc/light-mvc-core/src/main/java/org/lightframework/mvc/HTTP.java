@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.ServletResponse;
+
 
 
 /**
@@ -484,6 +486,13 @@ public final class HTTP {
 	    	return Request.current().getResponse();
 	    }
 	    
+	    /**
+	     * see {@link ServletResponse#isCommitted()}
+	     */
+	    public boolean isCommitted(){
+	    	throw new UnsupportedOperationException("not implement");
+	    }
+	    
 	    public int getStatus() {
 	    	return status;
 	    }
@@ -506,6 +515,10 @@ public final class HTTP {
 		
 		public void setHeader(String name,String value){
 			getHeaders().put(name, value);
+		}
+		
+		public void setDateHeader(String name,long date){
+			//TODO : set Date Header
 		}
 
 		public Map<String, String> getHeaders() {

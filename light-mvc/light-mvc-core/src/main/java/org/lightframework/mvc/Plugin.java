@@ -155,7 +155,12 @@ public abstract class Plugin {
 	}
 	
 	/**
-	 * called before response to browser 
+	 * called after {@link #render(Request, Response, Result)} or {@link #error(Request, Response, Result.ErrorResult)}.
+	 * 
+	 * <br/>
+	 * 
+	 * please note that response is committed after render.
+	 * 
 	 * @param request   http request
 	 * @param response  http response
 	 * @param result {@link org.lightframework.mvc.Result} object

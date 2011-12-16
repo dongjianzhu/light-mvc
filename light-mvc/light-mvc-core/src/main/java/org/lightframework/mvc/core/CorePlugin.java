@@ -36,7 +36,6 @@ public class CorePlugin extends Plugin{
 	protected ResolvePlugin  resolver  = new ResolvePlugin();
 	protected RenderPlugin   renderer  = new RenderPlugin();
 	protected ErrorPlugin    errorer   = new ErrorPlugin(renderer.getRenderAjaxPlugin());
-	protected ResponsePlugin responser = new ResponsePlugin();
 	
 	@Override
     public boolean request(Request request, Response response) throws Exception {
@@ -76,6 +75,6 @@ public class CorePlugin extends Plugin{
 
 	@Override
     public boolean response(Request request, Response response, Result result) throws Exception {
-	    return responser.response(request, response, result);
+	    return false;
     }
 }

@@ -410,6 +410,11 @@ public class MvcFilter implements javax.servlet.Filter {
 		}
 
 		@Override
+        public boolean isCommitted() {
+			return servletResponse.isCommitted();
+        }
+
+		@Override
         public void setStatus(int status) {
 			servletResponse.setStatus(status);
 			super.setStatus(status);
@@ -456,6 +461,11 @@ public class MvcFilter implements javax.servlet.Filter {
         public void setHeader(String name, String value) {
 			servletResponse.setHeader(name, value);
 			super.setHeader(name, value);
+        }
+		
+		@Override
+        public void setDateHeader(String name, long date) {
+			servletResponse.setDateHeader(name, date);
         }
 
 		@Override

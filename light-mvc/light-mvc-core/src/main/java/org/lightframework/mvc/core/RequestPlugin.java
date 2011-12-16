@@ -39,10 +39,19 @@ public class RequestPlugin extends Plugin {
 
 	@Override
     public boolean request(Request request, Response response) throws Exception {
+		
 		parseJson(request, response);
+		
+		setCacheControl(request, response);
 		
 	    return false;
     }
+	
+	protected void setCacheControl(Request request,Response response) {
+		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+		response.setHeader("Pragma","no-cache"); //HTTP 1.0
+		response.setDateHeader("Expires", -1); //prevents caching at the proxy server		
+	}
 	
 	protected void parseJson(Request request, Response response) throws Exception {
 		if(request.isPost() && HTTP.CONTENT_TYPE_JSON.equalsIgnoreCase(request.getContentType())){
