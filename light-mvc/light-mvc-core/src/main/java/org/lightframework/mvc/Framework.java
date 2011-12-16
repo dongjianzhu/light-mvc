@@ -170,6 +170,8 @@ public class Framework {
 			}else{
 				managed = true;
 			}
+		}finally{
+			PluginInvoker.response(request, response, request.result);
 		}
 		
 		if(log.isDebugEnabled()){
@@ -448,6 +450,32 @@ public class Framework {
 			}	
 			if(log.isDebugEnabled()){
 				log.debug("[plugin-invoker:error] -> handling not done by any plugins");
+			}			
+			return false;
+		}
+		
+		static boolean response(Request request,Response response,Result result) throws Exception{
+			if(log.isDebugEnabled()){
+				log.debug("[plugin-invoker:response] -> handling response...");
+			}			
+			for(Plugin plugin : request.getModule().getPlugins()){
+				if(plugin.response(request, response, result)){
+					if(log.isDebugEnabled()){
+						log.debug("[plugin-invoker:response] -> handled by '{}'",plugin.getName());					
+					}
+					return true;
+				}
+			}
+			for(Plugin plugin : plugins){
+				if(plugin.response(request, response, result)){
+					if(log.isDebugEnabled()){
+						log.debug("[plugin-invoker:response] -> handled by '{}'",plugin.getName());					
+					}					
+					return true;
+				}
+			}	
+			if(log.isDebugEnabled()){
+				log.debug("[plugin-invoker:response] -> handling not done by any plugins");
 			}			
 			return false;
 		}

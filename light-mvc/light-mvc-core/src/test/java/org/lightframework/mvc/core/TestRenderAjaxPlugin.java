@@ -63,12 +63,19 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 	public void testNotAjaxRequest() throws Exception{
 		execute();
 		assertNull(response.getContent());
+        assertEquals("no-cache",response.getHeader("Cache-Control"));
+        assertEquals("no-cache",response.getHeader("Pragma"));
+        assertEquals("-1",response.getHeader("Expires"));		
 	}
 	
 	public void testAjaxRequestByHeader() throws Exception {
 		request.setHeader(HTTP.HEADER_NAME_AJAX_REQUEST, HTTP.HEADER_VALUE_AJAX_REQUEST);
 
 		executeAjaxRequest();
+		
+        assertEquals("no-cache",response.getHeader("Cache-Control"));
+        assertEquals("no-cache",response.getHeader("Pragma"));
+        assertEquals("-1",response.getHeader("Expires"));
 	}
 	
 	public void testAjaxRequestByQueryString() throws Exception {

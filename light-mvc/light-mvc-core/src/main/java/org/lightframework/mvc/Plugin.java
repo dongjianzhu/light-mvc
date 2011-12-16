@@ -153,4 +153,15 @@ public abstract class Plugin {
 	public boolean error(Request request, Response response, Result.ErrorResult error) throws Exception{
 		return false;
 	}
+	
+	/**
+	 * called before response to browser 
+	 * @param request   http request
+	 * @param response  http response
+	 * @param result {@link org.lightframework.mvc.Result} object
+	 * @return true if this plugin handled and stop executing other plutins
+	 */	
+	public boolean response(Request request,Response response, Result result) throws Exception{
+		return false;
+	}
 }
