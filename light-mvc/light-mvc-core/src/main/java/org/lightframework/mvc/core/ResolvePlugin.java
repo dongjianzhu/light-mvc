@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  * core plugin to resolve action's method
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class ResolvePlugin extends Plugin {

@@ -27,6 +27,7 @@ import org.lightframework.mvc.binding.BindingException;
  * class to convert primitive type itself and primitive type's wrapper type. 
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class PrimitiveConverter implements IConverter {

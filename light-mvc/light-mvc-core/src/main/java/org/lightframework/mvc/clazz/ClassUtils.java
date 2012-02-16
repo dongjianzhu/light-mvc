@@ -52,6 +52,7 @@ import org.lightframework.mvc.binding.Argument;
  * class utility,used by mvc framework only
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public final class ClassUtils {

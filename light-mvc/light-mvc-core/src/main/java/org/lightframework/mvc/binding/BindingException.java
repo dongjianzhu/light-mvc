@@ -21,6 +21,7 @@ import org.lightframework.mvc.MvcException;
  * represents the error at binding value to action's argument
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class BindingException extends MvcException {

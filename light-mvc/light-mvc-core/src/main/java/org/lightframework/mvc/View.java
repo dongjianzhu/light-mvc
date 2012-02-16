@@ -19,7 +19,7 @@ import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 
 /**
- * TODO : document me
+ * {@link View}
  *
  * @author fenghm (live.fenghm@gmail.com)
  *

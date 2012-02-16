@@ -25,6 +25,7 @@ import org.lightframework.mvc.HTTP.Response;
  * core plugin to render action result
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class RenderPlugin extends Plugin {

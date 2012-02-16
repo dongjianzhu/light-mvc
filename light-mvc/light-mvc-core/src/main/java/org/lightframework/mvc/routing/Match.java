@@ -19,7 +19,9 @@ import java.util.Map;
 
 /**
  * reprensents a matched result return by {@link Route#matches(String)}
+ * 
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public final class Match {

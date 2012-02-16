@@ -21,7 +21,8 @@ import org.lightframework.mvc.Module;
 /**
  * mock object of {@link Application}
  * 
- * @author fenghm (fenghm@bingosoft.net)
+ * @author fenghm (live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class MockApplication extends Application {

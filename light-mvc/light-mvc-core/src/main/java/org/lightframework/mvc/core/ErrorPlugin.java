@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
  * core plugin to handle exceptions
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class ErrorPlugin extends Plugin {
