@@ -25,6 +25,7 @@ import java.util.Date;
  * represents current version of mvc framework.
  * 
  * @author fenghm (live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public final class Version {

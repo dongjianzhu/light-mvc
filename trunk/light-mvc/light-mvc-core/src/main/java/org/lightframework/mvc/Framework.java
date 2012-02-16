@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
  * the main class of mvc framework
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class Framework {

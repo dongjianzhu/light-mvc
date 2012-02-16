@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
  * represents a mvc web module
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class Module {

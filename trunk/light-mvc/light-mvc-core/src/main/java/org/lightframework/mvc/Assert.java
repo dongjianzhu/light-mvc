@@ -20,6 +20,7 @@ package org.lightframework.mvc;
  * assertion class of mvc framework
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public final class Assert extends MvcException {

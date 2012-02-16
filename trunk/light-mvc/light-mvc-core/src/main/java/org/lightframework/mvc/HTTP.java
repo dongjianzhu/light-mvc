@@ -32,6 +32,7 @@ import javax.servlet.ServletResponse;
  * defines http request and response 
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public final class HTTP {
