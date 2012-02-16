@@ -29,7 +29,7 @@ import com.mockrunner.mock.web.MockHttpServletResponse;
 
 /**
  * @author lixh
- * @author fenghm (fenghm@bingosoft.net)
+ * @author fenghm (live.fenghm@gmail.com)
  * 
  * @since 1.0.0
  */

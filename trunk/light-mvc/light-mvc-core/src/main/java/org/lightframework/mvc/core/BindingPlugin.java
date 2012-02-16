@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
  * the core plugin to binding parameters in request of action method.
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class BindingPlugin extends Plugin {

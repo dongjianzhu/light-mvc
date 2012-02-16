@@ -21,7 +21,9 @@ import com.mockrunner.mock.web.MockHttpSession;
 
 /**
  * mock object of {@link Session}
- * @author fenghm (fenghm@bingosoft.net)
+ * 
+ * @author fenghm (live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class MockSession extends Session {

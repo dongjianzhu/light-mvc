@@ -31,6 +31,7 @@ import org.lightframework.mvc.config.Format;
  * class to bind date value
  * 
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class DateConverter implements IConverter {

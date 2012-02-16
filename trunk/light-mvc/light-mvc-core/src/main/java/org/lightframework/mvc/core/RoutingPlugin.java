@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
  * core router plugin of mvc framework mapping a request url to action 
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class RoutingPlugin extends Plugin {

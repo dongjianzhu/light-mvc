@@ -20,9 +20,10 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * TODO : document me
+ * {@link ClazzLoader}
  * 
  * @author fenghm (live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class ClazzLoader extends java.lang.ClassLoader {
