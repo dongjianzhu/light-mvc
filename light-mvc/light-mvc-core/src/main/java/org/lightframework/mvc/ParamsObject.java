@@ -6,7 +6,9 @@ import java.util.Set;
 
 /**
  * a {@link Map} or array wrapper represents a java bean.
+ * 
  * @author fenghm (live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public class ParamsObject {

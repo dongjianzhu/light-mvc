@@ -26,6 +26,7 @@ import org.lightframework.mvc.clazz.ClassUtils;
  * definition of an action. <p>
  * 
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since  1.0.0
  */
 public class Action {
