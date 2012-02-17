@@ -26,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletResponse;
 
+import org.lightframework.mvc.internal.params.Parameters;
+
 
 
 /**
@@ -199,7 +201,7 @@ public final class HTTP {
 	    protected Map<String, String[]> headers;	    
 	    protected Map<String, String[]> parameters;
 	    protected Map<String, Object>   attributes;
-	    protected ParamsObject          bodyParameters;
+	    protected Parameters          bodyParameters;
 
 	    public static Request current(){
 	    	return current.get();
@@ -458,7 +460,7 @@ public final class HTTP {
 			return null != bodyParameters && !bodyParameters.isEmpty();
 		}
 		
-		public ParamsObject getBodyParameters(){
+		public Parameters getBodyParameters(){
 			return bodyParameters;
 		}
 	}
@@ -663,7 +665,7 @@ public final class HTTP {
 	 * @since 1.0.0
 	 */
 	public static final class Setter {
-		public static void setBodyParameters(Request request, ParamsObject bodyParameters){
+		public static void setBodyParameters(Request request, Parameters bodyParameters){
 			request.bodyParameters = bodyParameters;
 		}
 	}
