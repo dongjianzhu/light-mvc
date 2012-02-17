@@ -16,11 +16,11 @@
 package org.lightframework.mvc.core;
 
 import org.lightframework.mvc.HTTP;
-import org.lightframework.mvc.ParamsObject;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
+import org.lightframework.mvc.internal.params.Parameters;
 import org.lightframework.mvc.render.json.JSON;
 import org.lightframework.mvc.render.json.JSONObject;
 import org.lightframework.mvc.render.json.JSONWriter;
@@ -67,9 +67,9 @@ public class RequestPlugin extends Plugin {
 					try {
 		                JSONObject json = JSON.decode(request.getContent());
 		                if(json.isArray()){
-		                	HTTP.Setter.setBodyParameters(request, new ParamsObject(json.array().array()));
+		                	HTTP.Setter.setBodyParameters(request, new Parameters(json.array().array()));
 		                }else{
-		                	HTTP.Setter.setBodyParameters(request, new ParamsObject(json.map()));	
+		                	HTTP.Setter.setBodyParameters(request, new Parameters(json.map()));	
 		                }
 	                } catch (Exception e) {
 	                	Result.error(Result.CODE_BAD_REQUEST,"invalid json params",e);
