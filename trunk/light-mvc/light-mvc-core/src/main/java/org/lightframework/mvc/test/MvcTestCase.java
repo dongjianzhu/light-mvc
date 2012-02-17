@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 import org.lightframework.mvc.PluginManager;
 import org.lightframework.mvc.Result;
-import org.lightframework.mvc.clazz.ClassUtils;
+import org.lightframework.mvc.internal.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

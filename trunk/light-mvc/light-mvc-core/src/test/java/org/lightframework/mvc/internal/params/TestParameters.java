@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * @since 1.x.x
  */
-public class TestParamsObject extends TestCase{
+public class TestParameters extends TestCase{
 	public void testParamArray() throws Exception{
 		Object[] temp = {"123","字符","true" , new String[]{"A","B"}} ;
 		ParametersArray array = new ParametersArray(temp) ;

@@ -28,13 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.lightframework.mvc.clazz.ClassUtils;
 import org.lightframework.mvc.config.Default;
 import org.lightframework.mvc.config.Format;
 import org.lightframework.mvc.config.Name;
 import org.lightframework.mvc.convert.DateConverter;
 import org.lightframework.mvc.convert.IConverter;
 import org.lightframework.mvc.convert.PrimitiveConverter;
+import org.lightframework.mvc.internal.clazz.ClassUtils;
 import org.lightframework.mvc.render.json.JSONReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

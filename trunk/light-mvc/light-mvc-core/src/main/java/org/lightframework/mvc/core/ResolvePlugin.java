@@ -23,7 +23,7 @@ import org.lightframework.mvc.Utils;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.binding.Binder;
-import org.lightframework.mvc.clazz.ClassUtils;
+import org.lightframework.mvc.internal.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
