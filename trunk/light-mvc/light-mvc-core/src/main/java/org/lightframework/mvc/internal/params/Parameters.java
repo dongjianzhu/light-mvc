@@ -15,7 +15,7 @@ import org.lightframework.mvc.MvcException;
  */
 public class Parameters {
     
-	protected ParametersArray     array;
+	protected Object[]     	   array;
 	protected Map<String, Object> map;
 	
 	public Parameters(){
@@ -23,7 +23,7 @@ public class Parameters {
 	}
 	
 	public Parameters(Object[] array){
-		this.array = new ParametersArray(array);
+		this.array = array;
 	}
 	
 	public Parameters(Map<String, Object> map) {
@@ -38,7 +38,7 @@ public class Parameters {
 		return map != null;
 	}
 	
-	public ParametersArray array(){
+	public Object[] array(){
 		return array;
 	}
 	
@@ -51,7 +51,7 @@ public class Parameters {
 	}
 	
 	public boolean isEmpty(){
-		return null == array ? map.isEmpty() : array.length() == 0;
+		return null == array ? map.isEmpty() : array.length == 0;
 	}
 	
 	public boolean contains(String name){

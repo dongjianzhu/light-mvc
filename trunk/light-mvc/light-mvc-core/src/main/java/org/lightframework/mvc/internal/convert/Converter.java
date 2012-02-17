@@ -43,6 +43,7 @@ import org.lightframework.mvc.internal.reflect.ReflectType;
 import org.lightframework.mvc.internal.reflect.ReflectUtils;
 import org.lightframework.mvc.internal.utils.ClassUtils;
 import org.lightframework.mvc.internal.utils.DateUtils;
+import org.lightframework.mvc.internal.utils.StringUtils;
 
 
 /**
@@ -57,11 +58,15 @@ public final class Converter {
     private static final Class<?>[] EMPTY_ARGS = new Class<?>[]{};
     
     public static Object convert(Class<?> targetType,Object value) throws ConvertUnsupportedException {
-        return convert(targetType,null,value);
+        return convert(targetType,null,value,null);
     }
-	
-	@SuppressWarnings("unchecked")
-	public static Object convert(Class targetType,Type genericType, Object value) throws ConvertUnsupportedException {
+    
+	public static Object convert(Class<?> targetType,Type genericType, Object value) throws ConvertUnsupportedException {
+		return convert(targetType,genericType,value,null);
+	}
+    
+    @SuppressWarnings("unchecked")
+    public static Object convert(Class targetType,Type genericType, Object value,ConvertOptions options) throws ConvertUnsupportedException {
 		if(null == targetType){
 		    throw new IllegalArgumentException("argument 'targetType' required");
 		}
@@ -86,11 +91,11 @@ public final class Converter {
 		
 		try{
 			if(targetType == String.class){
-				return convertToString(value);
+				return convertToString(value,null == options ? null : options.format);
 			}
 			
 			if(valueType == String.class){
-				return convert(targetType, (String)value);
+				return convert(targetType, (String)value,null == options ? null : options.format);
 			}
 			
 			if(targetType == Integer.TYPE || targetType == Integer.class){
@@ -174,7 +179,7 @@ public final class Converter {
 			}
 			
 			if(Date.class.isAssignableFrom(targetType)){
-			    return convertToDate(targetType, value);
+			    return convertToDate(targetType, value,null != options ? options.format : null);
 			}
 			
 			if (BigDecimal.class == targetType){
@@ -219,12 +224,16 @@ public final class Converter {
 		throw new ConvertUnsupportedException(MessageFormat.format("can not convert type ''{0}'' to ''{1}''",
             								   			             valueType.getSimpleName(),
             								   			             targetType.getSimpleName()));
-	}
-
+    }
+    
 	/**
 	 * 把字符串转换成指定类型的对象
 	 */
 	public static Object convert(Class<?> type,String string) throws ConvertUnsupportedException {
+		return convert(type,string,null);
+	}
+    
+    public static Object convert(Class<?> type,String string,String format) throws ConvertUnsupportedException {
 		try {
             if(String.class.equals(type)){
             	return string;
@@ -285,7 +294,7 @@ public final class Converter {
             }
             
             if(Date.class.isAssignableFrom(type)){
-                return convertToDate(type.asSubclass(Date.class),string);
+                return convertToDate(type.asSubclass(Date.class),string,format);
             }
             
             if(type.isArray()){
@@ -308,12 +317,16 @@ public final class Converter {
         }
 		
 		throw new ConvertUnsupportedException(MessageFormat.format("unsupported type ''{0}'' convert from string",type.getName()));
-	}
-	
+    }
+    
 	/**
 	 * 把对象转换为字符串
 	 */
 	public static String convertToString(Object value){
+		return convertToString(value,null);
+	}
+	
+    public static String convertToString(Object value,String format){
 		if(null == value){
 			return "";
 		}
@@ -327,15 +340,18 @@ public final class Converter {
 		}
 		
 		if(value instanceof java.sql.Date){
-			return DateUtils.dateFormater.format((java.sql.Date)value);
+			return StringUtils.isEmpty(format) ? DateUtils.dateFormater.format((java.sql.Date)value) : 
+												  DateUtils.formatter(format).format((java.sql.Date)value);
 		}
 		
 		if(value instanceof Time){
-			return DateUtils.timeFormater.format((Time)value);
+			return StringUtils.isEmpty(format) ? DateUtils.timeFormater.format((Time)value) : 
+				    							  DateUtils.formatter(format).format((Time)value);
 		}
 		
 		if(value instanceof Date){
-			return DateUtils.dateTimeFormater.format((Date)value);
+			return StringUtils.isEmpty(format) ? DateUtils.dateTimeFormater.format((Date)value) : 
+				  							      DateUtils.formatter(format).format((Date)value);
 		}
 		
         if (value instanceof Class<?>) {
@@ -351,9 +367,13 @@ public final class Converter {
 		}
 		
 		return value.toString();
-	}
+    }
 	
 	public static Date convertToDate(Class<? extends Date> type,Object value){
+		return convertToDate(type,value,null);
+	}
+	
+	public static Date convertToDate(Class<? extends Date> type,Object value,String format){
 	    Class<?> valueType = value.getClass();
 	    if(Long.class == valueType || Long.TYPE == valueType){
 	        long time = ((Long)value);
@@ -387,13 +407,17 @@ public final class Converter {
                 return new Timestamp(time);
             }
 	    }else if(String.class == valueType){
-	        return convertToDate(type, (String)value);
+	        return convertToDate(type, (String)value,format);
 	    }
 	    throw new ConvertUnsupportedException(MessageFormat.format("unsupported type ''{0}'' convert to Date",valueType.getName()));
 	}
 	
 	public static Date convertToDate(Class<? extends Date> type,String string){
-	    Date date = DateUtils.toDate(type,string);
+		return convertToDate(type, string,null);
+	}
+	
+	public static Date convertToDate(Class<? extends Date> type,String string,String format){
+	    Date date = DateUtils.toDate(type,string,format);
 	    
 	    if(null == date){
 	        throw new ConvertException(MessageFormat.format("invalid date string ''{0}''",string));
@@ -722,10 +746,9 @@ public final class Converter {
 		return instance;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static <T> T[] stringToArray(Class<? extends T> componentType,String string){
+	public static Object stringToArray(Class<?> componentType,String string){
 	    if(null == string){
-	        return (T[])Array.newInstance(componentType, 0);
+	        return Array.newInstance(componentType, 0);
 	    }
 	    
         String[] strings = split(string,",");
@@ -734,7 +757,7 @@ public final class Converter {
         for(int i=0;i<strings.length;i++){
             Array.set(array, i, convert(componentType, strings[i]));
         }
-        return (T[])array;
+        return array;
     }
 	
 	private static String arrayToString(Object array){
