@@ -24,6 +24,7 @@ import org.lightframework.mvc.binding.BindingException;
  * the interface to convert string to object of the given {@link Argument}
  *
  * @author fenghm(live.fenghm@gmail.com)
+ * 
  * @since 1.0.0
  */
 public interface IConverter {

@@ -84,7 +84,7 @@ public class Module {
 	    		try{
 	    			plugin.unload();
 	    		}catch(Exception e){
-	    			log.error("[module '{}'] -> unload plugin '{}' error", plugin.getName(),e);
+	    			log.error("[module:{}] -> unload plugin '{}' error", plugin.getName(),e);
 	    		}
 	    	}
 	    	started = false;
@@ -133,7 +133,7 @@ public class Module {
 			for(String clazz : classes){
 				if(clazz.equalsIgnoreCase(name)){
 					if(log.isDebugEnabled()){
-						log.debug("[module:'{}'] -> found class name '{}'",getName(),clazz);
+						log.debug("[module:{}] -> found class name '{}'",getName(),clazz);
 					}
 					return loadClassForName(clazz);
 				}
@@ -141,7 +141,7 @@ public class Module {
 		}
 		
 		if(log.isDebugEnabled()){
-			log.debug("[module:'{}'] -> no class found with the given names",getName());
+			log.debug("[module:{}] -> no class found with the given names",getName());
 		}
 		
 		return null;
@@ -158,12 +158,12 @@ public class Module {
 		if(null == obj){
 			try {
 				if(log.isTraceEnabled()){
-					log.trace("[module:'{}] -> create controller '{}' instance of '{}'",
+					log.trace("[module:{}] -> create controller '{}' instance of '{}'",
 							  new Object[]{getName(),controllerName,controllerClass.getName()});
 				}
 	            obj = controllerClass.newInstance();
             } catch (Exception e) {
-            	throw new MvcException("[module:'" + getName() + "'] -> new controller instance error : " + e.getMessage(),e);
+            	throw new MvcException("[module:" + getName() + "] -> new controller instance error : " + e.getMessage(),e);
             }
 			controllers.put(key, obj);
 		}
@@ -192,7 +192,7 @@ public class Module {
 		try {
 	        clazz = getClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
-        	log.debug("[module:'{}'] -> class '{}' not found",getName(),className);
+        	log.debug("[module:{}] -> class '{}' not found",getName(),className);
         }
         return clazz;
 	}
@@ -264,14 +264,14 @@ public class Module {
 	            Method method = ClassUtils.findMethodIgnoreCase(clazz, "config");
 	            if(null != method){
 	            	if(method.getParameterTypes().length > 0){
-	            		log.warn("[module:'{}'] -> config method in class '{}' should had no parameters",getName(),clazz.getName());
+	            		log.warn("[module:{}] -> config method in class '{}' should had no parameters",getName(),clazz.getName());
 	            		return ;
 	            	}
 	            	
-	    			log.debug("[module:'{}'] -> found config method in home controller : '{}'",getName(),clazz.getName());
+	    			log.debug("[module:{}] -> found config method in home controller : '{}'",getName(),clazz.getName());
 
 	    			if(Modifier.isPublic(method.getModifiers())){
-	    				log.debug("[module:'{}'] -> call the config method to config module",getName());
+	    				log.debug("[module:{}] -> call the config method to config module",getName());
 	    				try {
 	                        if(Modifier.isStatic(method.getModifiers())){
 	                        	method.invoke(null, new Object[]{});  					
@@ -281,35 +281,35 @@ public class Module {
 	                        }
 	                        loaded = true;
                         } catch (Exception e) {
-                        	log.error("[module:'{}'] -> error calling config method ",getName(),e);
+                        	log.error("[module:{}] -> error calling config method ",getName(),e);
                         }
 	    			}else{
-	    				log.debug("[module:'{}'] -> config method is not public,ignore it",getName());
+	    				log.debug("[module:{}] -> config method is not public,ignore it",getName());
 	    			}
 	            }
             } catch (IOException e) {
-            	log.warn("[module:'{}'] -> find config method error",getName(),e);
+            	log.warn("[module:{}] -> find config method error",getName(),e);
             }
 		}
 		
 		if(!loaded){
-			log.info("[module:'{}'] -> configuration not found",getName());
+			log.info("[module:{}] -> configuration not found",getName());
 		}else{
-			log.info("[module:'{}'] -> configuration was loaded",getName());
+			log.info("[module:{}] -> configuration was loaded",getName());
 		}		
 	}
 	
 	protected String findView(String path,String controller,String action){
 		//TODO : improve performance in production mode
 		if(log.isTraceEnabled()){
-			log.trace("[module:'{}'] -> try to find view in path '{}'",getName(),path);
+			log.trace("[module:{}] -> try to find view in path '{}'",getName(),path);
 		}
 		
 		Collection<String> resources = findWebResources(path);
 		if(null != resources && !resources.isEmpty()){
 			
 			if(log.isTraceEnabled()){
-				log.trace("[module:'{}'] -> find {} resources",getName(),resources.size());
+				log.trace("[module:{}] -> find {} resources",getName(),resources.size());
 			}
 			
 			String prefix = path + "/" + action + ".";
@@ -332,9 +332,9 @@ public class Module {
 			
 			if(log.isTraceEnabled()){
 				if(null == found){
-					log.trace("[module:'{}'] -> no matched view of action '{}' found",getName(),action);
+					log.trace("[module:{}] -> no matched view of action '{}' found",getName(),action);
 				}else{
-					log.trace("[module:'{}'] -> found matched view '{}'",getName(),found);
+					log.trace("[module:{}] -> found matched view '{}'",getName(),found);
 				}
 			}
 		
@@ -342,7 +342,7 @@ public class Module {
 		}
 		
 		if(log.isTraceEnabled()){
-			log.trace("[module:'{}'] -> no resources found",getName());
+			log.trace("[module:{}] -> no resources found",getName());
 		}
 		
 		return null;
@@ -350,7 +350,7 @@ public class Module {
 	
 	protected String findMatchedView(Collection<String> resources,String tofind,boolean startsWith) {
 		if(log.isTraceEnabled()){
-			log.trace("[module:'{}'] -> to find matched view '{}'",getName(),tofind);
+			log.trace("[module:{}] -> to find matched view '{}'",getName(),tofind);
 		}
 		for(String resource : resources){
 			if(startsWith){
@@ -373,7 +373,7 @@ public class Module {
 	
 	protected Collection<String> findWebResources(String path){
 		//XXX: implement findWebResources
-		log.warn("[module:'{}'] -> not implemented method : findWebResources",getName());
+		log.warn("[module:{}] -> not implemented method : findWebResources",getName());
 		return new ArrayList<String>();
 	}
 	
@@ -393,7 +393,7 @@ public class Module {
             		classNames = findModuleClassNames();
 
                 	if(log.isTraceEnabled()){
-	                	log.trace("[module:'{}'] -> found {} classes in package '{}'",
+	                	log.trace("[module:{}] -> found {} classes in package '{}'",
 	                			  new Object[]{getName(),classNames.size(),packagee}
 	                	);
                 	}
