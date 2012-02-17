@@ -64,11 +64,11 @@ public class Framework {
 	protected static void start(Module module){
 		initialize();
 		try {
-	        log.debug("[module:'{}'] -> starting...",module.getName());
+	        log.debug("[module:{}] -> starting...",module.getName());
 	        module.start();
-	        log.debug("[module:'{}'] -> started!",module.getName());
+	        log.debug("[module:{}] -> started!",module.getName());
         } catch (Exception e) {
-        	log.error("[module:'{}'] -> start error",module.getName(),e);
+        	log.error("[module:{}] -> start error",module.getName(),e);
         }
 	}
 	
@@ -77,11 +77,11 @@ public class Framework {
 	 */
 	protected static void stop(Module module){
 		try {
-			log.debug("[module:'{}'] -> stopping...",module.getName());
+			log.debug("[module:{}] -> stopping...",module.getName());
 			module.stop();
-			log.debug("[module:'{}'] -> stopped!",module.getName());
+			log.debug("[module:{}] -> stopped!",module.getName());
 		}catch(Exception e){
-			log.error("[module:'{}'] -> stop error" ,module.getName(),e);
+			log.error("[module:{}] -> stop error" ,module.getName(),e);
 		}finally{
 			//release all context data
 			Result.reset();
