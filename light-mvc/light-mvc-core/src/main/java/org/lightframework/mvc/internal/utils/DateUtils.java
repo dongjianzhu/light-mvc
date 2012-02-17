@@ -21,6 +21,8 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <code>{@link DateUtils}</code>
@@ -43,6 +45,8 @@ public class DateUtils {
     public static final SimpleDateFormat timestampFormater;
     public static final SimpleDateFormat rfcDateFormater;
     
+    private static final Map<String, SimpleDateFormat> formaters = new ConcurrentHashMap<String, SimpleDateFormat>();
+    
     static {
         dateFormater      = new SimpleDateFormat(DATE_FORMAT);
         timeFormater      = new SimpleDateFormat(TIME_FORMAT);
@@ -55,6 +59,33 @@ public class DateUtils {
         dateTimeFormater.setLenient(false);
         timestampFormater.setLenient(false);
         rfcDateFormater.setLenient(false);
+        
+        formaters.put(DATE_FORMAT, 		dateFormater);
+        formaters.put(TIME_FORMAT, 		timeFormater);
+        formaters.put(DATETIME_FORMAT,  dateTimeFormater);
+        formaters.put(TIMESTAMP_FORMAT, timestampFormater);
+        formaters.put(RFC_DATE_FORMAT,  rfcDateFormater);
+    }
+    
+    public static SimpleDateFormat formatter(String format){
+		SimpleDateFormat formater = formaters.get(format);
+		
+		if(null == formater){
+			formater = new SimpleDateFormat(format);
+			formater.setLenient(false);
+			
+			formaters.put(format, formater);
+		}
+		
+		return formater;
+    }
+    
+    public static Date toDate(Class<? extends Date> type, String string,String format) {
+    	if(null != format && !"".equals(format)){
+    		return toDate(type,string,formatter(format));
+    	}
+    	
+    	return toDate(type,string);
     }
     
     public static Date toDate(Class<? extends Date> type, String string) {
@@ -130,7 +161,7 @@ public class DateUtils {
             }
         }
         
-        return null;
+        return date;
     }
     
     private static Date toDate(String string,SimpleDateFormat format){

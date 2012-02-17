@@ -44,6 +44,11 @@ public interface IBindingContext {
 	Map<String,Object> getParameters();
 	
 	/**
+	 * @return context object by type or name , if no mached context object then return null
+	 */
+	Object getParameter(Class<?> type,String name);
+	
+	/**
 	 * @return external converters
 	 */
 	List<IConverter> getConverters();

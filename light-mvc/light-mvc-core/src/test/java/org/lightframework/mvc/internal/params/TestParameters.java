@@ -18,28 +18,12 @@ package org.lightframework.mvc.internal.params;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lightframework.mvc.internal.params.ParametersArray;
-import org.lightframework.mvc.internal.params.Parameters;
-
 import junit.framework.TestCase;
 
 /**
  * @since 1.x.x
  */
 public class TestParameters extends TestCase{
-	public void testParamArray() throws Exception{
-		Object[] temp = {"123","字符","true" , new String[]{"A","B"}} ;
-		ParametersArray array = new ParametersArray(temp) ;
-		assertEquals(array.isEmpty(), false) ;
-		assertEquals(array.getInt(0) , 123) ;
-		assertEquals(array.getString(1) , "字符") ;
-		assertEquals(array.getBoolean(2) ,Boolean.TRUE ) ;
-		assertEquals(array.getInteger(0) ,new Integer(123) ) ;
-		assertEquals(array.getLong(0) ,new Long(123) ) ;
-		assertEquals(array.getArray(3)[0] ,"A" ) ;
-		assertNotNull(array.getBean(3)) ;
-		
-	}
 	
 	@SuppressWarnings("unchecked")
     public void testParamObject(){

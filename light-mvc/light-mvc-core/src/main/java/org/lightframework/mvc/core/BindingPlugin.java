@@ -18,6 +18,10 @@ package org.lightframework.mvc.core;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
@@ -27,8 +31,7 @@ import org.lightframework.mvc.binding.Argument;
 import org.lightframework.mvc.binding.Binder;
 import org.lightframework.mvc.binding.IBindingContext;
 import org.lightframework.mvc.convert.IConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.lightframework.mvc.internal.params.Parameters;
 
 /**
  * the core plugin to binding parameters in request of action method.
@@ -38,39 +41,30 @@ import org.slf4j.LoggerFactory;
  * @since 1.0.0
  */
 public class BindingPlugin extends Plugin {
-	private static final Logger log = LoggerFactory.getLogger(BindingPlugin.class);
-	
 	@Override
     public boolean binding(Request request, Response response, Action action) throws Exception{
 		BindingContext context = new BindingContext(request, action);
-		for(Argument arg : action.getArguments()){
-			if(!arg.isBinded()){
-				Object value = context.getParameter(arg.getName());
+		
+		if(action.getArguments().length == 1){
+			Argument arg = action.getArguments()[0];
+			
+			if(arg.isBinded()){
+				return true;
+			}
+			
+			if(arg.getType().isArray() && request.hasBodyParameters()){
+				Parameters params = request.getBodyParameters();
 				
-				if(null == value && request.hasBodyParameters() && action.getArguments().length == 1){
-					value = request.getBodyParameters().isArray() ? 
-								request.getBodyParameters().array().array() : 
-								request.getBodyParameters().map();
-				}
-				
-				if(log.isTraceEnabled()){
-					String type = value == null ? "null" : value.getClass().getName();
-					log.trace("[arg:'{}'] -> tryto binding : '{}'-'{}'",
-							   new Object[]{arg.getName(),type,value});
-				}
-				arg.binding(Binder.binding(arg,value,context));
-				if(log.isTraceEnabled()){
-					if(arg.isBinded()){
-						Object binded = arg.getValue();
-						String type   = null != binded ? binded.getClass().getName() : "null";
-						log.trace("[arg:'{}'] -> binding value : '{}'-'{}'",
-								  new Object[]{arg.getName(),type,binded});
-					}else{
-						log.trace("[arg:'{}'] -> not binded",arg.getName());
-					}
+				if(params.isArray()){
+					arg.binding(Binder.binding(arg, params.array(), context));
+					
+					return true;
 				}
 			}
 		}
+		
+		Binder.binding(action.getArguments(), context);
+		
 		return true;
     }
 	
@@ -83,6 +77,7 @@ public class BindingPlugin extends Plugin {
 		private BindingContext(Request request,Action action){
 			this.request = request;
 			this.action  = action;
+			
 			for(String name : request.getParameterNames()){
 				String[] value = request.getParameterValues(name);
 				if(value.length == 1){
@@ -92,26 +87,65 @@ public class BindingPlugin extends Plugin {
 				}else{
 					map.put(name, value);
 				}
-			}			
+			}
+			
+			if(request.hasBodyParameters()){
+				Parameters params = request.getBodyParameters();
+				
+				if(params.isMap()){
+					map.putAll(params.map());
+				}
+			}
+			
+			map.putAll(this.action.getParameters());
 		}
 		
-		public Object getParameter(String name) {
-			//get arg's raw value
-			Object value = action.getParameter(name);
-			if(null == value && request.hasBodyParameters() && request.getBodyParameters().isMap()){
-				value = request.getBodyParameters().get(name);
+		public Object getParameter(Class<?> type, String name) {
+			if(HttpServletRequest.class.isAssignableFrom(type)){
+				return request.getExternalRequest();
 			}
-			if(null == value){
-				value = request.getParameter(name);
+			
+			if(HttpServletResponse.class.isAssignableFrom(type)){
+				return request.getResponse().getExternalResponse();
 			}
-			return value;
+			
+			if(Request.class.isAssignableFrom(type)){
+				return request;
+			}
+			
+			if(Map.class.isAssignableFrom(type)){
+				return map;
+			}
+			
+	        return getParameter(name);
         }
 
+		public Object getParameter(String name) {
+//			//get arg's raw value
+//			Object value = action.getParameter(name);
+//			if(null == value && request.hasBodyParameters() && request.getBodyParameters().isMap()){
+//				value = request.getBodyParameters().get(name);
+//			}
+//			if(null == value){
+//				value = request.getParameter(name);
+//			}
+//			return value;
+			
+			for(Entry<String, Object> entry : map.entrySet()){
+				if(entry.getKey().equalsIgnoreCase(name)){
+					return entry.getValue();
+				}
+			}
+			
+			return null;
+		}
+
 		public Map<String, Object> getParameters() {
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.putAll(map);
-			params.putAll(action.getParameters());
-			return params;
+//			Map<String, Object> params = new HashMap<String, Object>();
+//			params.putAll(map);
+//			params.putAll(action.getParameters());
+//			return params;
+			return map;
         }
 		
 		public List<IConverter> getConverters() {
