@@ -18,6 +18,9 @@ package org.lightframework.mvc.clazz;
 import java.net.URL;
 import java.util.Set;
 
+import org.lightframework.mvc.internal.clazz.ClassFinder;
+import org.lightframework.mvc.internal.clazz.ClazzLoader;
+
 import test.resources.Resource1;
 
 import junit.framework.TestCase;

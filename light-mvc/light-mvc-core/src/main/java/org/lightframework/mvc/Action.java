@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lightframework.mvc.binding.Argument;
-import org.lightframework.mvc.clazz.ClassUtils;
+import org.lightframework.mvc.internal.clazz.ClassUtils;
 
 /**
  * definition of an action. <p>
