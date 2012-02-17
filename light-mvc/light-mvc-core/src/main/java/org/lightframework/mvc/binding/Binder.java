@@ -18,7 +18,10 @@ package org.lightframework.mvc.binding;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.lightframework.mvc.config.Default;
 import org.lightframework.mvc.config.Format;
@@ -48,16 +51,20 @@ public final class Binder {
 			return resolveArguments(ClassUtils.getMethodParameters(method));
 		} catch (IOException e) {
 			throw new BindingException("error resolving arguments of method '" + method.getName() + "'", e);
-
 		}
 	}
 
 	public static Object[] binding(Method method, IBindingContext context) throws BindingException {
 		Argument[] arguments = resolveArguments(method);
+		
+		binding(arguments,context);
+		
 		Object[] executeArgs = new Object[arguments.length];
+		
 		for (int i = 0; i < arguments.length; i++) {
-			executeArgs[i] = binding(arguments[i], context);
+			executeArgs[i] = arguments[i].getValue();
 		}
+		
 		return executeArgs;
 	}
 	
@@ -81,7 +88,21 @@ public final class Binder {
 				}
 				
 				if(null == value && ReflectType.isBeanType(arg.getType())){
-					value = context.getParameters();
+					if(args.length == 1){
+						value = context.getParameters();
+					}else{
+						Map<String, Object> map = new HashMap<String, Object>();
+						
+						String prefix = arg.getName() + ".";
+						
+						for(Entry<String, Object> param : context.getParameters().entrySet()){
+							if(param.getKey().toLowerCase().startsWith(prefix)){
+								map.put(param.getKey().substring(prefix.length()), param.getValue());
+							}
+						}
+						
+						value = map;
+					}
 				}
 				
 				arg.binding(Binder.binding(arg,value,context));
@@ -100,12 +121,7 @@ public final class Binder {
 		}
 	}
 
-	public static Object binding(Argument arg, IBindingContext context) throws BindingException {
-		return binding(arg, context.getParameter(arg.getName()), context);
-	}
-
-	public static Object binding(Argument arg, Object value, IBindingContext context) throws BindingException {
-		try {
+	public static Object binding(Argument arg, Object value, IBindingContext context) throws BindingException { try {
 			Class<?> type = arg.getType();
 
 			// binging default value for primitive type
