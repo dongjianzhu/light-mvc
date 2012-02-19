@@ -46,7 +46,7 @@ public class FilterMappingPlugin extends Plugin {
 
 
 	@Override
-	public boolean ignore(Request request) throws Exception {
+	public boolean ignore(Request request) throws Throwable {
 		
 		if(isCacheRequest(request)){
 			request.getResponse().setHeader("Cache-Control", "Public");

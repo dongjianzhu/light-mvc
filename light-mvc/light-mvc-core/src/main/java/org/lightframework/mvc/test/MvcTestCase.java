@@ -23,6 +23,8 @@ import org.lightframework.mvc.internal.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mockrunner.mock.web.MockServletContext;
+
 /**
  * junit {@link TestCase} for mvc framework
  *
@@ -42,8 +44,8 @@ public abstract class MvcTestCase extends TestCase {
 	protected MockSession     session;
 	protected MockRequest     request;
 	protected MockResponse    response;
-	protected boolean         ignored;
-	protected boolean         managed;
+	protected boolean        ignored;
+	protected boolean        managed;
 	protected String          packagee;
 	
 	@Override
@@ -62,7 +64,7 @@ public abstract class MvcTestCase extends TestCase {
 		}
 		
 		if(null == application){
-			application = new MockApplication(new Object(),module);
+			application = new MockApplication(new MockServletContext(),module);
 		}
 		
 		reset();
@@ -76,7 +78,7 @@ public abstract class MvcTestCase extends TestCase {
 	    setUpEveryTest();
 	    
 	    module.getPlugins().addAll(PluginManager.getPlugins());
-	    MockFramework.mockStart(module);
+	    MockFramework.mockStart(application);
     }
 	
 	@Override
@@ -84,7 +86,7 @@ public abstract class MvcTestCase extends TestCase {
 		tearDownEveryTest();
 		
 		MockFramework.mockHandleFinally(request, response);
-		MockFramework.mockStop(module);
+		MockFramework.mockStop(application);
 		MockApplication.mockSetCurrent(null);
 		
 		log.info("============================END:{}===============================",getName());
@@ -103,12 +105,12 @@ public abstract class MvcTestCase extends TestCase {
 		
 	}
 	
-	protected final Result request(String path) throws Exception {
+	protected final Result request(String path) throws Throwable {
 		request.setPath(path);
 		return execute();
 	}
 	
-	protected final Result execute() throws Exception {
+	protected final Result execute() throws Throwable {
 		MockApplication.mockSetCurrent(application);
 		if(MockFramework.mockIgnore(request)){
 			ignored = true;

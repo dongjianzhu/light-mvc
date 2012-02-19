@@ -43,7 +43,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		module.setPackagee(packages);
     }
 
-	public void testRenderResult() throws Exception{
+	public void testRenderResult() throws Throwable{
 		RenderAjaxPlugin plugin = new RenderAjaxPlugin();
 		ContentResult content = new ContentResult("text");
 		plugin.renderJson(request, response, content);
@@ -60,14 +60,14 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		assertEquals("text", result.getValue());
 	}
 	
-	public void testNotAjaxRequest() throws Exception{
+	public void testNotAjaxRequest() throws Throwable{
 		execute();
 		assertNull(response.getContent());
         assertEquals("no-cache",response.getHeader("Cache-Control"));
         assertEquals("no-cache",response.getHeader("Pragma"));
 	}
 	
-	public void testAjaxRequestByHeader() throws Exception {
+	public void testAjaxRequestByHeader() throws Throwable {
 		request.setHeader(HTTP.HEADER_NAME_AJAX_REQUEST, HTTP.HEADER_VALUE_AJAX_REQUEST);
 
 		executeAjaxRequest();
@@ -76,19 +76,19 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
         assertEquals("no-cache",response.getHeader("Pragma"));
 	}
 	
-	public void testAjaxRequestByQueryString() throws Exception {
+	public void testAjaxRequestByQueryString() throws Throwable {
 		request.setParameter(HTTP.X_PARAM_AJAX, "true");
 		
 		executeAjaxRequest();
 	}
 	
-	public void testAjaxRequestByAnnotation() throws Exception {
+	public void testAjaxRequestByAnnotation() throws Throwable {
 		request.setPath("/hello");
 		
 		executeAjaxRequest();
 	}
 	
-	public void testAjaxRequestOfReturnError() throws Exception {
+	public void testAjaxRequestOfReturnError() throws Throwable {
 		request.setAjax(true);
 		request.setPath("/error");
 		
@@ -105,7 +105,7 @@ public class TestRenderAjaxPlugin extends MvcTestCase {
 		assertNotNull(result.getError());
 	}
 	
-	protected void executeAjaxRequest() throws Exception {
+	protected void executeAjaxRequest() throws Throwable {
 		createSubClass(Home.class, packages + ".Home");
 		
 		execute();

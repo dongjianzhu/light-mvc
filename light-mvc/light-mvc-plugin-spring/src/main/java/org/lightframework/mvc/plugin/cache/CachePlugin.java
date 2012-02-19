@@ -46,7 +46,7 @@ public class CachePlugin extends Plugin {
 	private Long  expires  = 365L;
 
 	@Override
-	public boolean ignore(Request request) throws Exception {
+	public boolean ignore(Request request) throws Throwable {
 		if (isValidRequest4Cache(request)) {
 
 			log.debug(">>>>>>Cache URI {}", request.getUriString());

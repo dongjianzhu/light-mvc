@@ -34,4 +34,7 @@ public class Home {
 		log.info("** index action of home controller executed **");
 	}
 	
+	public void throwError(){
+	    throw new RuntimeException("an error");
+	}
 }

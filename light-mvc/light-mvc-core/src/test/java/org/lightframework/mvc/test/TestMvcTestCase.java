@@ -56,7 +56,7 @@ public class TestMvcTestCase extends MvcTestCase {
 		assertEquals(request.getMockUrl().getUriString(), request.getUriString());
 	}
 	
-	public void testHome() throws Exception {
+	public void testHome() throws Throwable {
 		request.setPath("");
 		
 		execute();
@@ -77,37 +77,37 @@ public class TestMvcTestCase extends MvcTestCase {
 		assertNull(result.getValue());
 	}
 	
-	public void testModulePlugin() throws Exception {
+	public void testModulePlugin() throws Throwable {
 
 		final AtomicInteger counter = new AtomicInteger();
 		
 		Plugin plugin = new Plugin() {
 			@Override
-            public boolean request(Request request, Response response) throws Exception {
+            public boolean request(Request request, Response response) throws Throwable {
 				counter.incrementAndGet();
 				return false;
             }
 
 			@Override
-            public Action[] route(Request request, Response response) throws Exception {
+            public Action[] route(Request request, Response response) throws Throwable {
 				counter.incrementAndGet();
 	            return super.route(request, response);
             }
 
 			@Override
-            public boolean resolve(Request request, Response response, Action action) throws Exception {
+            public boolean resolve(Request request, Response response, Action action) throws Throwable {
 				counter.incrementAndGet();
 	            return super.resolve(request, response, action);
             }
 
 			@Override
-            public boolean binding(Request request, Response response, Action action) throws Exception {
+            public boolean binding(Request request, Response response, Action action) throws Throwable {
 				counter.incrementAndGet();
 	            return super.binding(request, response, action);
             }
 
 			@Override
-            public Result execute(Request request, Response response, Action action) throws Exception {
+            public Result execute(Request request, Response response, Action action) throws Throwable {
 				counter.incrementAndGet();
 	            return super.execute(request, response, action);
             }

@@ -37,7 +37,7 @@ public class SpringPlugin extends Plugin implements BeanFactoryAware{
 	private BeanFactory beanFactory;
 
 	@Override
-    public boolean resolve(Request request, Response response, Action action) throws Exception {
+    public boolean resolve(Request request, Response response, Action action) throws Throwable {
 		String controllerName  = action.getControllerName();
 		
         Object controller = null;

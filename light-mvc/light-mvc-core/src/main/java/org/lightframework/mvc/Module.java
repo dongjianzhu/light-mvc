@@ -83,7 +83,7 @@ public class Module {
 	    	for(Plugin plugin : plugins){
 	    		try{
 	    			plugin.unload();
-	    		}catch(Exception e){
+	    		}catch(Throwable e){
 	    			log.error("[module:{}] -> unload plugin '{}' error", plugin.getName(),e);
 	    		}
 	    	}

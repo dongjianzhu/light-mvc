@@ -98,7 +98,7 @@ public class MvcFilter implements javax.servlet.Filter {
 	protected void doHandle(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
 		
 		try{
-			servletRequest.setCharacterEncoding(application.getEncoding());
+			servletRequest.setCharacterEncoding(application.encoding());
 			Application.setCurrent(application);
 			
 			//create mvc framework http request and response
@@ -193,7 +193,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		//add plugins to module
 		module.getPlugins().addAll(PluginManager.getPlugins());
 		
-		Framework.start(module);
+		Framework.start(application);
 		
 		doInited();
 		
@@ -217,7 +217,7 @@ public class MvcFilter implements javax.servlet.Filter {
 	}
 	
 	protected void doDestroy(){
-		Framework.stop(module);
+		Framework.stop(application);
 	}
 	
 	/**

@@ -15,6 +15,8 @@
  */
 package org.lightframework.mvc.test;
 
+import javax.servlet.ServletContext;
+
 import org.lightframework.mvc.Application;
 import org.lightframework.mvc.Module;
 
@@ -30,13 +32,16 @@ public class MockApplication extends Application {
 	public MockApplication() {
 	    super();
     }
-
+	
 	public MockApplication(Object context, Module root) {
+	    super(context, root);
+    }
+
+	public MockApplication(ServletContext context, Module root) {
 	    super(context, root);
     }
 
 	static void mockSetCurrent(MockApplication application){
 		Application.setCurrent(application);
 	}
-	
 }

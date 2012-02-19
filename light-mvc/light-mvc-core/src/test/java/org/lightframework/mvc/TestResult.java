@@ -36,7 +36,7 @@ import com.mockrunner.mock.web.MockHttpSession;
 public class TestResult extends MvcTestCase {
 	
 	@SuppressWarnings("static-access")
-    public void testRedirect() throws Exception{
+    public void testRedirect() throws Throwable{
 		module.setPackagee(packagee);
 		Result result = request("/");
 		
@@ -73,7 +73,7 @@ public class TestResult extends MvcTestCase {
 		assertEquals( request.getContext() + "/mvc/test", response.getRedirectUrl());
 	}
 	
-	public void testForward() throws Exception{
+	public void testForward() throws Throwable{
 		module.setPackagee(packagee);
 		request("/");
 		
@@ -104,7 +104,7 @@ public class TestResult extends MvcTestCase {
 		assertEquals( session.getExternalSession().getClass(), MockHttpSession.class);
 	}
 	
-	public void testContent()  throws Exception{
+	public void testContent()  throws Throwable{
 		request("/");
 		Result.content("text") ;
 		
@@ -112,14 +112,14 @@ public class TestResult extends MvcTestCase {
 		assertNotNull(resp.getOutputStreamContent() , "text") ;
 	}
 
-	public void testScript()  throws Exception{
+	public void testScript()  throws Throwable{
 		request("/");
 		Result.script("alert(123);") ;
 		MockHttpServletResponse resp = (MockHttpServletResponse)Result.getServletResponse() ;
 		assertNotNull(resp.getOutputStreamContent()) ;
 	}
 
-    public void testFile() throws Exception{
+    public void testFile() throws Throwable{
     	request("/");
     	
     	FileUtils.createDir(new File("C:/mvcTest")) ;  

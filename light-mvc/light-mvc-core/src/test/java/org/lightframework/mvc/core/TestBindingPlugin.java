@@ -45,7 +45,7 @@ public class TestBindingPlugin extends MvcTestCase {
 
 	}
 
-	public void testNumberPrimitiveBinding() throws Exception {
+	public void testNumberPrimitiveBinding() throws Throwable {
 		request.setPath("/binding/number_primitive");
 		request.setParameter("intParam", "1");
 		request.setParameter("longParam", "2");
@@ -60,7 +60,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 
-	public void testNumberObjectBinding() throws Exception {
+	public void testNumberObjectBinding() throws Throwable {
 		request.setPath("/binding/number_object");
 		request.setParameter("intParam", "1");
 		request.setParameter("longParam", "2");
@@ -73,7 +73,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testStringBinding() throws Exception {
+	public void testStringBinding() throws Throwable {
 		request.setPath("/binding/string");
 		request.setParameter("stringParam", "string");
 		request.setParameter("charParam1", "c");
@@ -85,7 +85,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testBoolAndByteBinding() throws Exception {
+	public void testBoolAndByteBinding() throws Throwable {
 		request.setPath("/binding/bool_and_byte");
 		request.setParameter("ok1", "true");
 		request.setParameter("ok2", "0");
@@ -98,7 +98,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());		
 	}
 	
-	public void testDateBinding() throws Exception {
+	public void testDateBinding() throws Throwable {
 		request.setPath("/binding/date");
 		request.setParameter("time", "10:10:10");
 		request.setParameter("sqlDate", "2010-10-10");
@@ -111,7 +111,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testArrayBinding() throws Exception {
+	public void testArrayBinding() throws Throwable {
 		request.setPath("/binding/array");
 		request.setParameter("values", "1,2,3");
 		
@@ -125,7 +125,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testDirectArrayBinding() throws Exception {
+	public void testDirectArrayBinding() throws Throwable {
 		request.setPath("/binding/array1");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -136,7 +136,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}	
 	
-	public void testBeanArrayBinding() throws Exception {
+	public void testBeanArrayBinding() throws Throwable {
 		request.setPath("/binding/array2");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -147,7 +147,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}	
 	
-	public void testBeanArrayBinding1() throws Exception {
+	public void testBeanArrayBinding1() throws Throwable {
 		request.setPath("/binding/array2");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -158,7 +158,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testBeanListBinding() throws Exception {
+	public void testBeanListBinding() throws Throwable {
 		request.setPath("/binding/list2");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -169,7 +169,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testCombine1() throws Exception {
+	public void testCombine1() throws Throwable {
 		request.setPath("/binding/combine1");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -180,7 +180,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}	
 	
-	public void testEnumBinding() throws Exception {
+	public void testEnumBinding() throws Throwable {
 		request.setPath("/binding/enums");
 		request.setParameter("color", "RED");
 		
@@ -189,7 +189,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());		
 	}
 	
-	public void testMapBinding() throws Exception {
+	public void testMapBinding() throws Throwable {
 		request.setPath("/binding/map");
 		request.setParameter("hello", "you are welcome");
 		
@@ -198,7 +198,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());	
 	}
 	
-	public void testBeanBinding() throws Exception {
+	public void testBeanBinding() throws Throwable {
 		request.setPath("/binding/bean");
 		request.setParameter("name", "xiaoming");
 		request.setParameter("age", "100");
@@ -209,7 +209,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testOgnlBinding() throws Exception {
+	public void testOgnlBinding() throws Throwable {
 		request.setPath("/binding/ognl");
 		request.setParameter("name", "xiaoming");
 		request.setParameter("age", "100");
@@ -223,7 +223,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testOgnlsBinding() throws Exception {
+	public void testOgnlsBinding() throws Throwable {
 		request.setPath("/binding/ognls");
 
 		request.setParameter("user1.name", "xiaoming");

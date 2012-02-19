@@ -37,7 +37,7 @@ public class TestRequest extends MvcTestCase {
 		assertTrue(request.isAjax());
 	}
 	
-	public void testBase() throws Exception{
+	public void testBase() throws Throwable{
 		execute();
 		Request request = Request.current();
 		assertNotNull(request);

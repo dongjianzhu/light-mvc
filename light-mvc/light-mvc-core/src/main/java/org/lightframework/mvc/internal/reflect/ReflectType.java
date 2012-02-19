@@ -18,6 +18,7 @@ package org.lightframework.mvc.internal.reflect;
 import static org.lightframework.mvc.internal.reflect.ReflectUtils.getDeclaredFields;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +162,15 @@ public class ReflectType {
             }
         }
         return null;
+    }
+    
+    public ReflectMethod findMethod(String name,Class<?>... argumentTypes){
+        Method method = ReflectUtils.findMethod(type, name, argumentTypes);
+        if(null == method){
+            return null;
+        }else{
+            return new ReflectMethod(accessor, method);
+        }
     }
     
     private void initialize(){
