@@ -27,7 +27,7 @@ import org.lightframework.mvc.routing.Route;
  * 
  * @since 1.0.0
  */
-public final class Routes {
+public final class RouteManager {
 	
 	private static final LinkedList<Route> table = new LinkedList<Route>();
 

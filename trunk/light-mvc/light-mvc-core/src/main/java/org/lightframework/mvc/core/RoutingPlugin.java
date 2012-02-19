@@ -23,7 +23,7 @@ import java.util.Map;
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Assert;
 import org.lightframework.mvc.Plugin;
-import org.lightframework.mvc.Routes;
+import org.lightframework.mvc.RouteManager;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.routing.Match;
@@ -61,12 +61,25 @@ public class RoutingPlugin extends Plugin {
 		
 		Match matched = null;
 		
-		for(Route route : routes()){
-			Match match = route.matches(method, path);
-			
-			if(match.isMatched()){
-				matched = match;
-				break;
+		if(null == matched){
+			for(Route route : request.getApplication().routes()){
+				Match match = route.matches(method, path);
+				
+				if(match.isMatched()){
+					matched = match;
+					break;
+				}
+			}
+		}
+		
+		if(null == matched){
+			for(Route route : routes()){
+				Match match = route.matches(method, path);
+				
+				if(match.isMatched()){
+					matched = match;
+					break;
+				}
 			}
 		}
 		
@@ -145,6 +158,6 @@ public class RoutingPlugin extends Plugin {
 	}
 	
 	public Collection<Route> routes(){
-		return Routes.table();
+		return RouteManager.table();
 	}
 }

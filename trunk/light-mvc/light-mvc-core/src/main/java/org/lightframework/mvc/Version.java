@@ -24,10 +24,12 @@ package org.lightframework.mvc;
  */
 public final class Version {
 
-    private static final String buildtime = "20120217-1555";
+    private static final String buildtime = "20120217-2031";
     private static final String version   = "1.1.0-SNAPSHOT";
 	
-	public static final String version_name   = version;
-
-	public static final String version_string = version_name + "(" + buildtime + ")";
+	private static final String version_string = version + "(" + buildtime + ")";
+	
+	public static String getVersion(){
+		return version_string;
+	}
 }

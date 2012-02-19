@@ -19,7 +19,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.lightframework.mvc.Action;
-import org.lightframework.mvc.MvcException;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
@@ -43,7 +42,7 @@ public class ExecutePlugin extends Plugin {
 	private static final Object[] EMPTY_EXECUTE_ARGS = new Object[]{};
 	
 	@Override
-    public Result execute(Request request, Response response, Action action) throws Exception{
+    public Result execute(Request request, Response response, Action action) throws Throwable {
 		//execute java method
 		Method method = action.getMethod();
 		
@@ -83,11 +82,6 @@ public class ExecutePlugin extends Plugin {
 				}
 				return new Result.EmptyResult();
 			}
-//		} catch(Return returned){
-//			if(log.isTraceEnabled()){
-//				log.trace("[action:'{}'] -> returned '{}'!",action.getName(),returned.result().getClass().getName());
-//			}
-//			return returned.result();
 		} catch(InvocationTargetException e){
 			if(e.getTargetException() instanceof Return){
 				if(log.isTraceEnabled()){
@@ -97,17 +91,7 @@ public class ExecutePlugin extends Plugin {
 				}
 				return ((Return)e.getTargetException()).result();
 			}else{
-				throw new MvcException("error invoke " + 
-						               action.getControllerClass().getName() + "$" + 
-						               action.getMethod().getName(), e.getTargetException());
-			}
-		}catch(Exception e){
-			if(e instanceof MvcException){
-				throw e;
-			}else{
-				throw new MvcException("error invoke " + 
-			               action.getControllerClass().getName() + "$" + 
-			               action.getMethod().getName(), e);				
+				throw e.getTargetException();
 			}
 		}
     }

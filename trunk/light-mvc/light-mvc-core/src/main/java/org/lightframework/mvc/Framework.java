@@ -46,7 +46,7 @@ public class Framework {
 	
 	protected static void initialize(){
 		if(!initialized){
-			log.info("[mvc] -> current version : '{}'",Version.version_string);
+			log.info("[mvc] -> version : '{}'",Version.getVersion());
 			log.info("[mvc] -> initializing... ");
 			synchronized (Framework.class) {
 	            if(!initialized){
@@ -58,10 +58,43 @@ public class Framework {
 		}
 	}
 	
+	protected static void start(Application application){
+		initialize();
+		try{
+			log.debug("[app:{}] -> starting...",application.name());
+			application.start();
+			log.debug("[app:{}] -> started!",application.name());
+			
+			start(application.getRootModule());
+			
+		}catch(Throwable e){
+			log.error("[app:{}] -> start error",application.name(),e);
+		}
+	}
+	
+	protected static void stop(Application application){
+		try {
+			log.debug("[app:{}] -> stopping...",application.name());
+			application.end();
+			log.debug("[app:{}] -> stopped!",application.name());
+			
+			stop(application.getRootModule());
+		}catch(Exception e){
+			log.error("[app:{}] -> stop error",application.name(),e);
+		}finally{
+			//release all context data
+			Result.reset();
+			Request.reset();
+			
+			//remove application
+			Application.removeCurrent();
+		}
+	}
+	
 	/**
 	 * start the module
 	 */
-	protected static void start(Module module){
+	private static void start(Module module){
 		initialize();
 		try {
 	        log.debug("[module:{}] -> starting...",module.getName());
@@ -75,27 +108,20 @@ public class Framework {
 	/**
 	 * stop the module
 	 */
-	protected static void stop(Module module){
+	private static void stop(Module module){
 		try {
 			log.debug("[module:{}] -> stopping...",module.getName());
 			module.stop();
 			log.debug("[module:{}] -> stopped!",module.getName());
 		}catch(Exception e){
 			log.error("[module:{}] -> stop error" ,module.getName(),e);
-		}finally{
-			//release all context data
-			Result.reset();
-			Request.reset();
-			
-			//remove application
-			Application.removeCurrent();
 		}
 	}
 	
 	/**
 	 * is this request ignored by current module
 	 */
-	protected static boolean ignore(Request request) throws Exception {
+	protected static boolean ignore(Request request) throws Throwable {
 		return PluginInvoker.ignore(request);
 	}
 
@@ -108,7 +134,7 @@ public class Framework {
 	 * @param response     mvc http response
 	 * @return true if mvc framework has handled this request
 	 */
-	protected static boolean handle(Request request,Response response) throws Exception {
+	protected static boolean handle(Request request,Response response) throws Throwable {
 		Assert.notNull("request.module", request.getModule());
 		
 		if(log.isDebugEnabled()){
@@ -159,7 +185,7 @@ public class Framework {
 				request.result = e.result();
 				managed = PluginInvoker.render(request, response, e.result());
 			}
-		}catch(Exception e){
+		}catch(Throwable e){
 			if(log.isDebugEnabled()){
 				log.debug("[mvc] -> an error occurs while handling request,message : {}",e.getMessage());
 			}
@@ -187,7 +213,7 @@ public class Framework {
 		Request.reset();
 	}
 	
-	private static Action resolveAction(Request request,Response response,Action[] actions) throws Exception{
+	private static Action resolveAction(Request request,Response response,Action[] actions) throws Throwable{
 		for(Action action : actions){
 			if(action.isResolved()){
 				return action;
@@ -201,7 +227,7 @@ public class Framework {
 		return null;
 	}
 	
-	private static boolean invokeAction(Request request,Response response,Action action) throws Exception{
+	private static boolean invokeAction(Request request,Response response,Action action) throws Throwable{
 		if(log.isDebugEnabled()){
 			log.debug("[action:'{}'] -> resolved as '{}${}'",
 					  new Object[]{
@@ -242,7 +268,7 @@ public class Framework {
 	 */
 	private static final class PluginInvoker{
 		
-		static boolean ignore(Request request) throws Exception {
+		static boolean ignore(Request request) throws Throwable {
 			for(Plugin plugin : request.getModule().getPlugins()){
 				if(plugin.ignore(request)){
 					if(log.isDebugEnabled()){
@@ -262,7 +288,7 @@ public class Framework {
 			return false;
 		}
 		
-		static boolean request(Request request,Response response) throws Exception{
+		static boolean request(Request request,Response response) throws Throwable{
 			if(log.isDebugEnabled()){
 				log.debug("[plugin-invoker:requet] -> request handling...");
 			}
@@ -288,7 +314,7 @@ public class Framework {
 			return false;
 		}
 		
-		static Action[] route(Request request,Response response) throws Exception{
+		static Action[] route(Request request,Response response) throws Throwable{
 			if(log.isDebugEnabled()){
 				log.debug("[plugin-invoker:route] -> routing action...");
 			}
@@ -316,7 +342,7 @@ public class Framework {
 			return Plugin.EMPTY_ACTIONS;
 		}
 		
-		static boolean resolve(Request request,Response response,Action action) throws Exception{
+		static boolean resolve(Request request,Response response,Action action) throws Throwable{
 			if(log.isDebugEnabled()){
 				log.debug("[plugin-invoker:resolve] -> resolving action...");
 			}
@@ -344,7 +370,7 @@ public class Framework {
 			return false;
 		}
 		
-		static boolean binding(Request request,Response response,Action action) throws Exception{
+		static boolean binding(Request request,Response response,Action action) throws Throwable{
 			if(log.isDebugEnabled()){
 				log.debug("[plugin-invoker:binding] -> binding arguments...");
 			}			
@@ -370,7 +396,7 @@ public class Framework {
 			return false;
 		}
 		
-		static Result execute(Request request,Response response,Action action) throws Exception{
+		static Result execute(Request request,Response response,Action action) throws Throwable{
 			if(log.isDebugEnabled()){
 				log.debug("[plugin-invoker:execute] -> executing action...");
 			}			
@@ -398,7 +424,7 @@ public class Framework {
 			return null;
 		}
 		
-		static boolean render(Request request,Response response,Result result) throws Exception {
+		static boolean render(Request request,Response response,Result result) throws Throwable {
 			if(log.isDebugEnabled()){
 				log.debug("[plugin-invoker:render] -> rendering result...");
 			}
@@ -429,7 +455,7 @@ public class Framework {
 			return false;
 		}
 		
-		static boolean error(Request request,Response response,Result.ErrorResult e) throws Exception{
+		static boolean error(Request request,Response response,Result.ErrorResult e) throws Throwable{
 			if(log.isDebugEnabled()){
 				log.debug("[plugin-invoker:error] -> handling error...");
 			}			
@@ -440,7 +466,15 @@ public class Framework {
 					}
 					return true;
 				}
-			}			
+			}		
+			
+			if(request.getApplication().error(request, response, e)){
+				if(log.isDebugEnabled()){
+					log.debug("[plugin-invoker:error] -> handled by application handler");
+				}
+				return true;
+			}
+			
 			for(Plugin plugin : plugins){
 				if(plugin.error(request, response, e)){
 					if(log.isDebugEnabled()){
@@ -455,7 +489,7 @@ public class Framework {
 			return false;
 		}
 		
-		static boolean response(Request request,Response response,Result result) throws Exception{
+		static boolean response(Request request,Response response,Result result) throws Throwable{
 			if(log.isDebugEnabled()){
 				log.debug("[plugin-invoker:response] -> handling response...");
 			}			

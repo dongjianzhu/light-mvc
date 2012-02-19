@@ -33,13 +33,13 @@ public class TestExecutePlugin extends MvcTestCase {
 		createSubClass(ProductController.class, packagee + ".ProductController");
     }
 
-	public void testStaticAction() throws Exception {
+	public void testStaticAction() throws Throwable {
 		request.setPath("/product");
 		execute();
 		assertNotNull(request.getAttribute("static_action"));
 	}
 	
-	public void testReturnedAction() throws Exception {
+	public void testReturnedAction() throws Throwable {
 		request.setPath("/product/returned");
 		execute();
 		assertEquals("http://www.google.com", response.getRedirectUrl());

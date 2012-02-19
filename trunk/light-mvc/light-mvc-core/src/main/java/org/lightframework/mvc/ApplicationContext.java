@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.plugin.cache;
+package org.lightframework.mvc;
 
-import org.lightframework.mvc.test.MvcTestCase;
+import javax.servlet.ServletContext;
+
+import org.lightframework.mvc.routing.Routes;
 
 /**
- * TODO : document me
+ * <code>{@link ApplicationContext}</code>
  *
- * @author lixiaohong
- * @since 1.x.x
+ * @author fenghm (fenghm@bingosoft.net)
+ *
+ * @since 1.1.0
  */
-public class TestCachePlugin extends MvcTestCase {
-	public void testIgnore() throws Throwable {
-		request("/test3/XX.js");
-	}
+public interface ApplicationContext {
+
+	Routes routes();
+	
+	Plugins plugins();
+	
+	ServletContext getServletContext();
+	
+	void setAttribute(String name,Object value);
+	
+	Object getAttribute(String name);
+	
+	Object removeAttribute(String name);
+
 }

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.lightframework.mvc.MvcException;
-import org.lightframework.mvc.Routes;
+import org.lightframework.mvc.RouteManager;
 import org.lightframework.mvc.routing.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,7 @@ public class RouteTable {
 					log.debug("[mvc:spring] -> {}\t{}\t{}",
 							  new Object[]{route.getMethod(),route.getPath(),route.getAction()});
 				}
-				Routes.add(route);
+				RouteManager.add(route);
 			}
 		}
 	}
