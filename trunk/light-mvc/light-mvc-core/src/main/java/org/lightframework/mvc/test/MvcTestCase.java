@@ -15,6 +15,9 @@
  */
 package org.lightframework.mvc.test;
 
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 import junit.framework.TestCase;
 
 import org.lightframework.mvc.PluginManager;
@@ -35,8 +38,9 @@ import com.mockrunner.mock.web.MockServletContext;
 public abstract class MvcTestCase extends TestCase {
 	private static final Logger log = LoggerFactory.getLogger(MvcTestCase.class);
 	
+	private static final Set<Class<?>> tests = new CopyOnWriteArraySet<Class<?>>();
+	
 	private static boolean javassisted;
-	private static boolean setUpOnce;
 
 	protected static MockApplication application;
 	
@@ -70,9 +74,9 @@ public abstract class MvcTestCase extends TestCase {
 		reset();
 		
 		MockApplication.mockSetCurrent(application);		
-		if(!setUpOnce){
+		if(!tests.contains(this.getClass())){
 			setUpOnlyOnce();
-			setUpOnce = true;
+			tests.add(this.getClass());
 		}
 		
 	    setUpEveryTest();

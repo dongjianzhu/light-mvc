@@ -34,6 +34,13 @@
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+		  <groupId>com.mockrunner</groupId>
+		  <artifactId>mockrunner-servlet</artifactId>
+		  <version>0.4.2</version>
+		  <type>jar</type>
+		  <scope>test</scope>
+		</dependency>        
         <dependency>
             <groupId>org.lightframework</groupId>
             <artifactId>light-mvc-core</artifactId>

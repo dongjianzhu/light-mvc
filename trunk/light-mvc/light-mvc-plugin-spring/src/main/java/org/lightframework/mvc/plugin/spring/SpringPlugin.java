@@ -28,7 +28,9 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 /**
  * a mvc {@link Plugin} to resolve spring beans as controller.
+ * 
  * @author fenghm (fenghm@bingosoft.net)
+ * 
  * @since 1.0.0
  */
 public class SpringPlugin extends Plugin implements BeanFactoryAware{
