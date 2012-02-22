@@ -323,11 +323,6 @@ public class MvcFilter implements javax.servlet.Filter {
         }
 		
 		@Override
-        public String getMethod() {
-	        return request.getMethod();
-        }
-
-		@Override
         public boolean isSecure() {
 	        return request.isSecure();
         }
@@ -377,6 +372,14 @@ public class MvcFilter implements javax.servlet.Filter {
 		private void init(){
 			this.context = getContextPath(request);			
 			this.path    = extractPath(context,getUriString());
+			
+			method = request.getHeader("X-HTTP-Method-Override");
+			
+			if(null == method || method.trim().equals("")){
+				method = request.getMethod();
+			}
+			
+			method = method.toUpperCase();
 		}
 		
 		private static String extractPath(String context,String uri){

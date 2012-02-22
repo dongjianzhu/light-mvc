@@ -13,23 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc;
+package org.lightframework.mvc.config;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * represents current version of mvc framework.
- * 
+ * <code>{@link Http}</code>
+ *
  * @author fenghm (live.fenghm@gmail.com)
  * 
- * @since 1.0.0
+ * @since 1.1.0
  */
-public final class Version {
+public final class Http {
 
-    private static final String buildtime = "20120219-2114";
-    private static final String version   = "1.1.0-SNAPSHOT";
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.METHOD})
+	public @interface Post {
+		
+	}
 	
-	private static final String version_string = version + "(" + buildtime + ")";
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.METHOD})
+	public @interface Get {
+		
+	}
 	
-	public static String getVersion(){
-		return version_string;
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.METHOD})
+	public @interface Put {
+		
+	}
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.METHOD})
+	public @interface Delete {
+		
 	}
 }

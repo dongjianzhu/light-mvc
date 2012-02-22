@@ -52,8 +52,10 @@ public final class HTTP {
 	public static final String CONTENT_TYPE_XML        = "text/xml";
 	
 	//---http method constants
-	public static final String METHOD_POST = "POST";
-	public static final String METHOD_GET  = "GET";
+	public static final String METHOD_POST   = "POST";
+	public static final String METHOD_GET    = "GET";
+	public static final String METHOD_PUT    = "GET";
+	public static final String METHOD_DELETE = "GET";
 	
 	//---extend http headers or parameters
 	public static final String X_PARAM_AJAX   = "x-ajax";
@@ -201,7 +203,7 @@ public final class HTTP {
 	    protected Map<String, String[]> headers;	    
 	    protected Map<String, String[]> parameters;
 	    protected Map<String, Object>   attributes;
-	    protected Parameters          bodyParameters;
+	    protected Parameters            bodyParameters;
 
 	    public static Request current(){
 	    	return current.get();
@@ -288,10 +290,20 @@ public final class HTTP {
 		public boolean isGet(){
 			return METHOD_GET.equals(getMethod());
 		}
+
+		public boolean isPut(){
+			return METHOD_PUT.equals(getMethod());
+		}
+		
+		public boolean isDelete(){
+			return METHOD_DELETE.equals(getMethod());
+		}
 		
 		public Object getAttribute(String name){
 			return getAttributes().get(name);
 		}
+		
+
 		
 		public void setAttribute(String name,Object value){
 			getAttributes().put(name, value);
