@@ -18,8 +18,8 @@ package org.lightframework.mvc.plugin.spring;
 import java.util.LinkedList;
 
 import org.lightframework.mvc.Action;
-import org.lightframework.mvc.Application;
 import org.lightframework.mvc.Plugin;
+import org.lightframework.mvc.PluginManager;
 import org.lightframework.mvc.RouteManager;
 import org.lightframework.mvc.test.MockModule;
 import org.lightframework.mvc.test.MvcTestCase;
@@ -64,9 +64,7 @@ public class TestSpringPlugin extends MvcTestCase {
 	}
 
 	public void testPluginRegister() throws Throwable {
-		Application application = Application.current();
-		
-		LinkedList<Plugin> plugins = application.getRootModule().getPlugins();
+		LinkedList<Plugin> plugins = PluginManager.getPlugins();
 		assertEquals(2,plugins.size());
 		
 		PluginRegistry registry = spring.getBean(PluginRegistry.class);

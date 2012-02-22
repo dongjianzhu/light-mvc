@@ -49,7 +49,6 @@ public class TestRouteTable extends TestCase {
 		assertEquals("home.index", table.routes().get(2).getAction());			
 		
 		table.register();
-		System.out.println(RouteManager.table().size());
-		assertEquals(10, RouteManager.table().size());
+		assertEquals(3, RouteManager.table().size());
 	}
 }
