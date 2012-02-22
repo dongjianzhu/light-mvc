@@ -1,4 +1,6 @@
-package org.lightframework.mvc.internal.json;
+package org.lightframework.mvc.render.json;
+
+
 
 /*
  *    Copyright 2011 JSON-SMART authors

@@ -130,7 +130,7 @@ public final class Binder {
 			}
 
 			// direct bind
-			if (null != value && type.isAssignableFrom(value.getClass())) {
+			if (null != value && type.isAssignableFrom(value.getClass()) && !type.isArray() && !Iterable.class.isAssignableFrom(type)) {;
 				return value;
 			}
 

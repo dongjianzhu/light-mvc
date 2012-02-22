@@ -1,4 +1,4 @@
-package org.lightframework.mvc.internal.json;
+package org.lightframework.mvc.render.json;
 
 /*
  *    Copyright 2011 JSON-SMART authors
@@ -15,9 +15,8 @@ package org.lightframework.mvc.internal.json;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.lightframework.mvc.internal.json.JSONParserException.ERROR_UNEXPECTED_CHAR;
-import static org.lightframework.mvc.internal.json.JSONParserException.ERROR_UNEXPECTED_EOF;
-import static org.lightframework.mvc.internal.json.JSONParserException.ERROR_UNEXPECTED_TOKEN;
+import static org.lightframework.mvc.render.json.JSONParserException.ERROR_UNEXPECTED_CHAR;
+import static org.lightframework.mvc.render.json.JSONParserException.ERROR_UNEXPECTED_TOKEN;
 
 import java.io.IOException;
 
@@ -25,25 +24,25 @@ import java.io.IOException;
  * Parser for JSON text. Please note that JSONParser is NOT thread-safe.
  * 
  * @author Uriel Chemouni <uchemouni@gmail.com>
- * @see JSONParserString
- * @see JSONParserByteArray
+ * @see JSONParserInputStream
+ * @see JSONParserReader
  */
-abstract class JSONParserMemory extends JSONParserBase {
-	protected int len;
-
-	public JSONParserMemory(int permissiveMode) {
+abstract class JSONParserStream extends JSONParserBase {
+	// len
+	//
+	public JSONParserStream(int permissiveMode) {
 		super(permissiveMode);
 	}
 
 	protected void readNQString(boolean[] stop) throws IOException {
-		int start = pos;
+		sb.clear();
 		skipNQString(stop);
-		extractStringTrim(start, pos);
+		xs = sb.toString().trim();
 	}
 
 	protected Object readNumber(boolean[] stop) throws JSONParserException, IOException {
-		int start = pos;
-		// accept first char digit or -
+		sb.clear();
+		sb.append(c);// accept first char digit or -
 		read();
 		skipDigits();
 
@@ -53,17 +52,17 @@ abstract class JSONParserMemory extends JSONParserBase {
 			if (c >= 0 && c < MAX_STOP && !stop[c] && c != EOI) {
 				// convert string
 				skipNQString(stop);
-				extractStringTrim(start, pos);
+				xs = sb.toString().trim();
 				if (!acceptNonQuote)
 					throw new JSONParserException(pos, ERROR_UNEXPECTED_TOKEN, xs);
 				return xs;
 			}
-			extractStringTrim(start, pos);
+			xs = sb.toString().trim();
 			return parseNumber(xs);
 		}
 		// floating point
 		if (c == '.') {
-			//
+			sb.append(c);
 			read();
 			skipDigits();
 		}
@@ -72,12 +71,12 @@ abstract class JSONParserMemory extends JSONParserBase {
 			if (c >= 0 && c < MAX_STOP && !stop[c] && c != EOI) {
 				// convert string
 				skipNQString(stop);
-				extractStringTrim(start, pos);
+				xs = sb.toString().trim();
 				if (!acceptNonQuote)
 					throw new JSONParserException(pos, ERROR_UNEXPECTED_TOKEN, xs);
 				return xs;
 			}
-			extractStringTrim(start, pos);
+			xs = sb.toString().trim();
 			return extractFloat();
 		}
 		sb.append('E');
@@ -90,16 +89,16 @@ abstract class JSONParserMemory extends JSONParserBase {
 			if (c >= 0 && c < MAX_STOP && !stop[c] && c != EOI) {
 				// convert string
 				skipNQString(stop);
-				extractStringTrim(start, pos);
+				xs = sb.toString().trim();
 				if (!acceptNonQuote)
 					throw new JSONParserException(pos, ERROR_UNEXPECTED_TOKEN, xs);
 				return xs;
 			}
-			extractStringTrim(start, pos);
+			xs = sb.toString().trim();
 			return extractFloat();
 		} else {
 			skipNQString(stop);
-			extractStringTrim(start, pos);
+			xs = sb.toString().trim();
 			if (!acceptNonQuote)
 				throw new JSONParserException(pos, ERROR_UNEXPECTED_TOKEN, xs);
 			if (!acceptLeadinZero)
@@ -117,27 +116,27 @@ abstract class JSONParserMemory extends JSONParserBase {
 			}
 			throw new JSONParserException(pos, ERROR_UNEXPECTED_CHAR, c);
 		}
-		int tmpP = indexOf(c, pos + 1);
-		if (tmpP == -1)
-			throw new JSONParserException(len, ERROR_UNEXPECTED_EOF, null);
-		extractString(pos + 1, tmpP);
-		if (xs.indexOf('\\') == -1) {
-			checkControleChar();
-			pos = tmpP;
-			read();
-			// handler.primitive(tmp);
-			return;
-		}
 		sb.clear();
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		/* assert (c == '\"' || c == '\'') */
 		readString2();
 	}
 
-	abstract protected void extractString(int start, int stop);
-
-	abstract protected int indexOf(char c, int pos);
-
-	protected void extractStringTrim(int start, int stop) {
-		extractString(start, stop);
-		xs = xs.trim();
-	}
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
 }

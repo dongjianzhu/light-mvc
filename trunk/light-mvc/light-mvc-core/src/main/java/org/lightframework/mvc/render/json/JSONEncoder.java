@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.lightframework.mvc.internal.json;
+package org.lightframework.mvc.render.json;
 
 import java.lang.reflect.Array;
 import java.util.Date;

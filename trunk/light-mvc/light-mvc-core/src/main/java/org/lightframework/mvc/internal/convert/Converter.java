@@ -81,7 +81,7 @@ public final class Converter {
 		
 		Class<?> valueType = value.getClass();
 
-		if(targetType.isAssignableFrom(valueType)){
+		if(targetType.isAssignableFrom(valueType) && !targetType.isArray() && !Iterable.class.isAssignableFrom(targetType)){
 			return value;
 		}
 		

@@ -17,6 +17,7 @@ package org.lightframework.mvc.render.json;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 import java.util.Map;
 
 import org.lightframework.mvc.render.IRenderContext;
@@ -33,7 +34,7 @@ public class JSON {
 
 	private static final JSONRender  render  = new JSONRender();
 	private static final JSONContext context = new JSONContext();
-	private static final JSONDecoder decoder = new JSONDecoder(false);
+	private static final JSONDecoder decoder = new JSONDecoder();
 
 	public static String encode(Object value) {
 		return render.encode(value, context);
@@ -59,11 +60,11 @@ public class JSON {
 
 	@SuppressWarnings("unchecked")
 	public static JSONObject decode(String source) {
-		Object result = decoder.decode(source, Map.class);
+		Object result = decoder.decode(source);
 		if(result instanceof Map){
 			return new JSONObject((Map)result);
 		}else{
-			return new JSONObject((Object[])result);
+			return new JSONObject((List)result);
 		}
 	}
 

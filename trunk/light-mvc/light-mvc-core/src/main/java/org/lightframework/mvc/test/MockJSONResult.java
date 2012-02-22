@@ -15,6 +15,8 @@
  */
 package org.lightframework.mvc.test;
 
+import java.util.Map;
+
 import org.lightframework.mvc.core.RenderAjaxPlugin;
 import org.lightframework.mvc.render.json.JSON;
 import org.lightframework.mvc.render.json.JSONObject;
@@ -41,25 +43,26 @@ public final class MockJSONResult {
 		MockJSONResult result = new MockJSONResult();
 		JSONObject json   = JSON.decode(content);
 
+		Map<String, Object> map = json.map();
 		
-		if(json.contains(RenderAjaxPlugin.RETURN_CODE)){
-			result.code = json.getInteger(RenderAjaxPlugin.RETURN_CODE);
+		if(map.containsKey(RenderAjaxPlugin.RETURN_CODE)){
+			result.code = Integer.parseInt(map.get(RenderAjaxPlugin.RETURN_CODE).toString());
 		}
 		
-		if(json.contains(RenderAjaxPlugin.RETURN_STATUS)){
-			result.status = json.getString(RenderAjaxPlugin.RETURN_STATUS);
+		if(map.containsKey(RenderAjaxPlugin.RETURN_STATUS)){
+			result.status = (String)map.get(RenderAjaxPlugin.RETURN_STATUS);
 		}
 		
-		if(json.contains(RenderAjaxPlugin.RETURN_DESC)){
-			result.description = json.getString(RenderAjaxPlugin.RETURN_DESC);
+		if(map.containsKey(RenderAjaxPlugin.RETURN_DESC)){
+			result.description = (String)map.get(RenderAjaxPlugin.RETURN_DESC);
 		}
 		
-		if(json.contains(RenderAjaxPlugin.RETURN_VALUE)){
-			result.value = json.getString(RenderAjaxPlugin.RETURN_VALUE);
+		if(map.containsKey(RenderAjaxPlugin.RETURN_VALUE)){
+			result.value = (String)map.get(RenderAjaxPlugin.RETURN_VALUE);
 		}
 		
-		if(json.contains(RenderAjaxPlugin.RETURN_ERROR)){
-			result.error = json.getString(RenderAjaxPlugin.RETURN_ERROR);
+		if(map.containsKey(RenderAjaxPlugin.RETURN_ERROR)){
+			result.error = (String)map.get(RenderAjaxPlugin.RETURN_ERROR);
 		}
 
 		return result;

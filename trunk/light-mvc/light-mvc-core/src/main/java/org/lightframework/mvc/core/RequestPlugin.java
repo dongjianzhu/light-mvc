@@ -74,7 +74,7 @@ public class RequestPlugin extends Plugin {
 					try {
 		                JSONObject json = JSON.decode(request.getContent());
 		                if(json.isArray()){
-		                	HTTP.Setter.setBodyParameters(request, new Parameters(json.array().array()));
+		                	HTTP.Setter.setBodyParameters(request, new Parameters(json.array()));
 		                }else{
 		                	HTTP.Setter.setBodyParameters(request, new Parameters(json.map()));	
 		                }

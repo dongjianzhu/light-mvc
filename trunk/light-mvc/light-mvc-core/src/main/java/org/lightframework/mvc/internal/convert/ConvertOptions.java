@@ -18,7 +18,7 @@ package org.lightframework.mvc.internal.convert;
 /**
  * <code>{@link ConvertOptions}</code>
  *
- * @author fenghm (fenghm@bingosoft.net)
+ * @author fenghm (live.fenghm@gmail.com)
  *
  * @since 1.1.0
  */

@@ -1,4 +1,4 @@
-package org.lightframework.mvc.internal.json;
+package org.lightframework.mvc.render.json;
 
 /*
  *    Copyright 2011 JSON-SMART authors
@@ -15,12 +15,12 @@ package org.lightframework.mvc.internal.json;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.lightframework.mvc.internal.json.JSONParserException.ERROR_UNEXPECTED_CHAR;
-import static org.lightframework.mvc.internal.json.JSONParserException.ERROR_UNEXPECTED_DUPLICATE_KEY;
-import static org.lightframework.mvc.internal.json.JSONParserException.ERROR_UNEXPECTED_EOF;
-import static org.lightframework.mvc.internal.json.JSONParserException.ERROR_UNEXPECTED_LEADING_0;
-import static org.lightframework.mvc.internal.json.JSONParserException.ERROR_UNEXPECTED_TOKEN;
-import static org.lightframework.mvc.internal.json.JSONParserException.ERROR_UNEXPECTED_UNICODE;
+import static org.lightframework.mvc.render.json.JSONParserException.ERROR_UNEXPECTED_CHAR;
+import static org.lightframework.mvc.render.json.JSONParserException.ERROR_UNEXPECTED_DUPLICATE_KEY;
+import static org.lightframework.mvc.render.json.JSONParserException.ERROR_UNEXPECTED_EOF;
+import static org.lightframework.mvc.render.json.JSONParserException.ERROR_UNEXPECTED_LEADING_0;
+import static org.lightframework.mvc.render.json.JSONParserException.ERROR_UNEXPECTED_TOKEN;
+import static org.lightframework.mvc.render.json.JSONParserException.ERROR_UNEXPECTED_UNICODE;
 
 import java.io.IOException;
 import java.math.BigDecimal;
