@@ -44,8 +44,15 @@ public class RequestPlugin extends Plugin {
 		
 		setCacheControl(request, response);
 		
+		setCommonAttributes(request);
+		
 	    return false;
     }
+	
+	protected void setCommonAttributes(Request request){
+		request.setAttribute("request", 	   request);
+		request.setAttribute("servletRequest", request.getServletRequest());
+	}
 	
 	protected void setCacheControl(Request request,Response response) {
 		response.setHeader("Cache-Control","no-cache"); //HTTP 1.1

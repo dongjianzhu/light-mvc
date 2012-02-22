@@ -91,7 +91,7 @@ public abstract class ReflectAccessor {
     static ReflectAccessor createFor(Class<?> type){
         ReflectClassLoader loader = new ReflectClassLoader(type.getClassLoader());
         String typeClassName      = type.getName();
-        String accessorClassName  = typeClassName + "$ReflectAccessor";
+        String accessorClassName  = typeClassName + "$LightMvcReflectAccessor";
         Class<?> accessorClass    = null;
         
         try {

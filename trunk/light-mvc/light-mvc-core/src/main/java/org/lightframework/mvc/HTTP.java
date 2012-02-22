@@ -25,6 +25,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.lightframework.mvc.internal.params.Parameters;
 
@@ -468,6 +470,10 @@ public final class HTTP {
         	return externalRequest;
         }
 		
+		public HttpServletRequest getServletRequest(){
+			return (HttpServletRequest)externalRequest;
+		}
+		
 		public boolean hasBodyParameters(){
 			return null != bodyParameters && !bodyParameters.isEmpty();
 		}
@@ -620,6 +626,10 @@ public final class HTTP {
 		public Object getExternalResponse() {
         	return externalResponse;
         }
+		
+		public HttpServletResponse getServletResponse(){
+			return (HttpServletResponse)externalResponse;
+		}
 		
 		/**
 		 *
