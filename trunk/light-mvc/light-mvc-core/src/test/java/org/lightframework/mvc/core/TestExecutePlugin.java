@@ -15,7 +15,11 @@
  */
 package org.lightframework.mvc.core;
 
+import org.lightframework.mvc.HTTP;
 import org.lightframework.mvc.Result;
+import org.lightframework.mvc.config.Http.Get;
+import org.lightframework.mvc.config.Http.Post;
+import org.lightframework.mvc.core.TestBindingPlugin.User;
 import org.lightframework.mvc.test.MvcTestCase;
 
 /**
@@ -45,6 +49,22 @@ public class TestExecutePlugin extends MvcTestCase {
 		assertEquals("http://www.google.com", response.getRedirectUrl());
 	}
 	
+	public void testHttpMethodAction() throws Throwable {
+		request.setPath("/product/edit");
+		request.setMethod(HTTP.METHOD_POST);
+		
+		execute();
+		
+		assertEquals(request.getAttribute("action"),"edit_post");
+		
+		request.setPath("/product/edit");
+		request.setMethod(HTTP.METHOD_GET);
+		
+		execute();
+		
+		assertEquals(request.getAttribute("action"),"edit_get");
+	}
+	
 	public static class ProductController {
 		
 		public static void index(){
@@ -55,5 +75,14 @@ public class TestExecutePlugin extends MvcTestCase {
 			Result.redirect("http://www.google.com");
 		}
 		
+		@Get
+		public void edit(String id){
+			Result.setAttribute("action", "edit_get");
+		}
+		
+		@Post
+		public void edit(User user){
+			Result.setAttribute("action", "edit_post");
+		}
 	}
 }

@@ -16,6 +16,9 @@
 package org.lightframework.mvc.core;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Plugin;
@@ -23,6 +26,10 @@ import org.lightframework.mvc.Utils;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.binding.Binder;
+import org.lightframework.mvc.config.Http.Delete;
+import org.lightframework.mvc.config.Http.Get;
+import org.lightframework.mvc.config.Http.Post;
+import org.lightframework.mvc.config.Http.Put;
 import org.lightframework.mvc.internal.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +79,7 @@ public class ResolvePlugin extends Plugin {
 			
 			if(null == method){
 				methodName = Utils.replace(methodName, "_", "");
-				method = ClassUtils.findMethodIgnoreCase(controllerClass, methodName);
+				method = findActionMethod(request, action, controllerClass, methodName);
 			}
 			
 			if(null != method){
@@ -93,6 +100,46 @@ public class ResolvePlugin extends Plugin {
 			}			
 		}
 		return false;
+	}
+	
+	protected Method findActionMethod(Request request,Action action,Class<?> clazz,String name){
+		
+		List<Method> methods = new ArrayList<Method>();
+		
+		do{
+            for (Method m : clazz.getDeclaredMethods()) {
+                if (m.getName().equalsIgnoreCase(name) && Modifier.isPublic(m.getModifiers())) {
+                	methods.add(m);
+                }
+            }
+            clazz = clazz.getSuperclass();
+		}while (!clazz.getName().equals("java.lang.Object"));
+
+		for(Method m : methods){
+			if(m.isAnnotationPresent(Post.class) && request.isPost()){
+				return m;
+			}
+			
+			if(m.isAnnotationPresent(Get.class) && request.isGet()){
+				return m;
+			}
+			
+			if(m.isAnnotationPresent(Put.class) && request.isPut()){
+				return m;
+			}
+			
+			if(m.isAnnotationPresent(Delete.class) && request.isDelete()){
+				return m;
+			}
+		}
+		
+		for(Method m : methods){
+			if(!(m.isAnnotationPresent(Post.class) || m.isAnnotationPresent(Get.class) || m.isAnnotationPresent(Put.class) || m.isAnnotationPresent(Delete.class))){
+				return m;
+			}
+		}
+		
+		return null;
 	}
 	
 	protected Class<?> resolveControllerClass(Request request,String pkg,String controller,Action action) throws Exception{
