@@ -127,9 +127,9 @@ public final class Converter {
 					return value;
 				}else{
 					String string = value.toString();
-		        	if("1".equals(string)){
+		        	if("1".equals(string) || "on".equalsIgnoreCase(string)){
 		        		return Boolean.TRUE;
-		        	}else if("0".equals(string)){
+		        	}else if("0".equals(string) || "off".equalsIgnoreCase(string)){
 		        		return Boolean.FALSE;
 		        	}else{
 		        		return Boolean.parseBoolean(string);	
@@ -256,9 +256,9 @@ public final class Converter {
             }
             
             if (type == Boolean.class || type == Boolean.TYPE) {
-            	if("1".equals(string)){
-            		return Boolean.TRUE;
-            	}else if("0".equals(string)){
+	        	if("1".equals(string) || "on".equalsIgnoreCase(string)){
+	        		return Boolean.TRUE;
+	        	}else if("0".equals(string) || "off".equalsIgnoreCase(string)){
             		return Boolean.FALSE;
             	}else{
             		return Boolean.parseBoolean(string);	
@@ -677,7 +677,7 @@ public final class Converter {
 	        					parent = value;
 	        				}
         				}else{
-        					//TODO ：prop not found, should throw an exception ?
+        					break;
         				}
         			}
         		}
