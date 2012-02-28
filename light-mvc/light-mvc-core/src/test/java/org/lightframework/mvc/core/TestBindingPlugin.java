@@ -123,6 +123,12 @@ public class TestBindingPlugin extends MvcTestCase {
 		result = execute();
 		assertNotNull(result);
 		assertEquals(true, result.getValue());
+		
+		request.setPath("/binding/array3");
+		request.removeParameter("values");
+		result = execute();
+		assertNotNull(result);
+		assertEquals(true, result.getValue());
 	}
 	
 	public void testDirectArrayBinding() throws Throwable {
@@ -239,6 +245,22 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertNotNull(result);
 		assertEquals(true, result.getValue());
 	}	
+	
+	public void testOgnls1Binding() throws Throwable {
+		request.setPath("/binding/ognls1");
+
+		request.setParameter("name", "xiaoming");
+		request.setParameter("age", "100");
+		request.setParameter("user1.birthday", "2010-10-10");
+		request.setParameter("child.name", "xiaohua");
+		request.setParameter("user1.child.age", "200");
+		
+		request.setParameter("id", 		 "1,2");
+		
+		Result result = execute();
+		assertNotNull(result);
+		assertEquals(true, result.getValue());
+	}
 
 	public static class BindingController {
 
@@ -295,6 +317,10 @@ public class TestBindingPlugin extends MvcTestCase {
 				return true;
 			}
 			return false;
+		}
+		
+		public static boolean array3(int[] values){
+			return values.length == 0;
 		}
 		
 		public static boolean array1(int[] values){
@@ -426,6 +452,24 @@ public class TestBindingPlugin extends MvcTestCase {
 				}
 				
 				if(!"xiaoming".equals(user2.child.getName())){
+					return false;
+				}
+				
+				return true;
+			}
+			return false;
+		}
+		
+		public static boolean ognls1(User user1,String[] id){
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+			if(null != user1 && 
+			   "xiaoming".equals(user1.getName()) && 
+			   100 == user1.getAge() && 
+			   "20101010".equals(formatter.format(user1.getBirthday()))){
+				
+				User child = user1.child;
+
+				if(null == child || !"xiaohua".equals(child.getName())){
 					return false;
 				}
 				

@@ -24,6 +24,8 @@ package org.lightframework.mvc.internal.convert;
  */
 public class ConvertOptions {
 
+	public String name;
+	
 	public String format;
 	
 	public ConvertOptions(){

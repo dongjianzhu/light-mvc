@@ -52,7 +52,7 @@ public class ReflectType {
     
     public static boolean isBeanType(Class<?> clazz){
         String name = clazz.getName();
-        if(clazz.isPrimitive() || clazz.isEnum() || clazz.isAnnotation() || clazz.isInterface() || 
+        if(clazz.isPrimitive() || clazz.isArray() || clazz.isEnum() || clazz.isAnnotation() || clazz.isInterface() || 
            name.startsWith("java.") || name.startsWith("javax.")){
             return false;
         }

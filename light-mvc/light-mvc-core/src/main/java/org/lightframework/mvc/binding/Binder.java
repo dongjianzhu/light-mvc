@@ -91,13 +91,14 @@ public final class Binder {
 					if(args.length == 1){
 						value = context.getParameters();
 					}else{
-						Map<String, Object> map = new HashMap<String, Object>();
+						Map<String, Object> map = new HashMap<String, Object>(context.getParameters());
 						
 						String prefix = arg.getName() + ".";
 						
 						for(Entry<String, Object> param : context.getParameters().entrySet()){
 							if(param.getKey().toLowerCase().startsWith(prefix)){
 								map.put(param.getKey().substring(prefix.length()), param.getValue());
+								map.remove(param.getKey());
 							}
 						}
 						
