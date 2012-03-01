@@ -257,6 +257,9 @@ public class TestBindingPlugin extends MvcTestCase {
 		
 		request.setParameter("id", 		 "1,2");
 		
+		request.setParameter("users[0].name", "xxx1");
+		request.setParameter("users[1].name", "xxx2");
+		
 		Result result = execute();
 		assertNotNull(result);
 		assertEquals(true, result.getValue());
@@ -460,7 +463,7 @@ public class TestBindingPlugin extends MvcTestCase {
 			return false;
 		}
 		
-		public static boolean ognls1(User user1,String[] id){
+		public static boolean ognls1(User user1,String[] id,User[] users){
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 			if(null != user1 && 
 			   "xiaoming".equals(user1.getName()) && 
@@ -473,7 +476,11 @@ public class TestBindingPlugin extends MvcTestCase {
 					return false;
 				}
 				
-				return true;
+				if(null != users && users.length == 2){
+					if(users[0].name.equals("xxx1") && users[1].name.equals("xxx2")){
+						return true;	
+					}
+				}
 			}
 			return false;
 		}

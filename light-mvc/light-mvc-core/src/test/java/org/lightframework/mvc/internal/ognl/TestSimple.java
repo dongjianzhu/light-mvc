@@ -17,7 +17,7 @@ package org.lightframework.mvc.internal.ognl;
 
 import junit.framework.TestCase;
 
-import static org.lightframework.mvc.internal.ognl.Simple.*;
+import static org.lightframework.mvc.internal.ognl.SimpleOgnl.*;
 
 /**
  * <code>{@link TestSimple}</code>
