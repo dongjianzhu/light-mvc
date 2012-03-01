@@ -30,7 +30,9 @@ import org.lightframework.mvc.convert.IConverter;
 import org.lightframework.mvc.internal.clazz.ClassUtils;
 import org.lightframework.mvc.internal.convert.ConvertOptions;
 import org.lightframework.mvc.internal.convert.Converter;
+import org.lightframework.mvc.internal.ognl.SimpleOgnl;
 import org.lightframework.mvc.internal.reflect.ReflectType;
+import org.lightframework.mvc.internal.reflect.ReflectUtils;
 import org.lightframework.mvc.internal.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,9 +76,8 @@ public final class Binder {
 				Object value = context.getParameter(arg.getType(),arg.getName());
 				
 				if(log.isTraceEnabled()){
-					String type = value == null ? "null" : value.getClass().getName();
-					log.trace("[arg:'{}'] -> tryto binding : '{}'-'{}'",
-							   new Object[]{arg.getName(),type,value});
+					String typeName = value == null ? "null" : value.getClass().getName();
+					log.trace("[arg:'{}'] -> tryto binding : '{}'-'{}'",new Object[]{arg.getName(),typeName,value});
 				}
 				
 				if(null == value){
@@ -88,25 +89,40 @@ public final class Binder {
 				}
 				
 				if(null == value && ReflectType.isBeanType(arg.getType())){
-					if(args.length == 1){
-						value = context.getParameters();
-					}else{
-						Map<String, Object> map = new HashMap<String, Object>(context.getParameters());
-						
-						String prefix = arg.getName() + ".";
-						
-						for(Entry<String, Object> param : context.getParameters().entrySet()){
-							if(param.getKey().toLowerCase().startsWith(prefix)){
-								map.put(param.getKey().substring(prefix.length()), param.getValue());
-								map.remove(param.getKey());
-							}
+					Map<String, Object> map = new HashMap<String, Object>(context.getParameters());
+					
+					String prefix = arg.getName() + ".";
+					
+					for(Entry<String, Object> param : context.getParameters().entrySet()){
+						if(param.getKey().toLowerCase().startsWith(prefix)){
+							map.put(param.getKey().substring(prefix.length()), param.getValue());
+							map.remove(param.getKey());
 						}
+					}
+					
+					value = map;
+				}
+				
+				boolean isBinded = false;
+				if(null == value){
+					Class<?> type = arg.getType();
+					if(type.isArray() && ReflectType.isBeanType(type.getComponentType())){
+						arg.binding(SimpleOgnl.bindingArrayOrList(arg.getName(), type, type.getComponentType(), context.getParameters()));
+						isBinded = true;
+					}else if(List.class.isAssignableFrom(type)){
+						Class<?> actualType = ReflectUtils.getActualType(arg.getGenericType());
 						
-						value = map;
+						if(ReflectType.isBeanType(actualType)){
+							arg.binding(SimpleOgnl.bindingArrayOrList(arg.getName(), type, actualType, context.getParameters()));
+							
+							isBinded = true;
+						}
 					}
 				}
 				
-				arg.binding(Binder.binding(arg,value,context));
+				if(!isBinded){
+					arg.binding(Binder.binding(arg,value,context));	
+				}
 				
 				if(log.isTraceEnabled()){
 					if(arg.isBinded()){

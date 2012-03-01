@@ -35,8 +35,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Map.Entry;
 
-import org.lightframework.mvc.internal.ognl.Simple;
-import org.lightframework.mvc.internal.ognl.Simple.OGNode;
+import org.lightframework.mvc.internal.ognl.SimpleOgnl;
 import org.lightframework.mvc.internal.reflect.ReflectEnum;
 import org.lightframework.mvc.internal.reflect.ReflectField;
 import org.lightframework.mvc.internal.reflect.ReflectType;
@@ -515,172 +514,7 @@ public final class Converter {
         	if(null != field){
         		field.setValue(bean, convert(field.getType(),field.getGenericType(),param));
         	}else{
-        		//TODO : optimize performance , group the keys
-        		OGNode[] nodes = Simple.parse(name);
-        		
-        		if(null != nodes){
-        			//ognl string
-        			Object parent = bean;
-        			
-        			int len = nodes.length;
-        			
-        			for(int i=0;i<len;i++){
-        				OGNode node = nodes[i];
-        				
-        				ReflectType parentType = ReflectType.get(parent.getClass());
-        				
-        				field = parentType.findField(node.prop);
-        				
-        				if(null != field){
-        					Object value = field.getValue(parent);
-        					
-        					if(null == value){
-        						value = defaultInstance(field.getType());
-        						
-        						if(null != value){
-        							field.setValue(parent, value);	
-        						}
-        					}
-        					
-        					if(null == value){
-        						if(i == len-1){
-        							field.setValue(parent, convert(field.getType(),field.getGenericType(),param));
-        						}
-        						//TODO ：unsupported nested type, should throw an exception ?
-        						break;
-        					}
-        					
-            				if(node.index != null){
-            					if(value instanceof List){
-                					parent = value;
-                					
-            						//TODO : cache elementType
-            						Class<?> elementType = ReflectUtils.getActualType(field.getGenericType());
-            						
-            						List list = (List)value;
-            						
-            						if(node.index > list.size()){
-            							for(int j=list.size();j<node.index;j++){
-            								list.add(defaultValue(elementType));
-            							}
-            						}
-            						
-            						if(i == len -1){
-            							if(node.index >= list.size()){
-            								list.add(convert(elementType,param));	
-            							}else{
-            								list.set(node.index, convert(elementType,param));
-            							}
-            						}else{
-            							Object itemValue = node.index < list.size() ? list.get(node.index) : null;
-            							
-            							if(null == itemValue){
-            								itemValue = defaultInstance(elementType);
-            								
-                							if(node.index >= list.size()){
-                								list.add(itemValue);	
-                							}else{
-                								list.set(node.index, itemValue);
-                							}
-            							}
-            							
-            							parent = itemValue;
-            						}
-            					}else if(value.getClass().isArray()){
-            						Class<?> componentType = value.getClass().getComponentType();
-
-            						int arrayLength = Array.getLength(value);
-            						
-            						if(node.index >= arrayLength){
-            							//increase array length
-            							Object newArray = Array.newInstance(componentType, node.index + 1);
-
-            							//copy 
-            							if(arrayLength > 0){
-                							System.arraycopy(value, 0, newArray, 0, arrayLength);
-            							}
-            							
-            							value = newArray;
-            							
-            							field.setValue(parent, value);
-            							
-            							arrayLength = node.index + 1;
-            						}
-            						
-                					parent = value;            						
-            						
-            						if(i == len -1){
-            							Array.set(value, node.index, convert(componentType,param));
-            						}else{
-            							Object itemValue = node.index < arrayLength ? Array.get(value, node.index) : null; 
-            								
-            							if(null == itemValue){
-            								itemValue = defaultInstance(componentType);
-                							Array.set(value, node.index, itemValue);
-            							}
-            							
-            							parent = itemValue;
-            						}
-            					}
-            				}else if(node.name != null){
-            					parent = value;
-            					
-            					if(value instanceof Map){
-            						//TODO : cache keyType and valueType
-            						Type[] genericTypes = ReflectUtils.getActualTypes(field.getGenericType());
-            						
-            						Class<?> keyType   = ReflectUtils.getActualType(genericTypes[0]); //check is string ?
-            						Class<?> valueType = ReflectUtils.getActualType(genericTypes[1]);
-            						
-            						Map propMap = (Map)value;
-            						
-            						Object keyValue = convert(keyType,node.name);
-            						
-            						if(i == len-1){
-            							propMap.put(keyValue, convert(valueType,param));
-            						}else{
-                						parent = propMap.get(keyValue);
-
-                						if(null == parent){
-                							parent = defaultInstance(valueType);
-                							propMap.put(convert(keyType,node.name), parent);
-                						}
-            						}
-            					}else{
-            						ReflectType propType   = ReflectType.get(field.getType());
-        							ReflectField propField = propType.findField(node.name);
-        							
-            						if(i == len-1){
-            							if(null != propField){
-            								propField.setValue(value, convert(propField.getType(),propField.getGenericType(),param));
-            							}
-            						}else{
-            							if(null == propField){
-            								//TODO : field not found, should throw an exception ?
-            								break;
-            							}else{
-            								parent = convert(propField.getType(),propField.getGenericType(),param);
-            							}
-            						}
-            					}
-	        				}else if(i == len-2){
-            					parent = value;
-            					
-	        					OGNode last = nodes[++i];
-	        					
-	        					field = ReflectType.get(parent.getClass()).findField(last.prop);
-	        					
-	        					if(null != field){
-	        						field.setValue(parent, convert(field.getType(),field.getGenericType(),param));
-	        					}
-	        				}else{
-	        					parent = value;
-	        				}
-        				}else{
-        					break;
-        				}
-        			}
-        		}
+        		SimpleOgnl.bindingField(bean,name,param);
         	}
         }
         
@@ -736,7 +570,7 @@ public final class Converter {
 		return null;
 	}
 	
-	private static Object defaultInstance(Class<?> type){
+	public static Object defaultInstance(Class<?> type){
 		Object instance = defaultValue(type);
 		
 		if(null == instance && ReflectType.isBeanType(type)){
