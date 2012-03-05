@@ -340,17 +340,17 @@ public final class Converter {
 		
 		if(value instanceof java.sql.Date){
 			return StringUtils.isEmpty(format) ? DateUtils.dateFormater.format((java.sql.Date)value) : 
-												  DateUtils.formatter(format).format((java.sql.Date)value);
+												  DateUtils.getDateFormat(format).format((java.sql.Date)value);
 		}
 		
 		if(value instanceof Time){
 			return StringUtils.isEmpty(format) ? DateUtils.timeFormater.format((Time)value) : 
-				    							  DateUtils.formatter(format).format((Time)value);
+				    							  DateUtils.getDateFormat(format).format((Time)value);
 		}
 		
 		if(value instanceof Date){
 			return StringUtils.isEmpty(format) ? DateUtils.dateTimeFormater.format((Date)value) : 
-				  							      DateUtils.formatter(format).format((Date)value);
+				  							      DateUtils.getDateFormat(format).format((Date)value);
 		}
 		
         if (value instanceof Class<?>) {

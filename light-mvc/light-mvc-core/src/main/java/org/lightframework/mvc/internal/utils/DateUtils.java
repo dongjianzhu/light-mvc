@@ -17,12 +17,14 @@ package org.lightframework.mvc.internal.utils;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.lightframework.mvc.internal.format.ConcurrentDateFormat;
 
 /**
  * <code>{@link DateUtils}</code>
@@ -39,20 +41,20 @@ public class DateUtils {
     public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String RFC_DATE_FORMAT  = "yyyy-MM-dd'T'HH:mm:ssZ";  
     
-    public static final SimpleDateFormat dateFormater;
-    public static final SimpleDateFormat timeFormater;
-    public static final SimpleDateFormat dateTimeFormater;
-    public static final SimpleDateFormat timestampFormater;
-    public static final SimpleDateFormat rfcDateFormater;
+    public static final DateFormat dateFormater;
+    public static final DateFormat timeFormater;
+    public static final DateFormat dateTimeFormater;
+    public static final DateFormat timestampFormater;
+    public static final DateFormat rfcDateFormater;
     
-    private static final Map<String, SimpleDateFormat> formaters = new ConcurrentHashMap<String, SimpleDateFormat>();
+    private static final Map<String, DateFormat> formaters = new ConcurrentHashMap<String, DateFormat>();
     
     static {
-        dateFormater      = new SimpleDateFormat(DATE_FORMAT);
-        timeFormater      = new SimpleDateFormat(TIME_FORMAT);
-        dateTimeFormater  = new SimpleDateFormat(DATETIME_FORMAT);
-        timestampFormater = new SimpleDateFormat(TIMESTAMP_FORMAT);
-        rfcDateFormater   = new SimpleDateFormat(RFC_DATE_FORMAT);
+        dateFormater      = new ConcurrentDateFormat(DATE_FORMAT);
+        timeFormater      = new ConcurrentDateFormat(TIME_FORMAT);
+        dateTimeFormater  = new ConcurrentDateFormat(DATETIME_FORMAT);
+        timestampFormater = new ConcurrentDateFormat(TIMESTAMP_FORMAT);
+        rfcDateFormater   = new ConcurrentDateFormat(RFC_DATE_FORMAT);
         
         dateFormater.setLenient(false);
         timeFormater.setLenient(false);
@@ -67,11 +69,11 @@ public class DateUtils {
         formaters.put(RFC_DATE_FORMAT,  rfcDateFormater);
     }
     
-    public static SimpleDateFormat formatter(String format){
-		SimpleDateFormat formater = formaters.get(format);
+    public static DateFormat getDateFormat(String format){
+		DateFormat formater = formaters.get(format);
 		
 		if(null == formater){
-			formater = new SimpleDateFormat(format);
+			formater = new ConcurrentDateFormat(format);
 			formater.setLenient(false);
 			
 			formaters.put(format, formater);
@@ -82,7 +84,7 @@ public class DateUtils {
     
     public static Date toDate(Class<? extends Date> type, String string,String format) {
     	if(null != format && !"".equals(format)){
-    		return toDate(type,string,formatter(format));
+    		return toDate(type,string,getDateFormat(format));
     	}
     	
     	return toDate(type,string);
@@ -142,7 +144,7 @@ public class DateUtils {
         return null;
     }
 
-    private static Date toDate(Class<? extends Date> type,String string,SimpleDateFormat format){
+    private static Date toDate(Class<? extends Date> type,String string,DateFormat format){
         ParsePosition position = new ParsePosition(0);
         
         Date date = format.parse(string,position);
@@ -164,7 +166,7 @@ public class DateUtils {
         return date;
     }
     
-    private static Date toDate(String string,SimpleDateFormat format){
+    private static Date toDate(String string,DateFormat format){
         ParsePosition position = new ParsePosition(0);
         
         Date date = format.parse(string,position);
@@ -187,6 +189,6 @@ public class DateUtils {
 	}
 
 	public static String toString(Date date, String format) {
-		return new SimpleDateFormat(format).format(date);
+		return getDateFormat(format).format(date);
 	}
 }
