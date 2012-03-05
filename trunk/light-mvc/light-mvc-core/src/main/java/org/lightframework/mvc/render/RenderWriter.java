@@ -15,8 +15,10 @@
  */
 package org.lightframework.mvc.render;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
+
+import org.lightframework.mvc.internal.format.ConcurrentDateFormat;
 
 /**
  * abstract class of {@link IRenderWriter}
@@ -27,7 +29,7 @@ import java.util.Date;
  */
 public abstract class RenderWriter implements IRenderWriter {
 	
-	public static final SimpleDateFormat RFC_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+	public static final DateFormat RFC_DATE_FORMAT = new ConcurrentDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     public static final char[] HEX_CHARS = new char[]{
         '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
     }; 
