@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.lightframework.mvc.binding.BindingException;
 import org.lightframework.mvc.exceptions.InvalidFormatException;
 import org.lightframework.mvc.internal.convert.Converter;
 import org.lightframework.mvc.internal.reflect.ReflectField;
@@ -70,23 +71,25 @@ public final class SimpleOgnl {
 					field = parentType.findField(node.prop);
 					
 					if(null != field){
-						value = field.getValue(parent);
-						
-						if(null == value){
-							value = Converter.defaultInstance(field.getType());
+						if(!node.isArray() && i == len-1){
+							try {
+	                            field.setValue(parent, Converter.convert(field.getType(),field.getGenericType(),param));
+	                            //TODO ：unsupported nested type, should throw an exception ?
+	                            break;
+                            } catch (Exception e) {
+	                            throw new BindingException("binding field '" + parentType.getActualType().getName() + "." + field.getName() + "' error",e);
+                            }
+						}else{
+							value = field.getValue(parent);
 							
-							if(null != value){
-								field.setValue(parent, value);	
+							if(null == value){
+								value = Converter.defaultInstance(field.getType());
+								
+								if(null != value){
+									field.setValue(parent, value);	
+								}
 							}
 						}
-						
-						if(null == value){
-							if(i == len-1){
-								field.setValue(parent, Converter.convert(field.getType(),field.getGenericType(),param));
-							}
-							//TODO ：unsupported nested type, should throw an exception ?
-							break;
-						}				
 					}else{
 						match = false;
 					}
@@ -410,6 +413,10 @@ public final class SimpleOgnl {
 		
 		private OGNode(String prop){
 			this.prop = prop;
+		}
+		
+		public boolean isArray(){
+			return index != null || name != null;
 		}
 	}
 }
