@@ -16,12 +16,17 @@
 package org.lightframework.mvc.binder;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.lightframework.mvc.Action;
+import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.binding.Argument;
 import org.lightframework.mvc.binding.Binder;
+import org.lightframework.mvc.convert.IConverter;
+
+import junit.framework.TestCase;
 
 /**
  * TODO : document me

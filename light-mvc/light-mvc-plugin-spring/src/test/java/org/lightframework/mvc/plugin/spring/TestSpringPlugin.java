@@ -18,9 +18,9 @@ package org.lightframework.mvc.plugin.spring;
 import java.util.LinkedList;
 
 import org.lightframework.mvc.Action;
+import org.lightframework.mvc.Application;
 import org.lightframework.mvc.Plugin;
-import org.lightframework.mvc.PluginManager;
-import org.lightframework.mvc.RouteManager;
+import org.lightframework.mvc.Routes;
 import org.lightframework.mvc.test.MockModule;
 import org.lightframework.mvc.test.MvcTestCase;
 import org.springframework.context.ApplicationContext;
@@ -59,19 +59,21 @@ public class TestSpringPlugin extends MvcTestCase {
 		}
     }
 	
-	public void tesrRouteRegister() throws Throwable {
-		assertEquals(4, RouteManager.table().size());
+	public void tesrRouteRegister() throws Exception {
+		assertEquals(4, Routes.table().size());
 	}
 
-	public void testPluginRegister() throws Throwable {
-		LinkedList<Plugin> plugins = PluginManager.getPlugins();
+	public void testPluginRegister() throws Exception {
+		Application application = Application.current();
+		
+		LinkedList<Plugin> plugins = application.getRootModule().getPlugins();
 		assertEquals(2,plugins.size());
 		
 		PluginRegistry registry = spring.getBean(PluginRegistry.class);
 		assertEquals(2, registry.getPlugins().size());
 	}
 	
-	public void testPluginResolve1() throws Throwable {
+	public void testPluginResolve1() throws Exception {
 		request("/test1");
 		
 		Object controller = spring.getBean("test1Controller");
@@ -98,7 +100,7 @@ public class TestSpringPlugin extends MvcTestCase {
 		assertEquals("list", action.getMethod().getName());
 	}
 	
-	public void testPluginResolve2() throws Throwable {
+	public void testPluginResolve2() throws Exception {
 		request("/test2");
 		
 		Object controller = spring.getBean("test2Service");
@@ -113,7 +115,7 @@ public class TestSpringPlugin extends MvcTestCase {
 		assertEquals(controller, action.getControllerObject());		
 	}	
 	
-	public void testPluginResolve3() throws Throwable {
+	public void testPluginResolve3() throws Exception {
 		request("/test3");
 		
 		Object controller = spring.getBean("test3");

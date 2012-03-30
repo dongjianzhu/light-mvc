@@ -15,18 +15,17 @@
  */
 package org.lightframework.mvc.test;
 
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-
 import junit.framework.TestCase;
 
 import org.lightframework.mvc.PluginManager;
 import org.lightframework.mvc.Result;
-import org.lightframework.mvc.internal.clazz.ClassUtils;
+import org.lightframework.mvc.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mockrunner.mock.web.MockServletContext;
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+import com.mockrunner.mock.web.MockHttpSession;
 
 /**
  * junit {@link TestCase} for mvc framework
@@ -38,9 +37,8 @@ import com.mockrunner.mock.web.MockServletContext;
 public abstract class MvcTestCase extends TestCase {
 	private static final Logger log = LoggerFactory.getLogger(MvcTestCase.class);
 	
-	private static final Set<Class<?>> tests = new CopyOnWriteArraySet<Class<?>>();
-	
 	private static boolean javassisted;
+	private static boolean setUpOnce;
 
 	protected static MockApplication application;
 	
@@ -48,8 +46,8 @@ public abstract class MvcTestCase extends TestCase {
 	protected MockSession     session;
 	protected MockRequest     request;
 	protected MockResponse    response;
-	protected boolean        ignored;
-	protected boolean        managed;
+	protected boolean         ignored;
+	protected boolean         managed;
 	protected String          packagee;
 	
 	@Override
@@ -68,21 +66,21 @@ public abstract class MvcTestCase extends TestCase {
 		}
 		
 		if(null == application){
-			application = new MockApplication(new MockServletContext(),module);
+			application = new MockApplication(new Object(),module);
 		}
 		
 		reset();
 		
 		MockApplication.mockSetCurrent(application);		
-		if(!tests.contains(this.getClass())){
+		if(!setUpOnce){
 			setUpOnlyOnce();
-			tests.add(this.getClass());
+			setUpOnce = true;
 		}
 		
 	    setUpEveryTest();
 	    
 	    module.getPlugins().addAll(PluginManager.getPlugins());
-	    MockFramework.mockStart(application);
+	    MockFramework.mockStart(module);
     }
 	
 	@Override
@@ -90,7 +88,7 @@ public abstract class MvcTestCase extends TestCase {
 		tearDownEveryTest();
 		
 		MockFramework.mockHandleFinally(request, response);
-		MockFramework.mockStop(application);
+		MockFramework.mockStop(module);
 		MockApplication.mockSetCurrent(null);
 		
 		log.info("============================END:{}===============================",getName());
@@ -109,12 +107,12 @@ public abstract class MvcTestCase extends TestCase {
 		
 	}
 	
-	protected final Result request(String path) throws Throwable {
+	protected final Result request(String path) throws Exception {
 		request.setPath(path);
 		return execute();
 	}
 	
-	protected final Result execute() throws Throwable {
+	protected final Result execute() throws Exception {
 		MockApplication.mockSetCurrent(application);
 		if(MockFramework.mockIgnore(request)){
 			ignored = true;

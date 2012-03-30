@@ -31,8 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * represents the result returned by action after exectuted.
  * 
- * @author fenghm (live.live.fenghm@gmail.com)
- * 
+ * @author fenghm (live.fenghm@bingosoft.net)
  * @since 1.0.0
  */
 public abstract class Result {

@@ -12,7 +12,9 @@ import javax.servlet.http.*;
 /**
  * <code>{@link GzipResponseWrapper}</code>
  *
- * @since 1.0.0
+ * TODO : document me
+ *
+ * @author User
  */
 public class GzipResponseWrapper extends HttpServletResponseWrapper {
     protected HttpServletResponse response;

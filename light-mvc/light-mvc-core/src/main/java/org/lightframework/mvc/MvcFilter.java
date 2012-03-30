@@ -50,7 +50,6 @@ import org.slf4j.LoggerFactory;
  * mvc web module http filter,configed in web.xml
  * 
  * @author fenghm(live.fenghm@gmail.com)
- * 
  * @since 1.0.0
  */
 public class MvcFilter implements javax.servlet.Filter {
@@ -98,7 +97,7 @@ public class MvcFilter implements javax.servlet.Filter {
 	protected void doHandle(HttpServletRequest servletRequest,HttpServletResponse servletResponse,Object context) throws IOException, ServletException {
 		
 		try{
-			servletRequest.setCharacterEncoding(application.encoding());
+			servletRequest.setCharacterEncoding(application.getEncoding());
 			Application.setCurrent(application);
 			
 			//create mvc framework http request and response
@@ -193,7 +192,7 @@ public class MvcFilter implements javax.servlet.Filter {
 		//add plugins to module
 		module.getPlugins().addAll(PluginManager.getPlugins());
 		
-		Framework.start(application);
+		Framework.start(module);
 		
 		doInited();
 		
@@ -217,7 +216,7 @@ public class MvcFilter implements javax.servlet.Filter {
 	}
 	
 	protected void doDestroy(){
-		Framework.stop(application);
+		Framework.stop(module);
 	}
 	
 	/**
@@ -323,6 +322,11 @@ public class MvcFilter implements javax.servlet.Filter {
         }
 		
 		@Override
+        public String getMethod() {
+	        return request.getMethod();
+        }
+
+		@Override
         public boolean isSecure() {
 	        return request.isSecure();
         }
@@ -372,14 +376,6 @@ public class MvcFilter implements javax.servlet.Filter {
 		private void init(){
 			this.context = getContextPath(request);			
 			this.path    = extractPath(context,getUriString());
-			
-			method = request.getHeader("X-HTTP-Method-Override");
-			
-			if(null == method || method.trim().equals("")){
-				method = request.getMethod();
-			}
-			
-			method = method.toUpperCase();
 		}
 		
 		private static String extractPath(String context,String uri){

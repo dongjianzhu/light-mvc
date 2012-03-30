@@ -77,7 +77,7 @@ public class TestJSONDecode extends TestCase {
 		assertTrue(json.isArray());
 		assertNotNull(json.array());
 		
-		JSONArray array = json.jsonArray();
+		JSONArray array = json.array();
 		assertEquals(1, array.get(0));
 		assertEquals(2, array.get(1));
 		assertEquals(3, array.get(2));

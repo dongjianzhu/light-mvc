@@ -137,10 +137,6 @@ public class MockRequest extends Request {
 		getParameters().put(name, new String[]{value});
 	}
 	
-	public void removeParameter(String name){
-		getParameters().remove(name);
-	}
-	
 	public void setParameter(String name,String[] value){
 		getParameters().put(name, value);
 	}

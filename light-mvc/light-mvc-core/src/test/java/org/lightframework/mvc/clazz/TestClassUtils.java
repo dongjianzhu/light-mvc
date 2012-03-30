@@ -3,8 +3,6 @@ package org.lightframework.mvc.clazz;
 import java.util.Date;
 import java.util.List;
 
-import org.lightframework.mvc.internal.clazz.ClassUtils;
-
 import junit.framework.TestCase;
 
 public class TestClassUtils extends TestCase {

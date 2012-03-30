@@ -36,16 +36,6 @@ public class JSONWriter extends RenderWriter implements IRenderWriter {
 	public static final char   SINGLE_QUOTE  = '"';
 	public static final char   COMMA_CHAR    = ',';
 	
-	private boolean isKeyQuoted = true;
-	
-	JSONWriter(){
-
-	}
-	
-	JSONWriter(JSONSettings settings){
-	    this.isKeyQuoted = settings.isKeyQuoted();
-	}
-	
 	public void openArray(StringBuilder out) {
 		out.append(OPEN_ARRAY);
     }
@@ -85,16 +75,6 @@ public class JSONWriter extends RenderWriter implements IRenderWriter {
 	public void writePropertyValueSeperator(StringBuilder out) {
 		out.append(COMMA_CHAR);
     }
-	
-	@Override
-    public void writeName(String name, StringBuilder out) {
-        if(isKeyQuoted){
-            writeString(name,out);    
-        }else{
-            out.append(name);
-        }
-    }
-
 	public void writeString(String string, StringBuilder out) {
         if (string == null) {
         	writeNull(out);

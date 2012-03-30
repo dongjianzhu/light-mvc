@@ -22,7 +22,6 @@ import org.lightframework.mvc.HTTP.Response;
  * the plugin interface class of mvc framework.
  * 
  * @author fenghm(live.fenghm@gmail.com)
- * 
  * @since 1.0.0
  */
 public abstract class Plugin {
@@ -44,14 +43,14 @@ public abstract class Plugin {
 	 * 
 	 * @return true if this plugin should be loaded by framework
 	 */
-	protected boolean load() throws Throwable{
+	protected boolean load() throws Exception{
 		return true;
 	}
 	
 	/**
 	 * called at framework destroying and this plugin had been unloading by framework.
 	 */	
-	protected void unload()  throws Throwable{
+	protected void unload()  throws Exception{
 	    
     }
 	
@@ -60,7 +59,7 @@ public abstract class Plugin {
 	 * @param request http request
 	 * @return true if ignore current request,else return false
 	 */
-	public boolean ignore(Request request) throws Throwable {
+	public boolean ignore(Request request) throws Exception{
 		return false;
 	}
 
@@ -70,7 +69,7 @@ public abstract class Plugin {
 	 * @param response http response
 	 * @return true if this plugin manage current request
 	 */	
-	public boolean request(Request request, Response response) throws Throwable {
+	public boolean request(Request request, Response response) throws Exception{
 		return false;
 	}
 	
@@ -84,7 +83,7 @@ public abstract class Plugin {
 	 * @param response http response
 	 * @return {@link Action} array which reprensents any actions if matched,else return empty {@link Action}[]
 	 */	
-	public Action[] route(Request request, Response response) throws Throwable {
+	public Action[] route(Request request, Response response) throws Exception{
 		return EMPTY_ACTIONS;
 	}
 
@@ -99,7 +98,7 @@ public abstract class Plugin {
 	 * @param action    {@link Action} object
 	 * @return true if this plugin aleady resolved the action method
 	 */	
-	public boolean resolve(Request request, Response response, Action action)  throws Throwable {
+	public boolean resolve(Request request, Response response, Action action)  throws Exception{
 	    return false;
     }
 	
@@ -114,7 +113,7 @@ public abstract class Plugin {
 	 * @param action {@link Action} object
 	 * @return true if this plugin managed the binding of action parameters
 	 */	
-	public boolean binding(Request request, Response response, Action action)  throws Throwable {
+	public boolean binding(Request request, Response response, Action action)  throws Exception{
 	    return false;
     }
 
@@ -125,7 +124,7 @@ public abstract class Plugin {
 	 * @param action   {@link Action} object
 	 * @return {@link Result} object if action executed by this plugin , else return null
 	 */	
-	public Result execute(Request request, Response response, Action action) throws Throwable {
+	public Result execute(Request request, Response response, Action action) throws Exception {
 	    return null;
     }
 
@@ -140,7 +139,7 @@ public abstract class Plugin {
 	 * @param result   {@link Result} object
 	 * @return true if rendered by this plugin
 	 */	
-	public boolean render(Request request, Response response, Result result) throws Throwable {
+	public boolean render(Request request, Response response, Result result) throws Exception {
 	    return false;
     }
 
@@ -151,7 +150,7 @@ public abstract class Plugin {
 	 * @param error {@link org.lightframework.mvc.Result.ErrorResult} object
 	 * @return true if this plugin handled this exception
 	 */	
-	public boolean error(Request request, Response response, Result.ErrorResult error) throws Throwable {
+	public boolean error(Request request, Response response, Result.ErrorResult error) throws Exception{
 		return false;
 	}
 	
@@ -167,7 +166,7 @@ public abstract class Plugin {
 	 * @param result {@link org.lightframework.mvc.Result} object
 	 * @return true if this plugin handled and stop executing other plutins
 	 */	
-	public boolean response(Request request,Response response, Result result) throws Throwable {
+	public boolean response(Request request,Response response, Result result) throws Exception{
 		return false;
 	}
 }

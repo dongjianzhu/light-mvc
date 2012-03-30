@@ -35,9 +35,9 @@ public class TestErrorPlugin extends MvcTestCase {
 	public void testError() {
 		try {
 	        execute();
-        } catch (Throwable e) {
-        	assertNull(e.getCause());
-        	assertEquals("error test", e.getMessage());
+        } catch (Exception e) {
+        	assertNotNull(e.getCause());
+        	assertEquals("error test", e.getCause().getMessage());
         }
         assertEquals("no-cache",response.getHeader("Cache-Control"));
         assertEquals("no-cache",response.getHeader("Pragma"));

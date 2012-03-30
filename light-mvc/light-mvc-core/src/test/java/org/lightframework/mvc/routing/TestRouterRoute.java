@@ -17,7 +17,7 @@ package org.lightframework.mvc.routing;
 
 import junit.framework.TestCase;
 
-import org.lightframework.mvc.RouteManager;
+import org.lightframework.mvc.Routes;
 import org.lightframework.mvc.routing.Match;
 import org.lightframework.mvc.routing.Route;
 
@@ -76,13 +76,13 @@ public class TestRouterRoute extends TestCase{
 	
 	public void testRoutes(){
 		Route route = Route.compile("*", "/{controller*}/{action}", "{controller}.{action}");
-		RouteManager.add(route) ;
-		RouteManager.add("/portal/{action}", "portal.{action}") ;
-		RouteManager.add("post","/jso/{action}", "jso.{action}") ;
+		Routes.add(route) ;
+		Routes.add("/portal/{action}", "portal.{action}") ;
+		Routes.add("post","/jso/{action}", "jso.{action}") ;
 		
 		
-		assertTrue( RouteManager.table().get(2).matches("/jso/test").isMatched() );
-		assertTrue( RouteManager.table().get(1).matches("/portal/menu").isMatched() );
-		assertTrue( RouteManager.table().get(0).matches("/a/b/c/d").isMatched() );
+		assertTrue( Routes.table().get(2).matches("/jso/test").isMatched() );
+		assertTrue( Routes.table().get(1).matches("/portal/menu").isMatched() );
+		assertTrue( Routes.table().get(0).matches("/a/b/c/d").isMatched() );
 	}
 }

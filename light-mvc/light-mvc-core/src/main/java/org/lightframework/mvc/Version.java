@@ -15,21 +15,61 @@
  */
 package org.lightframework.mvc;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * represents current version of mvc framework.
  * 
- * @author fenghm (live.fenghm@gmail.com)
- * 
+ * @author fenghm (fenghm@bingosoft.net)
  * @since 1.0.0
  */
 public final class Version {
+	
+	private static final String VERSION_FILE_NAME = 
+		Version.class.getPackage().getName().replaceAll("\\.", "/") + "/version";
+	
+	private static final String VERSION_CLASS_NAME = 
+		Version.class.getName().replaceAll("\\.", "/") + ".class";	
+	
+	public static final String version_name   = getVersionName();
+	public static final String version_string = version_name + "[build time:" + getBuildTime() + "]";
+	
+	private Version(){
+		
+	}
 
-    private static final String buildtime = "20120315-2326";
-    private static final String version   = "1.1.0-SNAPSHOT";
+	private static String getVersionName(){
+		try {
+	        return Utils.readFromResource(VERSION_FILE_NAME).trim();
+        } catch (IOException e) {
+        	throw new MvcException("error reading version",e);
+        }
+	}
 	
-	private static final String version_string = version + "(" + buildtime + ")";
-	
-	public static String getVersion(){
-		return version_string;
+	private static String getBuildTime(){
+		URL url = Thread.currentThread().getContextClassLoader().getResource(VERSION_CLASS_NAME);
+		if(null == url){
+			url = Version.class.getResource(VERSION_CLASS_NAME);
+		}
+		
+		//create file from url
+		String fileName = url.getFile();
+		int index = fileName.indexOf("!/");//jar file separator
+		if(index > 0){
+			fileName = fileName.substring(0,index);
+		}
+		if(fileName.startsWith("file:")){
+			fileName = fileName.substring("file:".length());
+		}
+		if(fileName.contains(":/") && fileName.startsWith("/")){
+			fileName = fileName.substring(1);
+		}
+		
+		File file = new File(fileName);
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(file.lastModified()));
 	}
 }

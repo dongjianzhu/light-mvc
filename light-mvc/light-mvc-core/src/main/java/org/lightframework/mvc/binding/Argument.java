@@ -21,9 +21,6 @@ import java.lang.reflect.Type;
 
 /**
  * represents an action execution argument
- * 
- * @author fenghm (fenghm@bingosoft.net)
- * 
  * @since 1.0.0 
  */
 public class Argument {

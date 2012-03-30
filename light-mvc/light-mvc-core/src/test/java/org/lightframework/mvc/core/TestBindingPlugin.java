@@ -45,7 +45,7 @@ public class TestBindingPlugin extends MvcTestCase {
 
 	}
 
-	public void testNumberPrimitiveBinding() throws Throwable {
+	public void testNumberPrimitiveBinding() throws Exception {
 		request.setPath("/binding/number_primitive");
 		request.setParameter("intParam", "1");
 		request.setParameter("longParam", "2");
@@ -60,7 +60,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 
-	public void testNumberObjectBinding() throws Throwable {
+	public void testNumberObjectBinding() throws Exception {
 		request.setPath("/binding/number_object");
 		request.setParameter("intParam", "1");
 		request.setParameter("longParam", "2");
@@ -73,7 +73,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testStringBinding() throws Throwable {
+	public void testStringBinding() throws Exception {
 		request.setPath("/binding/string");
 		request.setParameter("stringParam", "string");
 		request.setParameter("charParam1", "c");
@@ -85,7 +85,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testBoolAndByteBinding() throws Throwable {
+	public void testBoolAndByteBinding() throws Exception {
 		request.setPath("/binding/bool_and_byte");
 		request.setParameter("ok1", "true");
 		request.setParameter("ok2", "0");
@@ -98,7 +98,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());		
 	}
 	
-	public void testDateBinding() throws Throwable {
+	public void testDateBinding() throws Exception {
 		request.setPath("/binding/date");
 		request.setParameter("time", "10:10:10");
 		request.setParameter("sqlDate", "2010-10-10");
@@ -111,7 +111,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testArrayBinding() throws Throwable {
+	public void testArrayBinding() throws Exception {
 		request.setPath("/binding/array");
 		request.setParameter("values", "1,2,3");
 		
@@ -123,15 +123,9 @@ public class TestBindingPlugin extends MvcTestCase {
 		result = execute();
 		assertNotNull(result);
 		assertEquals(true, result.getValue());
-		
-		request.setPath("/binding/array3");
-		request.removeParameter("values");
-		result = execute();
-		assertNotNull(result);
-		assertEquals(true, result.getValue());
 	}
 	
-	public void testDirectArrayBinding() throws Throwable {
+	public void testDirectArrayBinding() throws Exception {
 		request.setPath("/binding/array1");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -142,7 +136,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}	
 	
-	public void testBeanArrayBinding() throws Throwable {
+	public void testBeanArrayBinding() throws Exception {
 		request.setPath("/binding/array2");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -153,7 +147,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}	
 	
-	public void testBeanArrayBinding1() throws Throwable {
+	public void testBeanArrayBinding1() throws Exception {
 		request.setPath("/binding/array2");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -164,7 +158,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testBeanListBinding() throws Throwable {
+	public void testBeanListBinding() throws Exception {
 		request.setPath("/binding/list2");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -175,7 +169,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}
 	
-	public void testCombine1() throws Throwable {
+	public void testCombine1() throws Exception {
 		request.setPath("/binding/combine1");
 		request.setMethod(HTTP.METHOD_POST);
 		request.setContentType(HTTP.CONTENT_TYPE_JSON);
@@ -186,7 +180,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());
 	}	
 	
-	public void testEnumBinding() throws Throwable {
+	public void testEnumBinding() throws Exception {
 		request.setPath("/binding/enums");
 		request.setParameter("color", "RED");
 		
@@ -195,7 +189,7 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());		
 	}
 	
-	public void testMapBinding() throws Throwable {
+	public void testMapBinding() throws Exception {
 		request.setPath("/binding/map");
 		request.setParameter("hello", "you are welcome");
 		
@@ -204,61 +198,11 @@ public class TestBindingPlugin extends MvcTestCase {
 		assertEquals(true, result.getValue());	
 	}
 	
-	public void testBeanBinding() throws Throwable {
+	public void testBeanBinding() throws Exception {
 		request.setPath("/binding/bean");
 		request.setParameter("name", "xiaoming");
 		request.setParameter("age", "100");
 		request.setParameter("birthday", "2010-10-10");
-		
-		Result result = execute();
-		assertNotNull(result);
-		assertEquals(true, result.getValue());
-	}
-	
-	public void testOgnlBinding() throws Throwable {
-		request.setPath("/binding/ognl");
-		request.setParameter("name", "xiaoming");
-		request.setParameter("age", "100");
-		request.setParameter("birthday", "2010-10-10");
-		request.setParameter("child.name", "xiaohua");
-		request.setParameter("childs[0].name", "zhangsan");
-		request.setParameter("childs[2].name", "lisi");		
-		
-		Result result = execute();
-		assertNotNull(result);
-		assertEquals(true, result.getValue());
-	}
-	
-	public void testOgnlsBinding() throws Throwable {
-		request.setPath("/binding/ognls");
-
-		request.setParameter("user1.name", "xiaoming");
-		request.setParameter("user1.age", "100");
-		request.setParameter("user1.birthday", "2010-10-10");
-		request.setParameter("user1.child.name", "xiaohua");
-		
-		request.setParameter("user2.name", 		 "xiaohua");
-		request.setParameter("user2.age", 		 "200");
-		request.setParameter("user2.child.name", "xiaoming");
-		
-		Result result = execute();
-		assertNotNull(result);
-		assertEquals(true, result.getValue());
-	}	
-	
-	public void testOgnls1Binding() throws Throwable {
-		request.setPath("/binding/ognls1");
-
-		request.setParameter("name", "xiaoming");
-		request.setParameter("age", "100");
-		request.setParameter("user1.birthday", "2010-10-10");
-		request.setParameter("child.name", "xiaohua");
-		request.setParameter("user1.child.age", "200");
-		
-		request.setParameter("id", 		 "1,2");
-		
-		request.setParameter("users[0].name", "xxx1");
-		request.setParameter("users[1].name", "xxx2");
 		
 		Result result = execute();
 		assertNotNull(result);
@@ -320,10 +264,6 @@ public class TestBindingPlugin extends MvcTestCase {
 				return true;
 			}
 			return false;
-		}
-		
-		public static boolean array3(int[] values){
-			return values.length == 0;
 		}
 		
 		public static boolean array1(int[] values){
@@ -389,101 +329,6 @@ public class TestBindingPlugin extends MvcTestCase {
 			return false;
 		}
 		
-		public static boolean ognl(User user){
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-			if(null != user && 
-			   "xiaoming".equals(user.getName()) && 
-			   100 == user.getAge() && 
-			   "20101010".equals(formatter.format(user.getBirthday()))){
-				
-				User child = user.child;
-
-				if(null == child || !"xiaohua".equals(child.getName())){
-					return false;
-				}
-				
-				List<User> childs = user.childs;
-				
-				if(null == childs || childs.size() != 3){
-					return false;
-				}
-				
-				User childs0 = childs.get(0);
-				User childs1 = childs.get(1);
-				User childs2 = childs.get(2);
-				
-				if(null == childs0 || null != childs1 || null == childs2){
-					return false;
-				}
-				
-				if(!"zhangsan".equals(childs0.getName())){
-					return false;
-				}
-				
-				if(!"lisi".equals(childs2.getName())){
-					return false;
-				}
-				
-				return true;
-			}
-			return false;
-		}
-		
-		public static boolean ognls(User user1,User user2){
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-			if(null != user1 && 
-			   "xiaoming".equals(user1.getName()) && 
-			   100 == user1.getAge() && 
-			   "20101010".equals(formatter.format(user1.getBirthday()))){
-				
-				User child = user1.child;
-
-				if(null == child || !"xiaohua".equals(child.getName())){
-					return false;
-				}
-				
-				if(null == user2){
-					return false;
-				}
-				
-				if(!"xiaohua".equals(user2.getName())){
-					return false;
-				}
-				
-				if(200 != user2.getAge()){
-					return false;
-				}
-				
-				if(!"xiaoming".equals(user2.child.getName())){
-					return false;
-				}
-				
-				return true;
-			}
-			return false;
-		}
-		
-		public static boolean ognls1(User user1,String[] id,User[] users){
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-			if(null != user1 && 
-			   "xiaoming".equals(user1.getName()) && 
-			   100 == user1.getAge() && 
-			   "20101010".equals(formatter.format(user1.getBirthday()))){
-				
-				User child = user1.child;
-
-				if(null == child || !"xiaohua".equals(child.getName())){
-					return false;
-				}
-				
-				if(null != users && users.length == 2){
-					if(users[0].name.equals("xxx1") && users[1].name.equals("xxx2")){
-						return true;	
-					}
-				}
-			}
-			return false;
-		}
 	}
 	
 	public static class User {
@@ -491,11 +336,6 @@ public class TestBindingPlugin extends MvcTestCase {
 		private String name;
 		private int    age;
 		private Date   birthday;
-		
-		public User child;
-		
-		public List<User> childs;
-		
 		public String getName() {
         	return name;
         }

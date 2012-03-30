@@ -24,7 +24,7 @@ import org.lightframework.mvc.test.MvcTestCase;
  * @since 1.x.x
  */
 public class TestMappingPlugin extends MvcTestCase {
-	public void testIgnore() throws Throwable {
+	public void testIgnore() throws Exception {
 		request("/test3/XX.js");
 	}
 }

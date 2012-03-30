@@ -24,6 +24,6 @@
         <module>light-mvc-parent</module>
         <module>light-mvc-core</module>
         <module>light-mvc-plugin-spring</module>
-    	<module>light-mvc-demo</module>
+    <module>light-mvc-demo</module>
   </modules>
 </project>

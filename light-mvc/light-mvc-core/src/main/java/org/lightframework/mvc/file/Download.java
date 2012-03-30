@@ -28,9 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link Download}
+ * TODO : document me
  * 
- * @since 1.0.0
+ * @author User
+ * @since 1.x.x
  */
 public class Download {
 	private static final Logger log = LoggerFactory.getLogger(Download.class);

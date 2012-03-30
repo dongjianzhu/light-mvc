@@ -22,7 +22,6 @@ import java.text.MessageFormat;
  * exception class of mvc framework
  *
  * @author fenghm(live.fenghm@gmail.com)
- * 
  * @since 1.0.0
  */
 public class MvcException extends RuntimeException {

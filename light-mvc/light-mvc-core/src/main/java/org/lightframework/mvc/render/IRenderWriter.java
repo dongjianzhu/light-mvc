@@ -18,8 +18,8 @@ package org.lightframework.mvc.render;
 import java.util.Date;
 
 /**
- * <code> {@link IRenderWriter} </code>
- * 
+ * TODO : document me
+ *
  * @author fenghm (live.fenghm@gmail.com)
  *
  * @since 1.0.0

@@ -15,16 +15,13 @@
  */
 package org.lightframework.mvc.test;
 
-import javax.servlet.ServletContext;
-
 import org.lightframework.mvc.Application;
 import org.lightframework.mvc.Module;
 
 /**
  * mock object of {@link Application}
  * 
- * @author fenghm (live.fenghm@gmail.com)
- * 
+ * @author fenghm (fenghm@bingosoft.net)
  * @since 1.0.0
  */
 public class MockApplication extends Application {
@@ -32,16 +29,13 @@ public class MockApplication extends Application {
 	public MockApplication() {
 	    super();
     }
-	
-	public MockApplication(Object context, Module root) {
-	    super(context, root);
-    }
 
-	public MockApplication(ServletContext context, Module root) {
+	public MockApplication(Object context, Module root) {
 	    super(context, root);
     }
 
 	static void mockSetCurrent(MockApplication application){
 		Application.setCurrent(application);
 	}
+	
 }

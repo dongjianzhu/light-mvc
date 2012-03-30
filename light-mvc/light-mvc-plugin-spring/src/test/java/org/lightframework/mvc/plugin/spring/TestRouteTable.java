@@ -15,7 +15,7 @@
  */
 package org.lightframework.mvc.plugin.spring;
 
-import org.lightframework.mvc.RouteManager;
+import org.lightframework.mvc.Routes;
 
 import junit.framework.TestCase;
 
@@ -49,6 +49,7 @@ public class TestRouteTable extends TestCase {
 		assertEquals("home.index", table.routes().get(2).getAction());			
 		
 		table.register();
-		assertEquals(3, RouteManager.table().size());
+		System.out.println(Routes.table().size());
+		assertEquals(10, Routes.table().size());
 	}
 }

@@ -31,8 +31,8 @@ public class TestApplication extends TestCase {
 	private static final Logger log = LoggerFactory.getLogger(TestApplication.class);
 	
 	public void testGetVersion(){
-		log.info("mvc version:{}",Version.getVersion());
-		assertNotNull(Version.getVersion());
+		log.info("mvc version:{}",Version.version_name);
+		assertNotNull(Version.version_name);
 	}
 	
 	public void testGetApplication(){
@@ -40,7 +40,7 @@ public class TestApplication extends TestCase {
 		
 		Object context = new Object();
 		Application application = new Application(context,new MockModule());
-		assertNotNull(application.getExternalContext());
+		assertNotNull(application.getContext());
 		assertNotNull(application.getRootModule());
 		Application.setCurrent(application);
 		

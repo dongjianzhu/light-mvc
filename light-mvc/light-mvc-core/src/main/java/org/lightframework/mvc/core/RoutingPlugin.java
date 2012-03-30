@@ -23,7 +23,7 @@ import java.util.Map;
 import org.lightframework.mvc.Action;
 import org.lightframework.mvc.Assert;
 import org.lightframework.mvc.Plugin;
-import org.lightframework.mvc.RouteManager;
+import org.lightframework.mvc.Routes;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.routing.Match;
@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
  * core router plugin of mvc framework mapping a request url to action 
  *
  * @author fenghm(live.fenghm@gmail.com)
- * 
  * @since 1.0.0
  */
 public class RoutingPlugin extends Plugin {
@@ -61,25 +60,12 @@ public class RoutingPlugin extends Plugin {
 		
 		Match matched = null;
 		
-		if(null == matched){
-			for(Route route : request.getApplication().routes()){
-				Match match = route.matches(method, path);
-				
-				if(match.isMatched()){
-					matched = match;
-					break;
-				}
-			}
-		}
-		
-		if(null == matched){
-			for(Route route : routes()){
-				Match match = route.matches(method, path);
-				
-				if(match.isMatched()){
-					matched = match;
-					break;
-				}
+		for(Route route : routes()){
+			Match match = route.matches(method, path);
+			
+			if(match.isMatched()){
+				matched = match;
+				break;
 			}
 		}
 		
@@ -158,6 +144,6 @@ public class RoutingPlugin extends Plugin {
 	}
 	
 	public Collection<Route> routes(){
-		return RouteManager.table();
+		return Routes.table();
 	}
 }

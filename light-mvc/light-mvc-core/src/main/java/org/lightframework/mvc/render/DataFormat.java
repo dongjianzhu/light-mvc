@@ -18,8 +18,7 @@ package org.lightframework.mvc.render;
 /**
  * defines data format
  * 
- * @author fenghm (live.fenghm@gmail.com)
- * 
+ * @author fenghm (fenghm@bingosoft.net)
  * @since 1.0.0
  */
 public final class DataFormat {

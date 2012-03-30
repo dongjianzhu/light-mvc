@@ -21,8 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@link Ajax}
- * 
+ * TODO : document me
+ *
  * @author fenghm (live.fenghm@gmail.com)
  * 
  * @since 1.0.0

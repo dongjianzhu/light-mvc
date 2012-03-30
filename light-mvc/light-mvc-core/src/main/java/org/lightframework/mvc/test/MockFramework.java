@@ -15,8 +15,8 @@
  */
 package org.lightframework.mvc.test;
 
-import org.lightframework.mvc.Application;
 import org.lightframework.mvc.Framework;
+import org.lightframework.mvc.Module;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 
@@ -30,19 +30,19 @@ import org.lightframework.mvc.HTTP.Response;
  */
 public class MockFramework extends Framework {
 
-	public static void mockStart(Application app){
-		Framework.start(app);
+	public static void mockStart(Module module){
+		Framework.start(module);
 	}
 	
-	public static void mockStop(Application app){
-		Framework.stop(app);
+	public static void mockStop(Module module){
+		Framework.stop(module);
 	}
 	
-	public static boolean mockIgnore(Request request) throws Throwable {
+	public static boolean mockIgnore(Request request) throws Exception {
 		return Framework.ignore(request);
 	}
 	
-	public static boolean mockHandle(Request request, Response response) throws Throwable {
+	public static boolean mockHandle(Request request, Response response) throws Exception {
 		return Framework.handle(request, response);
 	}
 	

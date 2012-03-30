@@ -34,20 +34,20 @@ public class TestRenderViewPlugin extends MvcTestCase {
 		createSubClass(Home.class, packagee + ".Home");
     }
 
-	public void testHomeViewNotFound() throws Throwable {
+	public void testHomeViewNotFound() throws Exception {
 		execute();
 		MockJSONResult result = response.getJSONResult();
 		assertNotNull(result);
 	}
 	
-	public void testHomeViewInRoot() throws Throwable {
+	public void testHomeViewInRoot() throws Exception {
 		module.addWebResource("/index.htm");
 		module.addWebResource("/index.jsp");
 		execute();
 		assertEquals("/index.jsp", response.getForwardPath());
 	}
 	
-	public void testHomeViewInViewRoot() throws Throwable {
+	public void testHomeViewInViewRoot() throws Exception {
 		module.addWebResource("/index.jsp");
 		module.addViewResource("/index.html");
 		execute();
@@ -55,7 +55,7 @@ public class TestRenderViewPlugin extends MvcTestCase {
 		assertEquals(module.getViewResourcePath("/index.html"), response.getForwardPath());
 	}
 	
-	public void testHomeViewInViewHome() throws Throwable {
+	public void testHomeViewInViewHome() throws Exception {
 		module.addWebResource("/index.jsp");
 		module.addViewResource("/index.html");
 		module.addViewResource("/home/index.vm");
@@ -63,7 +63,7 @@ public class TestRenderViewPlugin extends MvcTestCase {
 		assertEquals(module.getViewResourcePath("/home/index.vm"), response.getForwardPath());
 	}
 	
-	public void testNonHomeView() throws Throwable {
+	public void testNonHomeView() throws Exception {
 		createSubClass(Product.class, packagee + ".Product");
 		
 		request.setPath("/product");

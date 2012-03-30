@@ -20,13 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lightframework.mvc.binding.Argument;
-import org.lightframework.mvc.internal.clazz.ClassUtils;
+import org.lightframework.mvc.clazz.ClassUtils;
 
 /**
  * definition of an action. <p>
  * 
  * @author fenghm(live.fenghm@gmail.com)
- * 
  * @since  1.0.0
  */
 public class Action {

@@ -86,8 +86,8 @@ public class TestMvcFilter extends TestCase {
 			
 			Application application = Application.current();
 			assertNotNull(application);
-			assertNotNull(application.getExternalContext());
-			assertEquals(context, application.getExternalContext());
+			assertNotNull(application.getContext());
+			assertEquals(context, application.getContext());
 			
 			Module module = filter.module;
 			assertNotNull(module);
@@ -187,11 +187,11 @@ public class TestMvcFilter extends TestCase {
 			request.setQueryString("a=b&x-format=json&bool=true&int=123");
 			request.setServerPort(8080);
 			request.setRemoteAddr("localhost");
-			request.setMethod("POST");
-
 			response.setContentType("text/html") ;
 			
+			
 			filter.doFilter(request, response, chain);
+			
 			
 			Request req = (Request)request.getAttribute(MvcFilter.ATTRIBUTE_MVC_REQUEST);
 			assertNotNull(req);
@@ -227,6 +227,7 @@ public class TestMvcFilter extends TestCase {
 			assertEquals(request.getServerPort(), req.getUrl().getPort());
 			assertEquals(request.getRemoteAddr(), req.getRemoteAddress());
 			
+			request.setMethod("POST");
 			assertEquals(request.getMethod(), req.getMethod());
 			
 			

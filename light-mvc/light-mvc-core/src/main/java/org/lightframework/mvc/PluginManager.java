@@ -22,7 +22,6 @@ import java.util.List;
  * manage the {@link Plugin}s in mvc framework.
  * 
  * @author fenghm (live.fenghm@gmail.com)
- * 
  * @since 1.0.0
  */
 public final class PluginManager {

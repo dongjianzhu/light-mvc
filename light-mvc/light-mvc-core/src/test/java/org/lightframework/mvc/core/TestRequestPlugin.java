@@ -27,7 +27,7 @@ import org.lightframework.mvc.test.MvcTestCase;
  */
 public class TestRequestPlugin extends MvcTestCase {
 
-	public void testJsonBody() throws Throwable{
+	public void testJsonBody() throws Exception{
 		request.setMethod(HTTP.METHOD_GET);
 		
 		execute();

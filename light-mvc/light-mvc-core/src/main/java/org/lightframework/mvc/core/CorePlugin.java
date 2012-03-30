@@ -25,7 +25,6 @@ import org.lightframework.mvc.HTTP.Response;
  * core plugin of mvc framework
  *
  * @author fenghm(live.fenghm@gmail.com)
- * 
  * @since 1.0.0
  */
 public class CorePlugin extends Plugin{
@@ -39,43 +38,43 @@ public class CorePlugin extends Plugin{
 	protected ErrorPlugin    errorer   = new ErrorPlugin(renderer.getRenderAjaxPlugin());
 	
 	@Override
-    public boolean request(Request request, Response response) throws Throwable {
+    public boolean request(Request request, Response response) throws Exception {
 	    return requestor.request(request, response);
     }
 
 	@Override
-    public Action[] route(Request request, Response response) throws Throwable {
+    public Action[] route(Request request, Response response) throws Exception {
 	    return router.route(request, response);
     }
 
 	@Override
-    public boolean resolve(Request request, Response response, Action action) throws Throwable {
+    public boolean resolve(Request request, Response response, Action action) throws Exception {
 	    return resolver.resolve(request, response, action);
     }
 	
 	@Override
-    public boolean binding(Request request, Response response, Action action) throws Throwable {
+    public boolean binding(Request request, Response response, Action action) throws Exception {
 	    return binder.binding(request, response, action);
     }
 	
 	@Override
-    public Result execute(Request request, Response response, Action action) throws Throwable {
+    public Result execute(Request request, Response response, Action action) throws Exception {
 	    return executor.execute(request, response, action);
     }
 
 	@Override
-    public boolean render(Request request, Response response, Result render) throws Throwable {
+    public boolean render(Request request, Response response, Result render) throws Exception {
 		//需要判断是否已经Render
 	    return renderer.render(request, response, render);
     }
 
 	@Override
-    public boolean error(Request request, Response response, Result.ErrorResult error) throws Throwable{
+    public boolean error(Request request, Response response, Result.ErrorResult error) throws Exception{
 	    return errorer.error(request, response, error);
     }
 
 	@Override
-    public boolean response(Request request, Response response, Result result) throws Throwable {
+    public boolean response(Request request, Response response, Result result) throws Exception {
 	    return false;
     }
 }

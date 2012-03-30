@@ -19,9 +19,7 @@ import java.util.Map;
 
 /**
  * represents a json array
- * 
- * @author fenghm (live.fenghm@gmail.com)
- * 
+ * @author fenghm (fenghm@bingosoft.net)
  * @since 1.0.0
  */
 public class JSONArray {

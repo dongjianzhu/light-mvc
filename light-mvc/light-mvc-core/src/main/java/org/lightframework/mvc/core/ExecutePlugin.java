@@ -19,13 +19,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.lightframework.mvc.Action;
+import org.lightframework.mvc.MvcException;
 import org.lightframework.mvc.Plugin;
 import org.lightframework.mvc.Result;
 import org.lightframework.mvc.HTTP.Request;
 import org.lightframework.mvc.HTTP.Response;
 import org.lightframework.mvc.Result.Return;
 import org.lightframework.mvc.binding.Argument;
-import org.lightframework.mvc.internal.clazz.ClassUtils;
+import org.lightframework.mvc.clazz.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,6 @@ import org.slf4j.LoggerFactory;
  * core plugin to resolve and execute an {@link Action}
  *
  * @author fenghm(live.fenghm@gmail.com)
- * 
  * @since 1.0.0
  */
 public class ExecutePlugin extends Plugin {
@@ -42,7 +42,7 @@ public class ExecutePlugin extends Plugin {
 	private static final Object[] EMPTY_EXECUTE_ARGS = new Object[]{};
 	
 	@Override
-    public Result execute(Request request, Response response, Action action) throws Throwable {
+    public Result execute(Request request, Response response, Action action) throws Exception{
 		//execute java method
 		Method method = action.getMethod();
 		
@@ -82,6 +82,11 @@ public class ExecutePlugin extends Plugin {
 				}
 				return new Result.EmptyResult();
 			}
+//		} catch(Return returned){
+//			if(log.isTraceEnabled()){
+//				log.trace("[action:'{}'] -> returned '{}'!",action.getName(),returned.result().getClass().getName());
+//			}
+//			return returned.result();
 		} catch(InvocationTargetException e){
 			if(e.getTargetException() instanceof Return){
 				if(log.isTraceEnabled()){
@@ -91,7 +96,17 @@ public class ExecutePlugin extends Plugin {
 				}
 				return ((Return)e.getTargetException()).result();
 			}else{
-				throw e.getTargetException();
+				throw new MvcException("error invoke " + 
+						               action.getControllerClass().getName() + "$" + 
+						               action.getMethod().getName(), e.getTargetException());
+			}
+		}catch(Exception e){
+			if(e instanceof MvcException){
+				throw e;
+			}else{
+				throw new MvcException("error invoke " + 
+			               action.getControllerClass().getName() + "$" + 
+			               action.getMethod().getName(), e);				
 			}
 		}
     }

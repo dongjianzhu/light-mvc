@@ -15,67 +15,51 @@
  */
 package org.lightframework.mvc.render.json;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * represents a json value. 
  *
  * @author fenghm (live.fenghm@gmail.com)
- * 
+ *
  * @since 1.0.0
  */
 public class JSONObject {
-    
-    private Object value;
 
-	JSONObject(Object value){
-	    this.value = value;
+	private JSONArray           array;
+	private Map<String, Object> map;
+	
+    JSONObject(Map<String, Object> map) {
+    	this.map = map;
+    }
+    
+    JSONObject(Object[] array){
+    	this.array = new JSONArray(array);
+    }
+    
+    public boolean isArray(){
+    	return null != array;
+    }
+    
+    public JSONArray array(){
+    	return array;
+    }
+    
+    public Set<String> keys(){
+    	return map.keySet();
+    }
+	
+	public Map<String, Object> map(){
+		return map;
 	}
 	
-	public boolean isNull(){
-	    return null == value;
-	}
-    
-	@SuppressWarnings("unchecked")
-    public boolean isArray(){
-    	return null != value && (value.getClass().isArray() || value instanceof List);
-    }
-    
-    @SuppressWarnings("unchecked")
-    public boolean isMap(){
-        return null != value && value instanceof Map;
-    }
-    
-    public Object value(){
-        return value;
-    }
-    
-    public JSONArray jsonArray(){
-    	return isArray() ? new JSONArray(array()) : null;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public Object[] array(){
-    	return ((List)value).toArray();
-    }
-    
-    @SuppressWarnings("unchecked")
-    public List<Object> arraylist(){
-        return (List)value;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> map(){
-        return (Map<String,Object>)value;
-    }
-    
 	public boolean contains(String name){
-		return map().containsKey(name);
+		return map.containsKey(name);
 	}
 	
 	public Object get(String name){
-		return map().get(name);
+		return map.get(name);
 	}
 	
 	public JSONArray getJSONArray(String name){
@@ -83,10 +67,9 @@ public class JSONObject {
 		return null == array ? null : new JSONArray(array);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Object[] getArray(String name){
 		Object value = get(name);
-		return null == value ? null : ((List)value).toArray();
+		return null == value ? null : (Object[])value;
 	}
 	
 	public String getString(String name){
@@ -121,5 +104,5 @@ public class JSONObject {
 		}else{
 			throw new JSONException(value.getClass() + " is not a map or array");
 		}
-	}    
+	}
 }
