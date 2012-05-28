@@ -22,10 +22,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.lightframework.mvc.clazz.ClassFinder;
 import org.lightframework.mvc.clazz.ClassUtils;
@@ -411,7 +411,7 @@ public class Module {
 	}
 	
 	protected Set<String> findModuleClassNames() throws IOException{
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new CopyOnWriteArraySet<String>();
 		
 		String path = packagee.replace('.', '/');
 		URL    url1 = null != resourceForFinding ? getClassLoader().getResource(resourceForFinding) : null;
