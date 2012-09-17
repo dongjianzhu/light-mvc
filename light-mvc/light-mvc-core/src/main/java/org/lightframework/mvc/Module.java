@@ -380,6 +380,7 @@ public class Module {
 	 * @return all the class names in this module and the {@link #packages} 
 	 */
 	protected Set<String> getModuleClassNames() {
+		/**
 		long now = System.currentTimeMillis();
 		if(null == classNames || now - lastFindClassesTime > 10000){
 			synchronized (this) {
@@ -403,6 +404,22 @@ public class Module {
 				lastFindClassesTime = now;
             }
 		}
+		return classNames;*/
+		// 考虑到性能，采取缓存的策略，开发时增加方法还是需要重启web容器
+		if (null == classNames) {
+			synchronized (this) {
+				try {
+					classNames = findModuleClassNames();
+
+					if (log.isTraceEnabled()) {
+						log.trace("[module:'{}'] -> found {} classes in package '{}'", new Object[] { getName(), classNames.size(), packagee });
+					}
+				} catch (IOException e) {
+					throw new MvcException("error find classes in module '" + getName() + "'", e);
+				}
+			}
+		}
+		
 		return classNames;
 	}
 	
