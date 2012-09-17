@@ -8,7 +8,7 @@
     <groupId>org.lightframework</groupId>
     <artifactId>light-mvc-core</artifactId>
     <name>org.lightframework.mvc.core</name>
-    <version>1.0.3-20111217</version>
+    <version>1.0.5-20120614</version>
     <packaging>jar</packaging>
 
     <build>
