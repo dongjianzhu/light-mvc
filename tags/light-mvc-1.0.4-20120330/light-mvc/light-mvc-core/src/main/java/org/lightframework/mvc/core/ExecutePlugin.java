@@ -111,6 +111,43 @@ public class ExecutePlugin extends Plugin {
 		}
     }
 	
+	public static Object safeValue(Class<?> type){
+        if(Integer.TYPE == type){
+            return 0;
+        }
+        
+        if(Boolean.TYPE == type){
+            return false;
+        }
+        
+        if(Long.TYPE == type){
+            return 0L;
+        }
+        
+        if(Float.TYPE == type){
+            return 0.0f;
+        }
+        
+        if(Double.TYPE == type){
+            return 0.0d;
+        }
+        
+        if(Short.TYPE == type){
+            return 0;
+        }
+        
+        if(Byte.TYPE == type){
+        	return 0;
+        }
+        
+        if(Character.TYPE == type){
+        	return '\u0000';
+        }
+        
+        return null;
+	}
+
+	
 	private static Object[] getExecuteArgs(Argument[] args){
 		if(null == args || args.length == 0){
 			return EMPTY_EXECUTE_ARGS;
@@ -118,6 +155,9 @@ public class ExecutePlugin extends Plugin {
 			Object[] array = new Object[args.length];
 			for(int i=0; i<args.length; i++){
 				array[i] = args[i].getValue();
+				if (null == array[i]) {
+					array[i] = safeValue(args[i].getType());
+				}
 			}
 			return array;
 		}
